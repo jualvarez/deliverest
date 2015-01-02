@@ -1,0 +1,37 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block bodyclass %}{{ block.super }} app-{{ app_label }}{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo;
+{% for app in app_list %}
+{{ app.name }}
+{% endfor %}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% trans 'Reportes' %}</h2>
+        <h3>{% trans 'Reportes de ' %}{{ app_label }}</h3>
+            <ul class="actionlist">
+            <li class="changelink">
+                    <a href="/admin/deliorders/order/products_report">{% trans 'Reporte de productos' %}</a>
+                <br/>
+                    <span class="mini quiet">{% trans 'Cantidades de productos en todas las órdenes abiertas' %}</span>
+            </li>
+            <li class="changelink">
+                    <a href="/admin/deliorders/order/print_orders/">{% trans 'Imprimir entregas' %}</a>
+                <br/>
+                    <span class="mini quiet">{% trans 'Vista de impresión de pedidos pendientes' %}</span>
+            </li>
+            </ul>
+    </div>
+</div>
+{% endblock %}

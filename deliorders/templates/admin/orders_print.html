@@ -1,0 +1,59 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_list %}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+  <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{{ media.js }}
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="/admin/deliorders">Deliorders</a>
+&rsaquo; <a href="/admin/deliorders/order/print_orders/">Report</a>
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static "deliorders/print.css" %}" />
+{% if not delivery_method %}
+<ul class="delivery-links">
+{% for dm in delivery_methods %}<li class="delivery-link"><a href="/admin/deliorders/order/print_orders/{{ dm.pk }}/">{{ dm.name}}</a></li>{% endfor %}
+</ul>
+<div style="clear:both"></div>
+{% endif %}
+{% for order in orders %}
+<div class="order-bound">
+    <div class="customer-header">
+        <div class="customer-name">{{ order.customer.first_name|capfirst }} {{ order.customer.last_name|capfirst}}</div>
+        <div class="customer-details">
+        {% if order.customer.address %}
+        {{ order.customer.address }}<br>
+        {% endif %} {% if order.customer.phone %}
+        {{ order.customer.phone }}
+        {% endif %}
+        </div>
+        <div style="clear:both"></div>
+    </div>
+    <table width="100%">
+        {% for item in order.orderitem_set.all %}
+        <tr class="{% if forloop.counter|divisibleby:2 %}row2{% else %}row1{% endif %}">
+            <td>{{ item.product.product.name }}</td>
+            <td>{{ item.product.presentation.name }}</td>
+            <td>{{ item.product.presentation.quantity }} {{ item.product.presentation.measure_unit|lower }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>$</td>
+            <td align="right">{{ item.item_total|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="order-total">
+            <td colspan="4">Total</td>
+            <td>$</td>
+            <td align="right">{{ order.order_total|floatformat:2 }}</td>
+        </tr>
+    </table>
+    </ul>
+</div>
+{% endfor %}
+{% endblock %}
