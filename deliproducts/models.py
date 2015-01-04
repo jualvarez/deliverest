@@ -15,6 +15,13 @@ UNIT_CHOICES = (
         (UNIT_UNIT, _('unidad'))
     )
 
+UNIT_CHOICES_PLURAL = {
+        UNIT_L: _('litros'),
+        UNIT_G: _('gramos'),
+        UNIT_KG: _('kilogramos'),
+        UNIT_UNIT: _('unidades')
+    }
+
 
 class Presentation(models.Model):
 
@@ -32,7 +39,7 @@ class Presentation(models.Model):
     def __str__(self):
         if self.quantity != None:
             return "%s %s %s" % (self.name, self.quantity,
-                    self.get_measure_unit_display())
+                    self.get_measure_unit_display() if (self.quantity == 1) or (self.measure_unit not in UNIT_CHOICES_PLURAL) else UNIT_CHOICES_PLURAL[self.measure_unit])
         else:
             return self.name
 
