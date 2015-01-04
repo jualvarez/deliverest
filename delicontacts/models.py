@@ -14,6 +14,7 @@ class Person(models.Model):
     class Meta:
         verbose_name = _('persona')
         verbose_name_plural = _('personas')
+        ordering = ('first_name', 'last_name')
 
     def __str__(self):
         return "%s" % (self.first_name)
