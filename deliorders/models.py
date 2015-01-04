@@ -67,10 +67,10 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order)
     product = models.ForeignKey(Price, verbose_name=_('producto'))
+    quantity = models.IntegerField(verbose_name=_('cantidad'))
     sell_price = models.DecimalField(max_digits=20, decimal_places=4,
         blank=True,
         verbose_name=_('precio de venta (si difiere)'))
-    quantity = models.IntegerField(verbose_name=_('cantidad'))
     comments = models.CharField(max_length=200, verbose_name='Notas',
         blank=True)
 
