@@ -16,7 +16,7 @@ class Person(models.Model):
         verbose_name_plural = _('personas')
 
     def __str__(self):
-        return "%s %s" % (self.first_name)
+        return "%s" % (self.first_name)
 
 
 class Customer(Person):
@@ -28,7 +28,7 @@ class Customer(Person):
         verbose_name_plural = _('clientes')
 
     def __str__(self):
-        return "%s %s" % (self.first_name)
+        return "%s" % (self.first_name)
 
     def delivery_method_name(self):
         return self.prefered_delivery_method.name
