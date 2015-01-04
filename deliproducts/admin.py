@@ -27,5 +27,6 @@ class PriceAdmin(admin.ModelAdmin):
     search_fields = ['product__name', 'product__description','presentation__name']
     list_display = ('product', 'presentation', 'currency', 'sell_price', 'buy_price')
     list_filter = ('presentation', 'sell_price', 'buy_price')
+    ordering = ('product__name',)
 
 admin.site.register(Price, PriceAdmin)
