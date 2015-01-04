@@ -17,7 +17,7 @@ class OrderAdmin(admin.ModelAdmin):
     exclude = ('code', 'when_closed', 'when_delivered', 'reconciled')
     search_fields = ('code', 'customer__first_name', 'customer__last_name')
     list_display = ('code', 'customer', 'delivery_method', 'order_total',
-        'when_create', 'status')
+        'delivery_date', 'when_create', 'status')
     list_filter = ('status', 'delivery_method', 'customer')
     inlines = [OrderItemInline]
     actions = ['close_orders']
