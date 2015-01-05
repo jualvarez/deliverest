@@ -47,11 +47,9 @@ class OrderAdmin(admin.ModelAdmin):
                     edit_item = results[item.product.pk]
                 except KeyError:
                     prod = item.product
-                    item_display = "%s %s %d %s" % (
+                    item_display = "%s (%s)" % (
                         prod.product.name,
-                        prod.presentation.name,
-                        prod.presentation.quantity,
-                        prod.presentation.measure_unit
+                        prod.presentation
                     )
                     results[item.product.pk] = [item_display] + [0 for i in delivery_methods] + [0]
                 for pos, delivery_method_id in enumerate(delivery_methods.keys()):
