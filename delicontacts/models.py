@@ -2,6 +2,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from delidelivery.models import DeliveryMethod
 
+CONTACT_MODE_CHOICES = (
+        (100, _('E-mail')),
+        (200, _('Facebook')),
+        (300, _('Telefono')),
+        (400, _('Otro')),
+    )
 
 class Person(models.Model):
     first_name = models.CharField(max_length=100, verbose_name=_('nombre'))
@@ -21,6 +27,7 @@ class Person(models.Model):
 
 
 class Customer(Person):
+    contact_mode = models.IntegerField(choices=CONTACT_MODE_CHOICES, default=100, verbose_name=_('Forma de contacto'))
     prefered_delivery_method = models.ForeignKey(DeliveryMethod,
         verbose_name=_('método de envio preferido'))
 

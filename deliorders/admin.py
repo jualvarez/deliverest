@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin.views.main import ChangeList
 from django.db.models import Q
 from django.template import RequestContext
 from django.conf.urls import url, patterns
@@ -12,18 +13,42 @@ from delidelivery.models import DeliveryMethod
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
 
+class OrderAdminChangeList(ChangeList):
+    def get_results(self, *args, **kwargs):
+        super(OrderAdminChangeList, self).get_results(*args, **kwargs)
+        q = self.result_list.aggregate(order_sum=Sum('status'))
+        self.total = q['order_sum']
 
 class OrderAdmin(admin.ModelAdmin):
     exclude = ('code', 'when_closed', 'when_delivered', 'reconciled')
     search_fields = ('code', 'customer__first_name', 'customer__last_name')
-    list_display = ('code', 'customer', 'delivery_method', 'order_total',
-        'delivery_date', 'when_create', 'status')
-    list_filter = ('status', 'delivery_method', 'customer')
+    list_display = ('code', 'customer', 'get_contact_mode', 'delivery_method', 'order_total',
+        'get_customer_address', 'get_customer_phone', 'delivery_date', 'when_create', 'status')
+    list_filter = ('status', 'delivery_method')
     inlines = [OrderItemInline]
-    actions = ['close_orders']
+    actions = ['close_orders', 'deliver_orders', 'reconcile_orders']
 
     order_report_template = 'admin/products_report.html'
     order_print_template = 'admin/orders_print.html'
+    order_reconcile_template = 'admin/orders_reconcile.html'
+
+    def get_changelist(self, request):
+        return OrderAdminChangeList
+
+    def get_contact_mode(self, obj):
+        return obj.customer.email if (obj.contact_mode == 100 and obj.customer.email) else obj.get_contact_mode_display()
+    get_contact_mode.admin_order_field = 'customer'
+    get_contact_mode.short_description = _('Contacto')
+
+    def get_customer_address(self, obj):
+        return obj.customer.address
+    get_customer_address.admin_order_field = 'customer'
+    get_customer_address.short_description = _('Dirección de entrega')
+
+    def get_customer_phone(self, obj):
+        return obj.customer.phone
+    get_customer_phone.admin_order_field = 'customer'
+    get_customer_phone.short_description = _('Teléfono de contacto')
 
     def get_urls(self):
         urls = super(OrderAdmin, self).get_urls()
@@ -83,12 +108,20 @@ class OrderAdmin(admin.ModelAdmin):
                 'orders': pending_orders
             }, context_instance=RequestContext(request))
 
-    def close_orders(self, request, queryset):
+    def change_orders_status(self, queryset, from_status, to_status):
         for order in queryset:
-            if order.status == 100:
-                order.status = 200
+            if order.status == from_status:
+                order.status = to_status
                 order.save()
 
-    close_orders.short_description = _("Cerrar órdenes")
+    def close_orders(self, request, queryset):
+        self.change_orders_status(queryset, 100, 200)
+
+    def deliver_orders(self, request, queryset):
+        self.change_orders_status(queryset, 200, 300)
+
+    close_orders.short_description = _("Cerrar pedidos")
+    deliver_orders.short_description = _("Marcar pedidos entregados")
+    reconcile_orders.short_description = _("Conciliar pedidos")
 
 admin.site.register(Order, OrderAdmin)
