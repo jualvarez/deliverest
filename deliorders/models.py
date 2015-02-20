@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import date
-#from django.contrib.auth.models import User
+
 from django.utils.translation import ugettext_lazy as _
 from delicontacts.models import Customer, CONTACT_MODE_CHOICES
 from deliproducts.models import Price
@@ -16,13 +16,15 @@ ORDER_STATUS_CHOICES = (
         (600, _('Conciliado')),
     )
 
+DELIVERED_STATUSES = (300,500)
+
 
 class Order(models.Model):
     code = models.CharField(max_length=50, unique=True,
         verbose_name=_('código'))
     customer = models.ForeignKey(Customer, verbose_name=_('cliente'))
     contact_mode = models.IntegerField(choices=CONTACT_MODE_CHOICES, blank=True,
-        verbose_name=_('Forma de contacto'))
+        verbose_name=_('forma de contacto'))
     delivery_method = models.ForeignKey(DeliveryMethod, blank=True, null=True,
         verbose_name=_('método de envío'))
     delivery_date = models.DateField(default=date.today(),
@@ -56,7 +58,7 @@ class Order(models.Model):
         # Calculate closing dates automatically
         if self.when_closed is None and self.status > 100:
             self.when_closed = date.today()
-        if self.when_delivered is None and self.status in (300, 500):
+        if self.when_delivered is None and self.status in DELIVERED_STATUSES:
             self.when_delivered = date.today()
 
         # Customer's prefered delivery method is default
@@ -66,8 +68,10 @@ class Order(models.Model):
 
         return super(Order, self).save(*args, **kwargs)
 
-    def order_total(self):
+    def get_order_total(self):
         return self.orderitem_set.aggregate(total=models.Sum('sell_price',field='quantity*sell_price'))['total']
+
+    get_order_total.short_description = _("Total de pedido")
 
 
 class OrderItem(models.Model):

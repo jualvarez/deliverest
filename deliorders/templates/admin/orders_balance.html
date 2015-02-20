@@ -1,0 +1,70 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls admin_static admin_list %}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
+  <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{{ media.js }}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="/admin/deliorders">Deliorders</a>
+&rsaquo; Balance
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block content %}
+  <div id="content-main">
+      {% block filters %}
+        {% if cl.has_filters %}
+          <div id="changelist-filter">
+            <h2>{% trans 'Filter' %}</h2>
+            {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+          </div>
+        {% endif %}
+      {% endblock %}
+
+      {% block result_list %}
+
+        {% if results %}
+        <div class="results">
+        <table id="result_list">
+        <thead>
+        <tr>
+          <th>
+             <div class="text">Producto</div>
+          </th>
+          <th>
+             <div class="text">Cantidad</div>
+          </th>
+          <th>
+             <div class="text">Costo</div>
+          </th>
+          <th>
+             <div class="text">Precio de venta</div>
+          </th>
+          <th>
+             <div class="text">Ganancia</div>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key, result in results.items %}
+        <tr class="{% cycle 'row1' 'row2' %}">{% for item in result %}<td>{{ item }}</td>{% endfor %}</tr>
+        {% endfor %}
+        {% if totals %}
+        <tfoot><tr>{% for total in totals %}<td>{% if forloop.counter == 1 %}Totales{% else %}{{ total }}{% endif %}</td>{% endfor %}</tr></tfoot>
+        {% endif %}
+        </tbody>
+        </table>
+        </div>
+        {% endif %}
+
+
+      {% endblock %}
+      {% block pagination %}{% endblock %}
+  </div>
+{% endblock %}
