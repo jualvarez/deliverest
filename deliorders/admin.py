@@ -2,20 +2,64 @@ from decimal import Decimal
 
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
+from django.contrib.admin import SimpleListFilter
 from django.db.models import Q, Sum
 from django.template import RequestContext
 from django.conf.urls import url, patterns
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_text
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, ORDER_STATUS_CHOICES
 from delidelivery.models import DeliveryMethod
 
 import autocomplete_light
 
+# Help class for default filter
+class DefaultListFilter(SimpleListFilter):
+    all_value = '_all'
+
+    def default_value(self):
+        raise NotImplementedError()
+
+    def queryset(self, request, queryset):
+        if self.parameter_name in request.GET and request.GET[self.parameter_name] == self.all_value:
+            return queryset
+
+        if self.parameter_name in request.GET:
+            return queryset.filter(**{self.parameter_name:request.GET[self.parameter_name]})
+
+        return queryset.filter(**{self.parameter_name:self.default_value()})
+
+    def choices(self, cl):
+        yield {
+            'selected': self.value() == self.all_value,
+            'query_string': cl.get_query_string({self.parameter_name: self.all_value}, []),
+            'display': _('All'),
+        }
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == force_text(lookup) or (self.value() == None and force_text(self.default_value()) == force_text(lookup)),
+                'query_string': cl.get_query_string({
+                    self.parameter_name: lookup,
+                }, []),
+                'display': title,
+            }
+
+class StatusFilter(DefaultListFilter):
+    title = _('Estado ')
+    parameter_name = 'status__exact'
+
+    def lookups(self, request, model_admin):
+        return ORDER_STATUS_CHOICES
+
+    def default_value(self):
+        return 200
+
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
+    form = autocomplete_light.modelform_factory(OrderItem)
 
 class OrderAdminChangeList(ChangeList):
     def get_results(self, *args, **kwargs):
@@ -25,11 +69,11 @@ class OrderAdminChangeList(ChangeList):
             self.order_sum = self.order_sum + order.get_order_total()
 
 class OrderAdmin(admin.ModelAdmin):
+    list_filter = (StatusFilter, 'delivery_method')
     exclude = ('code', 'when_closed', 'when_delivered', 'reconciled')
     search_fields = ('code', 'customer__first_name', 'customer__last_name')
     list_display = ('code', 'customer', 'get_contact_mode', 'delivery_method', 'get_order_total',
         'get_customer_address', 'get_customer_phone', 'delivery_date', 'when_create', 'status')
-    list_filter = ('status', 'delivery_method')
     inlines = [OrderItemInline]
     actions = ['close_orders', 'deliver_orders', 'reconcile_orders', 'balance_report']
 

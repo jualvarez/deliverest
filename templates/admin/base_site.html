@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ _('Orgánicos de mi tierra :: Administración') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ _('Orgánicos de mi tierra :: Administración') }}</a></h1>
+{% endblock %}
+
+{% block extrahead %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js" type="text/javascript"></script>
+    {% include 'autocomplete_light/static.html' %}
+{% endblock %}

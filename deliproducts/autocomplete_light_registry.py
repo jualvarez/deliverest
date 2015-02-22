@@ -1,13 +1,15 @@
+from django.utils.translation import ugettext_lazy as _
+
 import autocomplete_light
-from delicontacts.models import Customer
+from deliproducts.models import Price
 
 # This will generate a PersonAutocomplete class
-autocomplete_light.register(Customer,
+autocomplete_light.register(Price,
     # Just like in ModelAdmin.search_fields
-    search_fields=['^first_name', 'last_name'],
+    search_fields=['product__name', 'product__description'],
     attrs={
         # This will set the input placeholder attribute:
-        'placeholder': 'Other model name ?',
+        'placeholder': _('Producto'),
         # This will set the yourlabs.Autocomplete.minimumCharacters
         # options, the naming conversion is handled by jQuery
         'data-autocomplete-minimum-characters': 2,
