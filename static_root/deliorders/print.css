@@ -1,0 +1,48 @@
+.customer-header {
+    padding:5px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: #999;
+    }
+.customer-name {
+    font-size: 18px;
+    font-weight: bold;
+    float: left;
+    }
+.customer-details {
+    font-size: 11px;
+    font-family: "Lucida Grande", Verdana, Arial, sans-serif;
+    color: #444;
+    /* border-top-color: #999;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-bottom-color: #999;
+    border-bottom-width: 1px;
+    border-bottom-style: solid; */
+    float: right;
+    padding: 3px;
+    }
+
+.order-bound {
+    max-width: 650px;
+    border: 1px solid;
+    border-color: #666666;
+    margin-bottom: 7px;
+    }
+
+tr.order-total {
+    font-weight: bold;
+    border-top: #aaa 2px solid;
+    }
+
+ul.delivery-links {
+    }
+
+li.delivery-link {
+    list-style-type: none;
+    float:left;
+    padding:5px;
+    border:1px solid;
+    margin-bottom: 5px;
+    margin-right: 2px;
+    }

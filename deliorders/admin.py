@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from .models import Order, OrderItem
 from delidelivery.models import DeliveryMethod
 
+import autocomplete_light
+
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -21,6 +23,8 @@ class OrderAdmin(admin.ModelAdmin):
     list_filter = ('status', 'delivery_method', 'customer')
     inlines = [OrderItemInline]
     actions = ['close_orders']
+
+    form = autocomplete_light.modelform_factory(Order)
 
     order_report_template = 'admin/products_report.html'
     order_print_template = 'admin/orders_print.html'
