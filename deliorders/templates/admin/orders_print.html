@@ -39,10 +39,10 @@
     <table width="100%">
         {% for item in order.orderitem_set.all %}
         <tr class="{% if forloop.counter|divisibleby:2 %}row2{% else %}row1{% endif %}">
+            <td>{{ item.quantity }}</td>
             <td>{{ item.product.product.name }}</td>
             <td>{{ item.product.presentation.name }}</td>
             <td>{{ item.product.presentation.quantity }} {{ item.product.presentation.measure_unit|lower }}</td>
-            <td>{{ item.quantity }}</td>
             <td>$</td>
             <td align="right">{{ item.item_total|floatformat:2 }}</td>
         </tr>
