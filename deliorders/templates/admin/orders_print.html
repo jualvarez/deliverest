@@ -29,10 +29,14 @@
         <div class="customer-name">{{ order.customer.first_name|capfirst }} {{ order.customer.last_name|capfirst}}</div>
         <div class="customer-details">
         {% if order.customer.address %}
-        {{ order.customer.address }}<br>
-        {% endif %} {% if order.customer.phone %}
+        {{ order.customer.address }}
+        {% endif %} {% if order.customer.phone %}<br>
         {{ order.customer.phone }}
+        {% endif %}{% if order.comments %}<br>
+        {{ order.comments }}
         {% endif %}
+        </div>
+        <div class="customer-details">
         </div>
         <div style="clear:both"></div>
     </div>
@@ -40,7 +44,7 @@
         {% for item in order.orderitem_set.all %}
         <tr class="{% if forloop.counter|divisibleby:2 %}row2{% else %}row1{% endif %}">
             <td>{{ item.quantity }}</td>
-            <td>{{ item.product.product.name }}</td>
+            <td>{{ item.product.product.name }} {% if item.comments %}({{ item.comments }}){% endif %}</td>
             <td>{{ item.product.presentation.name }}</td>
             <td>{{ item.product.presentation.quantity }} {{ item.product.presentation.measure_unit|lower }}</td>
             <td>$</td>
@@ -50,7 +54,7 @@
         <tr class="order-total">
             <td colspan="4">Total</td>
             <td>$</td>
-            <td align="right">{{ order.order_total|floatformat:2 }}</td>
+            <td align="right">{{ order.get_order_total|floatformat:2 }}</td>
         </tr>
     </table>
     </ul>
