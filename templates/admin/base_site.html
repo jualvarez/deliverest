@@ -1,9 +1,10 @@
 {% extends "admin/base.html" %}
+{% load i18n %}
 
-{% block title %}{{ title }} | {{ _('Orgánicos de mi tierra :: Administración') }}{% endblock %}
+{% block title %}{{ title }} | {% trans 'Orgánicos de mi tierra :: Administración' %}{% endblock %}
 
 {% block branding %}
-<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ _('Orgánicos de mi tierra :: Administración') }}</a></h1>
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{% trans 'Orgánicos de mi tierra :: Administración' %}</a></h1>
 {% endblock %}
 
 {% block extrahead %}

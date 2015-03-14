@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -8,32 +10,32 @@ UNIT_KG = 'KG'
 UNIT_UNIT = 'U'
 
 UNIT_CHOICES = (
-        (UNIT_L, _('litro')),
-        (UNIT_ML, _('cc')),
-        (UNIT_G, _('gramo')),
-        (UNIT_KG, _('kilogramo')),
-        (UNIT_UNIT, _('unidad'))
+        (UNIT_L, _(u'litro')),
+        (UNIT_ML, _(u'cc')),
+        (UNIT_G, _(u'gramo')),
+        (UNIT_KG, _(u'kilogramo')),
+        (UNIT_UNIT, _(u'unidad'))
     )
 
 UNIT_CHOICES_PLURAL = {
-        UNIT_L: _('litros'),
-        UNIT_G: _('gramos'),
-        UNIT_KG: _('kilogramos'),
-        UNIT_UNIT: _('unidades')
+        UNIT_L: _(u'litros'),
+        UNIT_G: _(u'gramos'),
+        UNIT_KG: _(u'kilogramos'),
+        UNIT_UNIT: _(u'unidades')
     }
 
 
 class Presentation(models.Model):
 
-    name = models.CharField(max_length=150, verbose_name=_('nombre'))
-    quantifiable = models.BooleanField(default=True, verbose_name=_('cuantificable'))
+    name = models.CharField(max_length=150, verbose_name=_(u'nombre'))
+    quantifiable = models.BooleanField(default=True, verbose_name=_(u'cuantificable'))
     quantity = models.DecimalField(max_digits=6, decimal_places=2,
-        verbose_name=_('cantidad'), blank=True, null=True)
+        verbose_name=_(u'cantidad'), blank=True, null=True)
     measure_unit = models.CharField(max_length=2, choices=UNIT_CHOICES, blank=True, null=True)
 
     class Meta:
-        verbose_name = _('presentación')
-        verbose_name_plural = _('presentaciones')
+        verbose_name = _(u'presentación')
+        verbose_name_plural = _(u'presentaciones')
         unique_together = ('name', 'quantity', 'measure_unit')
 
     def __str__(self):
@@ -46,40 +48,40 @@ class Presentation(models.Model):
 
 class Product(models.Model):
 
-    name = models.CharField(max_length=200, verbose_name=_('nombre'), unique=True)
+    name = models.CharField(max_length=200, verbose_name=_(u'nombre'), unique=True)
     description = models.CharField(max_length=500,
-        verbose_name=_('descripción'))
+        verbose_name=_(u'descripción'))
     presentations = models.ManyToManyField(Presentation, through='Price')
     provider = models.ForeignKey('Provider', blank=True, null=True)
 
     class Meta:
-        verbose_name = _('producto')
-        verbose_name_plural = _('productos')
+        verbose_name = _(u'producto')
+        verbose_name_plural = _(u'productos')
 
     def __str__(self):
         return "%s" % (self.name)
 
 CURRENCY_CHOICE = (
-    ('ARS', _('Peso argentino')),
-    ('USD', _('Dolar'))
+    ('ARS', _(u'Peso argentino')),
+    ('USD', _(u'Dolar'))
     )
 
 
 class Price(models.Model):
-    product = models.ForeignKey(Product, verbose_name=_('producto'))
+    product = models.ForeignKey(Product, verbose_name=_(u'producto'))
     presentation = models.ForeignKey(Presentation,
-        verbose_name=_('presentación'))
-    wholesale = models.BooleanField(verbose_name=_('Por mayor'), default=False)
+        verbose_name=_(u'presentación'))
+    wholesale = models.BooleanField(verbose_name=_(u'Por mayor'), default=False)
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICE,
-        default='ARS', verbose_name=_('moneda'))
+        default='ARS', verbose_name=_(u'moneda'))
     sell_price = models.DecimalField(max_digits=20, decimal_places=4,
-        verbose_name=_('precio de venta'))
+        verbose_name=_(u'precio de venta'))
     buy_price = models.DecimalField(max_digits=20, decimal_places=4,
-        verbose_name=_('precio de compra'))
+        verbose_name=_(u'precio de compra'))
 
     class Meta:
-        verbose_name = _('precio')
-        verbose_name_plural = _('precios')
+        verbose_name = _(u'precio')
+        verbose_name_plural = _(u'precios')
         unique_together = ('product', 'presentation', 'wholesale')
 
     def __str__(self):
@@ -88,15 +90,15 @@ class Price(models.Model):
 
 
 class Provider(models.Model):
-    code = models.CharField(max_length=50, verbose_name=_('código'))
-    name = models.CharField(max_length=150, verbose_name=_('nombre'))
-    address = models.TextField(verbose_name=_('dirección'), blank=True)
-    phone = models.CharField(max_length=100, verbose_name=_('teléfono'),
+    code = models.CharField(max_length=50, verbose_name=_(u'código'))
+    name = models.CharField(max_length=150, verbose_name=_(u'nombre'))
+    address = models.TextField(verbose_name=_(u'dirección'), blank=True)
+    phone = models.CharField(max_length=100, verbose_name=_(u'teléfono'),
         blank=True)
 
     class Meta:
-        verbose_name = _('proveedor')
-        verbose_name_plural = _('proveedores')
+        verbose_name = _(u'proveedor')
+        verbose_name_plural = _(u'proveedores')
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.code)

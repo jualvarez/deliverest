@@ -26,7 +26,7 @@
 {% for order in orders %}
 <div class="order-bound">
     <div class="customer-header">
-        <div class="customer-name">{{ order.customer.first_name|capfirst }} {{ order.customer.last_name|capfirst}}</div>
+        <div class="customer-name">{{ order.customer.name|capfirst }}</div>
         <div class="customer-details">
         {% if order.customer.address %}
         {{ order.customer.address }}

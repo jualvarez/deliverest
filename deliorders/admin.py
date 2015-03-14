@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from decimal import Decimal
 
 from django.contrib import admin
@@ -35,7 +37,7 @@ class DefaultListFilter(SimpleListFilter):
         yield {
             'selected': self.value() == self.all_value,
             'query_string': cl.get_query_string({self.parameter_name: self.all_value}, []),
-            'display': _('All'),
+            'display': _(u'All'),
         }
         for lookup, title in self.lookup_choices:
             yield {
@@ -47,7 +49,7 @@ class DefaultListFilter(SimpleListFilter):
             }
 
 class StatusFilter(DefaultListFilter):
-    title = _('Estado ')
+    title = _(u'Estado ')
     parameter_name = 'status__exact'
 
     def lookups(self, request, model_admin):
@@ -71,7 +73,7 @@ class OrderAdminChangeList(ChangeList):
 class OrderAdmin(admin.ModelAdmin):
     list_filter = (StatusFilter, 'delivery_method')
     exclude = ('code', 'when_closed', 'when_delivered', 'reconciled')
-    search_fields = ('code', 'customer__first_name', 'customer__last_name')
+    search_fields = ('code', 'customer__name',)
     list_display = ('code', 'customer', 'get_contact_mode', 'delivery_method', 'get_order_total',
         'get_customer_address', 'get_customer_phone', 'delivery_date', 'when_create', 'status')
     inlines = [OrderItemInline]
@@ -85,17 +87,17 @@ class OrderAdmin(admin.ModelAdmin):
     def get_contact_mode(self, obj):
         return obj.customer.email if (obj.contact_mode == 100 and obj.customer.email) else obj.get_contact_mode_display()
     get_contact_mode.admin_order_field = 'customer'
-    get_contact_mode.short_description = _('Contacto')
+    get_contact_mode.short_description = _(u'Contacto')
 
     def get_customer_address(self, obj):
         return obj.customer.address
     get_customer_address.admin_order_field = 'customer'
-    get_customer_address.short_description = _('Dirección de entrega')
+    get_customer_address.short_description = _(u'Dirección de entrega')
 
     def get_customer_phone(self, obj):
         return obj.customer.phone
     get_customer_phone.admin_order_field = 'customer'
-    get_customer_phone.short_description = _('Teléfono de contacto')
+    get_customer_phone.short_description = _(u'Teléfono de contacto')
 
     def get_urls(self):
         urls = super(OrderAdmin, self).get_urls()
@@ -130,7 +132,7 @@ class OrderAdmin(admin.ModelAdmin):
                 results[item.product.pk][-1] += item.quantity
 
         return render_to_response(self.order_report_template, {
-                'title': _('Reporte de cantidades de producto'),
+                'title': _(u'Reporte de cantidades de producto'),
                 'result_headers': result_headers,
                 'results': results
             }, context_instance=RequestContext(request))
@@ -146,10 +148,10 @@ class OrderAdmin(admin.ModelAdmin):
                                     pk=delivery_method_id)
             pending_orders = pending_orders.filter(
                 delivery_method_id=delivery_method_id)
-            title_append = _(" para ") + '"' + delivery_method.name + '"'
+            title_append = _(u" para ") + '"' + delivery_method.name + '"'
 
         return render_to_response(self.order_print_template, {
-                'title': _('Ordenes a entregar') + title_append,
+                'title': _(u'Ordenes a entregar') + title_append,
                 'delivery_method': delivery_method,
                 'delivery_methods': delivery_methods,
                 'orders': pending_orders
@@ -186,7 +188,7 @@ class OrderAdmin(admin.ModelAdmin):
                 totals[4] += profit
 
         return render_to_response(self.order_balance_template, {
-                'title': _('Balance'),
+                'title': _(u'Balance'),
                 'results': results,
                 'totals': totals
             }, context_instance=RequestContext(request))
@@ -211,10 +213,10 @@ class OrderAdmin(admin.ModelAdmin):
     def reconcile_orders(self, request, queryset):
         self.change_orders_status(queryset, (300,400), 600)
 
-    close_orders.short_description = _("Cerrar pedidos")
-    deliver_orders.short_description = _("Marcar pedidos entregados")
-    balance_report.short_description = _("Balance de pedidos")
-    reconcile_orders.short_description = _("Conciliar pedidos")
+    close_orders.short_description = _(u"Cerrar pedidos")
+    deliver_orders.short_description = _(u"Marcar pedidos entregados")
+    balance_report.short_description = _(u"Balance de pedidos")
+    reconcile_orders.short_description = _(u"Conciliar pedidos")
 
     order_report_template = 'admin/products_report.html'
     order_print_template = 'admin/orders_print.html'

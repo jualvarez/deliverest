@@ -9,7 +9,7 @@ autocomplete_light.register(Price,
     search_fields=['product__name', 'product__description'],
     attrs={
         # This will set the input placeholder attribute:
-        'placeholder': _('Producto'),
+        'placeholder': _(u'Producto'),
         # This will set the yourlabs.Autocomplete.minimumCharacters
         # options, the naming conversion is handled by jQuery
         'data-autocomplete-minimum-characters': 2,

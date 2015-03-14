@@ -6,10 +6,10 @@ from delicontacts.models import Customer
 # This will generate a PersonAutocomplete class
 autocomplete_light.register(Customer,
     # Just like in ModelAdmin.search_fields
-    search_fields=['first_name', 'last_name'],
+    search_fields=['name','address'],
     attrs={
         # This will set the input placeholder attribute:
-        'placeholder': _('Nombre de cliente'),
+        'placeholder': _(u'Nombre de cliente'),
         # This will set the yourlabs.Autocomplete.minimumCharacters
         # options, the naming conversion is handled by jQuery
         'data-autocomplete-minimum-characters': 2,

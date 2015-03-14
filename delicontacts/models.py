@@ -1,42 +1,43 @@
+# -*- coding: utf-8 -*-
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from delidelivery.models import DeliveryMethod
 
 CONTACT_MODE_CHOICES = (
-        (100, _('E-mail')),
-        (200, _('Facebook')),
-        (300, _('Telefono')),
-        (400, _('Otro')),
+        (100, _(u'E-mail')),
+        (200, _(u'Facebook')),
+        (300, _(u'Telefono')),
+        (400, _(u'Otro')),
     )
 
 class Person(models.Model):
-    first_name = models.CharField(max_length=100, verbose_name=_('nombre'))
-    last_name = models.CharField(max_length=100, verbose_name=_('apellido'), blank=True)
-    email = models.EmailField(verbose_name=_('e-mail'), blank=True)
-    address = models.TextField(blank=True, verbose_name=_('dirección'))
+    name = models.CharField(max_length=100, verbose_name=_(u'nombre'))
+    email = models.EmailField(verbose_name=_(u'e-mail'), blank=True)
+    address = models.TextField(blank=True, verbose_name=_(u'dirección'))
     phone = models.CharField(max_length=200, blank=True,
-        verbose_name=_('teléfono'))
+        verbose_name=_(u'teléfono'))
 
     class Meta:
-        verbose_name = _('persona')
-        verbose_name_plural = _('personas')
-        ordering = ('first_name', 'last_name')
+        verbose_name = _(u'persona')
+        verbose_name_plural = _(u'personas')
+        ordering = ('name',)
 
     def __str__(self):
-        return "%s" % (self.first_name)
+        return "%s" % (self.name)
 
 
 class Customer(Person):
-    contact_mode = models.IntegerField(choices=CONTACT_MODE_CHOICES, default=100, verbose_name=_('Forma de contacto'))
+    contact_mode = models.IntegerField(choices=CONTACT_MODE_CHOICES, default=100, verbose_name=_(u'Forma de contacto'))
     prefered_delivery_method = models.ForeignKey(DeliveryMethod,
-        verbose_name=_('método de envio preferido'))
+        verbose_name=_(u'método de envio preferido'))
 
     class Meta:
-        verbose_name = _('cliente')
-        verbose_name_plural = _('clientes')
+        verbose_name = _(u'cliente')
+        verbose_name_plural = _(u'clientes')
 
     def __str__(self):
-        return "%s" % (self.first_name)
+        return "%s <%s> (%s)" % (self.name, self.email if self.email else u'sin email', self.address)
 
     def delivery_method_name(self):
         return self.prefered_delivery_method.name
