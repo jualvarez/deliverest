@@ -25,6 +25,32 @@ UNIT_CHOICES_PLURAL = {
     }
 
 
+class Category(models.Model):
+    name = models.CharField(verbose_name=_(u'nombre'), max_length=150, unique=True)
+    parent = models.ForeignKey('self', verbose_name=(u'categoría padre'), related_name='category', null=True, blank=True)
+
+    color = models.CharField(verbose_name=_(u'color'), help_text=_(u'color de identificación de la categoría'), max_length=8, null=True, blank=True)
+    children_color = models.CharField(verbose_name=_(u'color de los hijos'), help_text=_(u'color de identificación para los hijos de esta categoría'), max_length=8, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _(u'categoría')
+        verbose_name_plural = _(u'categorías')
+
+    def parent_crumbs(self, instance=None, crumb_str=None):
+        if instance is None:
+            instance = self
+            crumb_str = self.name
+
+        if instance.parent is not None:
+            crumb_str = "%s > %s" % (instance.parent.name, crumb_str)
+            return self.parent_crumbs(instance.parent, crumb_str)
+
+        else:
+            return crumb_str
+
+    def __str__(self):
+        return self.parent_crumbs()
+
 class Presentation(models.Model):
 
     name = models.CharField(max_length=150, verbose_name=_(u'nombre'))
@@ -54,6 +80,8 @@ class Product(models.Model):
     presentations = models.ManyToManyField(Presentation, through='Price')
     provider = models.ForeignKey('Provider', blank=True, null=True)
 
+    category = models.ForeignKey('Category', verbose_name=_(u'categoría'), null=True, blank=True)
+
     class Meta:
         verbose_name = _(u'producto')
         verbose_name_plural = _(u'productos')
@@ -64,7 +92,7 @@ class Product(models.Model):
 CURRENCY_CHOICE = (
     ('ARS', _(u'Peso argentino')),
     ('USD', _(u'Dolar'))
-    )
+)
 
 
 class Price(models.Model):

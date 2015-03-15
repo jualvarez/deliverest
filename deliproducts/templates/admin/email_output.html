@@ -1,0 +1,84 @@
+<table style="width:600px" border="0" cellspacing="0" align="center">
+<tbody>
+{% comment %} HEADER {% endcomment %}
+<tr>
+<td colspan="3" bgcolor="#b6c19b">
+<div align="center"><img src="?ui=2&amp;ik=c3316a840b&amp;view=fimg&amp;th=14c0ec4dd75e6bf8&amp;attid=0.1.3&amp;disp=emb&amp;attbid=ANGjdJ_8Bqc5l4X4OuhLVL8w91XNI7hu5MqJIyIMfFl94QN7xIKoY3YhbF1p1TQBppHNsD1vP3RhEyEyWwE-X1d-9k0QWPfLB7raCRYZMM2FPg6PnvHbA8KNP7xPOeA&amp;sz=w1200-h132&amp;ats=1426362024336&amp;rm=14c0ec4dd75e6bf8&amp;zw&amp;atsh=1" alt="top.png" width="600" height="66"></div>
+</td>
+</tr>
+<tr>
+<td align="center" valign="middle" bgcolor="#b6c19b" width="201" height="118">
+<div align="center"><img src="?ui=2&amp;ik=c3316a840b&amp;view=fimg&amp;th=14c0ec4dd75e6bf8&amp;attid=0.1.1&amp;disp=emb&amp;attbid=ANGjdJ970aNRA1PNrz7NEl5x4eSvjbSspHzeqysWF0l4vVYbOE2EQUfrjzemdJMdMhSHQzr-gnVTE_VyIWjDvo5P1jLqdYEWDHdCpjtXawjX0Oezbu2b-Cdp4-LHK3Q&amp;sz=w400&amp;ats=1426362024336&amp;rm=14c0ec4dd75e6bf8&amp;zw&amp;atsh=1" alt="logo.png" width="200"></div>
+</td>
+<td align="center" valign="middle" bgcolor="#b6c19b" width="250">
+<div align="center">
+<p style="color:#274e13;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:18px"><strong>DÍA DE ENTREGA </strong>ALIMENTOS ECOLÓGICOS.</p>
+</div>
+<p style="color:#274e13;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:13px"><strong><strong>{% for delivery_date in delivery_dates %}{{ delivery_date|date:"l j \d\e F"|upper }}{% if not forloop.last %}, {% endif %}{% endfor %} SEGÚN ZONA</strong></strong></p>
+</td>
+<td align="center" valign="middle" bgcolor="#b6c19b" width="149">
+<div align="center"><img src="?ui=2&amp;ik=c3316a840b&amp;view=fimg&amp;th=14c0ec4dd75e6bf8&amp;attid=0.1.2&amp;disp=emb&amp;attbid=ANGjdJ-TKjGUIEWjYkwCfVzYeG21KlZduKlkGbMrQmtJZIuLwI9E-TZuKxDIB4NeorgavpDi5HLtH6F2vo_N1hBrMQYVqcJ_qaHlCJTJ7qc8GusHXVki-Vrx5OJhGzY&amp;sz=w222&amp;ats=1426362024337&amp;rm=14c0ec4dd75e6bf8&amp;zw&amp;atsh=1" alt="natural.png" width="111"></div>
+</td>
+</tr>
+<tr>
+<td colspan="3" bgcolor="#b6c19b">
+<div align="center"><span style="color:#741b47;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:18px">Se reciben los pedidos hasta: <span style="color:#741b47;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:13px"><strong> {{ closing_date|date:"l j \d\e F"|upper }}<br></strong></span><br></span></div>
+</td>
+</tr>
+<tr>
+<td colspan="3" bgcolor="#a3b181">
+<div align="center">
+<p style="color:#274e13;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:14px"><strong><em>Sugerimos una compra mínima de $150 pero no es excluyente <br> - Costo del envío ${{ delivery_cost }} -</em></strong></p>
+</div>
+</td>
+</tr>
+{% comment %} END HEADER {% endcomment %}
+
+{% comment %} CONTENT {% endcomment %}
+{% for category in categories %}
+<tr>
+<td colspan="3" align="center" valign="middle" bgcolor="#b41b62">
+<p style="color:#ecd9a8;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:18px">{{ category }}</p>
+</td>
+  {% for prod_cat, prods in products.items %}
+  {% if prod_cat == category %}
+    {% for product in prods %}
+    <tr>
+    <td style="padding:7px;color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:16px" colspan="2" valign="middle" bgcolor="#a3b181">{{ product.product.name }} ({{ product.presentation }})</td>
+    <td style="padding:7px;color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:16px" valign="top" bgcolor="#a3b181">$ {{ product.sell_price }}</td>
+    </tr>
+    {% endfor %}
+  {% endif %}
+  {% endfor %}
+{% endfor %}
+{% comment %} END CONTENT {% endcomment %}
+
+{% comment %} FOOTER {% endcomment %}
+<tr>
+<td colspan="3" bgcolor="#a3b181">
+<div align="center">
+<p style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:16px"><strong>PEDIDOS POR INBOX O A <a href="mailto:pedidos@organicosdemitierra.com" target="_blank">pedidos@organicosdemitierra.<WBR>com</a></strong></p>
+<p style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:19px">f: <a href="https://www.facebook.com/organicosdemitierra?fref=ts" target="_blank">Organicos de mi Tierra </a></p>
+</div>
+</td>
+</tr>
+<tr>
+<td colspan="3" align="center" valign="middle" bgcolor="#006600">
+<p style="color:#ecd9a8;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:16px"><strong>DATOS QUE NECESITAMOS: NOMBRE, TELÉFONO, DIRECCIÓN.</strong></p>
+</td>
+</tr>
+<tr>
+<td colspan="3" bgcolor="#a3b181">
+<div align="center">
+<p style="color:#274e13;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:16px"><br><em><strong>:: Implementamos</strong></em> también <em><strong>NODOS</strong></em> para que retires tu pedido el miércoles en Rafael Nuñez al 5600 y Jueves en Güemes. <strong>Agradecemos a quienes puedan retirar en los NODOS ::<br><br></strong><em><strong>--.Se agradece devolver las bolsas de las verduras, la cooperativa puede reciclarlas.--</strong></em></p>
+</div>
+</td>
+</tr>
+<tr>
+<td colspan="3" align="center" valign="middle" bgcolor="#006600">
+<p style="color:#ecd9a8;font-family:Geneva,Arial,Helvetica,sans-serif;text-align:center;font-size:16px"><strong>:: Órganicos de Mi Tierra ::</strong></p><font color=#888888>
+</font></td><font color=#888888>
+</font></tr><font color=#888888>
+</font></tbody><font color=#888888>
+</font></table>
+{% comment %} END FOOTER {% endcomment %}
