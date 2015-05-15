@@ -71,10 +71,10 @@ class OrderAdminChangeList(ChangeList):
             self.order_sum = self.order_sum + order.get_order_total()
 
 class OrderAdmin(admin.ModelAdmin):
-    list_filter = (StatusFilter, 'delivery_method')
+    list_filter = (StatusFilter, 'delivery_method', 'delivery_date', 'when_create')
     exclude = ('code', 'when_closed', 'when_delivered', 'reconciled')
-    search_fields = ('code', 'customer__name',)
-    list_display = ('code', 'customer', 'get_contact_mode', 'delivery_method', 'get_order_total',
+    search_fields = ('code', 'customer__name')
+    list_display =  ('code', 'customer', 'get_contact_mode', 'delivery_method', 'get_order_total',
         'get_customer_address', 'get_customer_phone', 'delivery_date', 'when_create', 'status')
     inlines = [OrderItemInline]
     actions = ['close_orders', 'deliver_orders', 'reconcile_orders', 'balance_report']
