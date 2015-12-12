@@ -1,0 +1,28 @@
+{% extends "organicos_base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+<h2>{{ form.instance.name }}</h2>
+<h3>Actualizá la información de tu cuenta</h3>
+<form method="post">
+{% csrf_token %}
+{% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-info">
+            {% bootstrap_icon "star" %} Guardar
+        </button>
+    {% endbuttons %}
+</form>
+</div>
+
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    $(function(){
+    });
+</script>
+{% endblock %}

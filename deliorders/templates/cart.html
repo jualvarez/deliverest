@@ -1,0 +1,132 @@
+{% extends "organicos_base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% if empty_cart %}
+        <h2>Tu carrito está vacío.</h2>
+        {% else %}
+        <h2>El detalle de tu pedido ({{ order.code }})</h2>
+
+        {% if tf_closed and order.status == 10 %}
+        <p class="lead"><strong>Nota importante: </strong>los pedidos para la próxima entrega ya están cerrados. Si confirmás ahora, tu pedido se entregará entre el {{ tf_delivery_start|date:"d \d\e F"|lower }} y el {{ tf_delivery_end|date:"d \d\e F"|lower }} dependiendo de la forma de envío elegida.</p>
+        {% endif %}
+
+        {% if order.status == 10 %}
+        <form method="post">
+            {% csrf_token %}
+            {% else %}
+            <p class="lead">Tu pedido está confirmado. ¡Lo estamos preparando!</p>
+            {% endif %}
+            <table class="table table-responsive">
+                <thead>
+                    <th width="3%"></th>
+                    <th width="10%">Cantidad</th>
+                    <th>Producto</th>
+                    <th>Presentación</th>
+                    <th width="10%" class="cart-price">Unitario</th>
+                    <th width="10%" class="cart-price">Total</th>
+                </thead>
+                <tbody>
+                    {% for item in order.orderitem_set.all %}
+                    <tr>
+                        <td id="{{ item.id }}">{% if order.status == 10 %}<a href="#" onclick="removeItem(event)"><span class="glyphicon glyphicon-trash"></span></a>{% endif %}</td>
+                        <td>{% if order.status == 10 %}<input type="number" onchange="checkQtyValue(this)" class="form-control input-sm" name="modify_{{ item.id }}" value="{{ item.quantity }}" />{% else %}{{ item.quantity }}{% endif %}</td>
+                        <td>{{ item.product.product }}</td>
+                        <td>{{ item.product.presentation }}</td>
+                        <td align="right" class="cart-price">$&nbsp;{{ item.sell_price|floatformat:2 }}</td>
+                        <td align="right" class="cart-price">$&nbsp;{{ item.item_total|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td colspan="4" align="right" class="cart-price"><strong>Total</strong></td>
+                        <td align="right" class="cart-price"><strong>$ {{ order.get_order_total|floatformat:2 }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            {% if order.status == 10 %}
+            <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Modificar pedido</button>
+        </form>
+        {% endif %}
+    </div>
+    {% if order.status == 10 %}
+    <form method="post" action="{% url 'confirm_cart' %}">
+        <div class="row">
+            {% csrf_token %}
+            <div class="col-md-8">
+                <h2>Detalles de la entrega</h2>
+                <div class="form-group">
+                    <label for="delivery_method">Método de entrega</label>
+                    <select class="form-control" id="delivery_method" name="delivery_method">
+                        {% for dm in delivery_methods %}
+                        <option value="{{dm.id}}" {% if order.delivery_method_id == dm.id %}selected{% endif %}>{{ dm.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="address">Dirección de envío</label>
+                    <textarea class="form-control" id="delivery_address" name="delivery_address">{{ customer.address }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="comments">Comentarios y pedidos especiales</label>
+                    <textarea class="form-control" id="comments" name="comments">{{ order.comments }}</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <button type="submit" class="btn btn-primary cart-price"><span class="glyphicon glyphicon-ok"></span>&nbsp;Finalizar la compra</button>
+        </div>
+    </form>
+    {% else %}
+    <dl class="dl-horizontal">
+        <dt>Forma de entrega</dt>
+        <dd>{{ order.delivery_method }}</dd>
+        <dt>Dirección de {% if order.delivery_method.is_delivery %}envío{% else %}recogida{% endif %}</dt>
+        <dd>{% if order.delivery_method.is_delivery %}{{ order.delivery_address }}{% else %}{{ order.delivery_method.pickup_address }}{% endif %}</dd>
+        <dt>Fecha de entrega</dt>
+        <dd>{{ order.delivery_date|date:"l d \d\e F \d\e Y"|lower|capfirst }}</dd>
+        <dt>Hora de entrega</dt>
+        <dd>{{ order.delivery_method.delivery_time|capfirst }}</dd>
+    </dl>
+    <form action="{% url 'confirm_cart' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="modify_order" value="1" />
+        <button type="submit" {% if not order.user_can_open %}disabled{% endif %} class="btn btn-info">Modificar pedido</button>
+        {% if not order.user_can_open %}<p><small>Tu pedido está siendo procesado. Recibirás nuestra confirmación en breves momentos.</small></p>{% endif %}
+    </form>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% if order.status == 10 %}
+<script type="text/javascript">
+    $(function(){
+    });
+    function removeItem(ev) {
+        ev.preventDefault();
+        var $inpt = $(ev.target).closest('tr').find('input');
+        $inpt.val(0);
+        checkQtyValue($inpt);
+    }
+    function checkQtyValue(inpt) {
+        $('.cart-price').fadeOut(800);
+        elAlert = $('<div class="alert alert-warning alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Modificaste el pedido. Hacé click en <strong>Modificar pedido</strong> para actualizar los precios.</div>');
+        elAlert.hide();
+        var body = $('body');
+        body.append(elAlert);
+        elAlert.fadeIn(800);
+
+        if (parseFloat($(inpt).val()) > 0) {
+            $(inpt).closest('tr').removeClass('removed');
+        }
+        else {
+            $(inpt).closest('tr').addClass('removed');
+        }
+    }
+</script>
+{% endif %}
+{% endblock %}

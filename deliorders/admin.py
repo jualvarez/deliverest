@@ -205,7 +205,7 @@ class OrderAdmin(admin.ModelAdmin):
                 order.save()
 
     def close_orders(self, request, queryset):
-        self.change_orders_status(queryset, 100, 200)
+        self.change_orders_status(queryset, (20,100), 200)
 
     def deliver_orders(self, request, queryset):
         self.change_orders_status(queryset, 200, 300)

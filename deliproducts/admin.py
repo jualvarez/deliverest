@@ -55,7 +55,15 @@ class ProductAdmin(admin.ModelAdmin):
         actions = super(ProductAdmin, self).get_actions(request)
         category_actions_list = [ApplyProductCategory(cat) for cat in Category.objects.all()]
         category_actions = dict((action.name, (action, action.name, action.short_description)) for action in category_actions_list)
+        # Other actions
+        def add_as_featured_product(self, request, queryset):
+            for product in queryset:
+                product.featured = True
+                product.save()
+        additional_actions = {}
+        additional_actions['add_as_featured_product'] = (add_as_featured_product, 'add_as_featured_product', _('Agregar como producto destacado'))
         actions.update(category_actions)
+        actions.update(additional_actions)
         return actions
 
 

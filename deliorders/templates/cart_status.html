@@ -1,0 +1,19 @@
+{% if order.orderitem_set.all %}
+<h4><a href="{% url 'shopping_cart' %}"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;Tu lista</a></h4>
+{% endif %}
+<ul class="list-group cart-list" id="cart-status">
+    {% for item in order.orderitem_set.all %}
+    <form method="post">
+    <li class="list-group-item row">
+    <div class="col-xs-10">
+    <input type="hidden" name="price_id" value="{{ item.product.id }}" />
+    <a href="{% url 'shopping_cart' %}#{{ item.id }}">{{ item.quantity }} {%if item.quantity == 1%}{{ item.product.presentation.name|lower }}{% else %}{{ item.product.presentation.plural_name|lower }}{% endif %} de <strong>{{ item.product.product.name|lower }}</strong></a>
+    </div>
+    <div class="col-xs-2 pull-right">
+    <a href="#" onclick="btnAddToCart(event, 1)"><span class="glyphicon glyphicon-plus-sign"></span></a>
+    <a href="#" onclick="btnAddToCart(event, -1)"><span class="glyphicon glyphicon-minus-sign"></span></a>
+    </div>
+    </li>
+    </form>
+    {% endfor %}
+</ul>
