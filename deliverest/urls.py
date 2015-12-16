@@ -30,9 +30,6 @@ urlpatterns = patterns(
 
     url(r'^cuenta/$',
         'delicontacts.views.account_settings', name="account_settings"),
-    url(r'^nueva-cuenta/$',
-        'delicontacts.views.new_account_settings',
-        name="new_account_settings"),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^autocomplete/', include('autocomplete_light.urls')),
@@ -41,6 +38,6 @@ urlpatterns = patterns(
     url('^', include('django.contrib.auth.urls')),
 
     # Social login related
-    url(r'^logout/$', 'deliorders.views.logout'),
-    url(r'', include('social.apps.django_app.urls', namespace='social'))
+    url(r'^accounts/', include('allauth.urls')),
+    #url(r'', include('social.apps.django_app.urls', namespace='social'))
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

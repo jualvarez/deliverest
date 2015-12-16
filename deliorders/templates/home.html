@@ -34,7 +34,7 @@
             </div>
         </div>
     {% endif %}
-    <div class="container">
+    <div class="container {% if category_browse %}container-bar{% endif %}">
     <div class="row">
 
         <div class="col-md-3">
@@ -44,7 +44,7 @@
                 <a href="{% url 'category' category=category.slug %}" class="list-group-item">{{ category.name }}</a>
                 {% endfor %}
             </div>
-            <div id="cart-status">
+            <div class="hidden-sm hidden-xs" id="cart-status">
             </div>
         </div>
 
@@ -80,6 +80,9 @@
         </div>
 
     </div>
+    <div class="row container">
+        <div class="visible-sm-block visible-xs-block col-sm-12 col-xs-12" id="cart-status-sm"></div>
+    </div>
     </div>
     {% endblock %}
 
@@ -94,6 +97,8 @@
 
     function updateCartStatus() {
         var $cartStatus = $('#cart-status');
+        if (!$cartStatus.is(':visible'))
+            $cartStatus = $('#cart-status-sm');
         $cartStatus.fadeOut(100);
         $.ajax({
             url: '{% url "cart_status" %}',

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="container">
+<div class="container container-bar">
     <div class="row">
         {% if empty_cart %}
         <h2>Tu carrito está vacío.</h2>
@@ -19,33 +19,35 @@
             {% else %}
             <p class="lead">Tu pedido está confirmado. ¡Lo estamos preparando!</p>
             {% endif %}
-            <table class="table table-responsive">
-                <thead>
-                    <th width="3%"></th>
-                    <th width="10%">Cantidad</th>
-                    <th>Producto</th>
-                    <th>Presentación</th>
-                    <th width="10%" class="cart-price">Unitario</th>
-                    <th width="10%" class="cart-price">Total</th>
-                </thead>
-                <tbody>
-                    {% for item in order.orderitem_set.all %}
-                    <tr>
-                        <td id="{{ item.id }}">{% if order.status == 10 %}<a href="#" onclick="removeItem(event)"><span class="glyphicon glyphicon-trash"></span></a>{% endif %}</td>
-                        <td>{% if order.status == 10 %}<input type="number" onchange="checkQtyValue(this)" class="form-control input-sm" name="modify_{{ item.id }}" value="{{ item.quantity }}" />{% else %}{{ item.quantity }}{% endif %}</td>
-                        <td>{{ item.product.product }}</td>
-                        <td>{{ item.product.presentation }}</td>
-                        <td align="right" class="cart-price">$&nbsp;{{ item.sell_price|floatformat:2 }}</td>
-                        <td align="right" class="cart-price">$&nbsp;{{ item.item_total|floatformat:2 }}</td>
-                    </tr>
-                    {% endfor %}
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td colspan="4" align="right" class="cart-price"><strong>Total</strong></td>
-                        <td align="right" class="cart-price"><strong>$ {{ order.get_order_total|floatformat:2 }}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <th width="3%"></th>
+                        <th width="10%">Cantidad</th>
+                        <th>Producto</th>
+                        <th>Presentación</th>
+                        <th width="10%" class="cart-price">Unitario</th>
+                        <th width="10%" class="cart-price">Total</th>
+                    </thead>
+                    <tbody>
+                        {% for item in order.orderitem_set.all %}
+                        <tr>
+                            <td id="{{ item.id }}">{% if order.status == 10 %}<a href="#" onclick="removeItem(event)"><span class="glyphicon glyphicon-trash"></span></a>{% endif %}</td>
+                            <td>{% if order.status == 10 %}<input type="number" onchange="checkQtyValue(this)" class="form-control input-sm" name="modify_{{ item.id }}" value="{{ item.quantity }}" />{% else %}{{ item.quantity }}{% endif %}</td>
+                            <td>{{ item.product.product }}</td>
+                            <td>{{ item.product.presentation }}</td>
+                            <td align="right" class="cart-price">$&nbsp;{{ item.sell_price|floatformat:2 }}</td>
+                            <td align="right" class="cart-price">$&nbsp;{{ item.item_total|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="4" align="right" class="cart-price"><strong>Total</strong></td>
+                            <td align="right" class="cart-price"><strong>$&nbsp;{{ order.get_order_total|floatformat:2 }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             {% if order.status == 10 %}
             <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Modificar pedido</button>
         </form>

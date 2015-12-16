@@ -18,7 +18,8 @@ def check_timeframe(request):
         if ret['tf_closed']:
             # Check if user already confirmed timeframe for this week
             if not hasattr(request.user, 'customer'):
-                return {}
+                ret['tf_confirmed'] = True
+                return ret
             customer = request.user.customer
             when_last_confirmed = customer.last_confirmed_tf or datetime.date(2015,1,1)
 

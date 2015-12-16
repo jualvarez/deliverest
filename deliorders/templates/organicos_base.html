@@ -1,3 +1,4 @@
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -40,7 +41,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">Orgánicos de mi Tierra</a>
+                <a class="navbar-brand" href="/"><span class="hidden-sm">Orgánicos de mi Tierra</span><span class="visible-sm-block">OdmT</span></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -73,7 +74,7 @@
                         <a href="{% url 'shopping_cart' %}"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;Carrito</a>
                     </li>
                     <li>
-                        <a href="{% url 'deliorders.views.logout' %}">Desconectar</a>
+                        <a href="#" onclick="btnLogoutDialog(event)">Desconectar</a>
                     </li>
                 {% else %}
                     <li>
@@ -141,7 +142,7 @@
                     <div class="omb_login">
                         <div class="row omb_socialButtons">
                             <div class="col-xs-6 col-xs-offset-3">
-                                <a href="{% url "social:begin" backend='facebook' %}" class="input-group btn btn-lg btn-block omb_btn-facebook">
+                                <a href="{% provider_login_url "facebook" process="login" %}" class="input-group btn btn-lg btn-block omb_btn-facebook">
                                     <i class="fa fa-facebook"></i>
                                     <span>&nbsp;<span class="hidden-xs">Acceder con </span>facebook</span>
                                 </a>
@@ -178,6 +179,13 @@
                                         {% endfor %}
                                     </div>
 
+                                    <div class="col-xs-12">
+                                        <a href="{% url 'account_reset_password' %}">¿Olvidó su contraseña?</a>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <a href="{% url 'account_signup' %}">Regístrese</a>
+                                    </div>
+
                                     <div class="col-xs-6">
                                         <button class="btn btn-lg btn-primary btn-block" type="submit">Acceder</button>
                                     </div>
@@ -194,13 +202,13 @@
     </div><!-- /.modal -->
     {% endif %}
 
-    <div class="modal fade" id="addproduct-modal">
+    <div class="modal fade" id="custom-modal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Agregar producto</h4>
+            <h4 class="modal-title"></h4>
           </div>
-          <div class="modal-body" id="addDialogContent">
+          <div class="modal-body">
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -258,7 +266,10 @@
       e.preventDefault();
 
       var btn = $(event.target);
-      var priceId = btn.closest('form').find('[name=price_id]').val();
+      var price = btn.closest('form').find('[name=price_id]')
+      if (price.length > 1)
+        price = price.filter(':checked')
+      var priceId = price.val();
       var inptQty = btn.closest('form').find('[name=quantity]');
       var quantity = parseFloat(qty) || inptQty.val();
       addToCart(priceId, quantity)
@@ -271,7 +282,7 @@
         if (e !== undefined)
             e.preventDefault();
 
-        $('#addproduct-modal').modal('hide');
+        $('#custom-modal').modal('hide');
         $.ajax({
             url: '{% url "add_dialog" %}',
             data: {
@@ -279,8 +290,24 @@
             }
         })
         .then(function(dHtml) {
-            $('#addDialogContent').html(dHtml);
-            $('#addproduct-modal').modal('show');
+            $('#custom-modal .modal-title').html("Agregar producto");
+            $('#custom-modal .modal-body').html(dHtml);
+            $('#custom-modal').modal('show');
+        })
+    }
+
+    function btnLogoutDialog(e) {
+        if (e !== undefined)
+            e.preventDefault();
+
+        $('#custom-modal').modal('hide');
+        $.ajax({
+            url: '{% url "account_logout" %}'
+        })
+        .then(function(dHtml) {
+            $('#custom-modal .modal-title').html("Cerrar sesión");
+            $('#custom-modal .modal-body').html(dHtml);
+            $('#custom-modal').modal('show');
         })
     }
 

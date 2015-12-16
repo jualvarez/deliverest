@@ -126,8 +126,7 @@ class Product(models.Model):
 
     name = models.CharField(
         max_length=200,
-        verbose_name=_(u'nombre'),
-        unique=True)
+        verbose_name=_(u'nombre'))
     description = models.CharField(
         max_length=500,
         verbose_name=_(u'descripción'))

@@ -1,0 +1,24 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block title %}{% trans "Orgánicos de mi Tierra :: Regístrese" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+	<h1>{% trans "Regístrese" %}</h1>
+
+	<p>{% blocktrans %}¿Ya tiene una cuenta? Por favor <a data-toggle="modal" data-target="#login-modal">inicie sesión</a>.{% endblocktrans %}</p>
+
+	<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+	  {% csrf_token %}
+	  {% bootstrap_form form %}
+	  {% if redirect_field_value %}
+	  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+	  {% endif %}
+	  <button class="btn btn-primary" type="submit">{% trans "Regístrese" %}</button>
+	</form>
+</div>
+
+{% endblock %}
