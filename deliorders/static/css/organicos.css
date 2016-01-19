@@ -57,6 +57,10 @@ a,a:focus, a:hover {
 	color: #f5ead4;
 }
 
+.typeahead.dropdown-menu {
+	min-width:372px !important;
+}
+
 .cart-list .list-group-item {
 	background-color: #FFFFFF;
 }
