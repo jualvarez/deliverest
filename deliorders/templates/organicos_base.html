@@ -30,6 +30,7 @@
 </head>
 
 <body>
+    <div class="alert-wrapper" id="alert-wrapper"></div>
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container-fluid">
@@ -323,11 +324,10 @@
         });
 
         jqProm.then(function(ret){
-            if (ret.success) {
+            if (ret.success)
                 elAlert = $('<div id="cart-success" class="alert alert-success alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>¡Listo!</strong> '+ret.message+'</div>');
-            }
             else
-            elAlert = $('<div id="cart-success" class="alert alert-warning alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+ret.error+'</div>');
+                elAlert = $('<div id="cart-success" class="alert alert-warning alert-dismissible alert-fixed"><button type="button" class="close" data-dismiss="alert" aria-label="Close" role="alert"><span aria-hidden="true">&times;</span></button>'+ret.error+'</div>');
         })
         .fail(function(){
             elAlert = $('<div id="cart-success" class="alert alert-danger alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Disculpanos, algo salió mal y no pudimos agregar el producto. Por favor intentá de nuevo mas tarde.</div>');
@@ -341,8 +341,9 @@
                 elAlert.alert('close');
             }
             elAlert.hide();
-            var body = $('body');
-            body.append(elAlert);
+            var aWrapper = $('#alert-wrapper');
+            aWrapper.children().alert('close');
+            aWrapper.prepend(elAlert);
             elAlert.fadeIn(800);
             setTimeout(closeAlert, 5000);
         });

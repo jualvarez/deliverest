@@ -51,6 +51,11 @@ a,a:focus, a:hover {
 	color: #f5ead4;
 }
 
+.btn-info.disabled, .btn-info.disabled.active, .btn-info.disabled.focus, .btn-info.disabled:active, .btn-info.disabled:focus, .btn-info.disabled:hover, .btn-info[disabled], .btn-info[disabled].active, .btn-info[disabled].focus, .btn-info[disabled]:active, .btn-info[disabled]:focus, .btn-info[disabled]:hover, fieldset[disabled] .btn-info, fieldset[disabled] .btn-info.active, fieldset[disabled] .btn-info.focus, fieldset[disabled] .btn-info:active, fieldset[disabled] .btn-info:focus, fieldset[disabled] .btn-info:hover {
+    background-color: #a0446f;
+    border-color: #972159;
+}
+
 .btn-info.active, .btn-info.focus, .btn-info:active, .btn-info:focus, .btn-info:hover, .open>.dropdown-toggle.btn-info {
 	background-color: #c22e73;
 	border-color: #972159;
@@ -66,10 +71,17 @@ a,a:focus, a:hover {
 }
 
 .alert-fixed {
-	position: fixed;
-	top:10px;
-	right: 10px;
-	z-index: 5000;
+	width: 50%;
+	min-width: 300px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.alert-wrapper {
+    width: 100%;
+    position: fixed;
+    z-index: 5000;
+    top: 20px;
 }
 
 tr.removed {

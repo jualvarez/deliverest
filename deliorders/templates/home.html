@@ -56,7 +56,7 @@
                     <div class="thumbnail">
                         <!-- <img src="http://placehold.it/320x150" alt=""> -->
                         <div class="caption-full">
-                            <h4><a href="#">{{ product.name }}</a></h4>
+                            <h4><a href="#" onclick="btnAddProductDialog({{ product.id }}, event)">{{ product.name }}</a></h4>
                             <p>{{ product.description }}</p>
                             <form method="post" action="{% url 'shopping_cart' %}" class="form-inline">
                                 {% csrf_token %}

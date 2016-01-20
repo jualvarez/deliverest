@@ -49,7 +49,7 @@
                 </table>
             </div>
             {% if order.status == 10 %}
-            <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Modificar pedido</button>
+            <button type="submit" id="update-button" disabled class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Modificar pedido</button>
         </form>
         {% endif %}
     </div>
@@ -116,11 +116,15 @@
     }
     function checkQtyValue(inpt) {
         $('.cart-price').fadeOut(800);
+        $('#update-button').attr('disabled', false);
         elAlert = $('<div class="alert alert-warning alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Modificaste el pedido. Hacé click en <strong>Modificar pedido</strong> para actualizar los precios.</div>');
-        elAlert.hide();
-        var body = $('body');
-        body.append(elAlert);
+        var aWrapper = $('#alert-wrapper');
+        aWrapper.children().alert('close');
+        aWrapper.append(elAlert);
         elAlert.fadeIn(800);
+        setTimeout(function closeAlert(){
+            elAlert.alert('close');
+        }, 5000);
 
         if (parseFloat($(inpt).val()) > 0) {
             $(inpt).closest('tr').removeClass('removed');
