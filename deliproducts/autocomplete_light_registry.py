@@ -4,7 +4,7 @@ import autocomplete_light
 from deliproducts.models import Price
 
 # This will generate a PersonAutocomplete class
-autocomplete_light.register(Price,
+autocomplete_light.registry.register(Price,
     # Just like in ModelAdmin.search_fields
     search_fields=['product__name', 'product__description'],
     attrs={

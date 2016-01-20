@@ -1,35 +1,38 @@
 
 """Deliverest URL definitions."""
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
-urlpatterns = patterns(
-    '',
-    url(r'^$', 'deliorders.views.home',
+from deliorders.views import home, add_to_cart, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
+from deliproducts.views import search_ajax
+from delicontacts.views import account_settings
+
+urlpatterns = [
+    url(r'^$', home,
         name="home"),
     url(r'^categoria/(?P<category>[^/]+)/$',
-        'deliorders.views.home', name="category"),
+        home, name="category"),
     url(r'^agregar/$',
-        'deliorders.views.add_to_cart', name="add_to_cart"),
+        add_to_cart, name="add_to_cart"),
     url(r'^agregar-producto/$',
-        'deliorders.views.add_dialog', name="add_dialog"),
+        add_dialog, name="add_dialog"),
     url(r'^carrito/$',
-        'deliorders.views.cart', name="shopping_cart"),
+        cart, name="shopping_cart"),
     url(r'^confirmar-carrito/$',
-        'deliorders.views.confirm_cart', name="confirm_cart"),
+        confirm_cart, name="confirm_cart"),
     url(r'^estado-carrito/$',
-        'deliorders.views.cart_status', name="cart_status"),
+        cart_status, name="cart_status"),
     url(r'^confirm-tf/$',
-        'deliorders.views.user_confirmed_tf', name="confirm_tf"),
+        user_confirmed_tf, name="confirm_tf"),
 
     url(r'^buscar/$',
-        'deliproducts.views.search_ajax', name="product_search_ajax"),
+        search_ajax, name="product_search_ajax"),
 
     url(r'^cuenta/$',
-        'delicontacts.views.account_settings', name="account_settings"),
+        account_settings, name="account_settings"),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^autocomplete/', include('autocomplete_light.urls')),
@@ -40,4 +43,4 @@ urlpatterns = patterns(
     # Social login related
     url(r'^accounts/', include('allauth.urls')),
     #url(r'', include('social.apps.django_app.urls', namespace='social'))
-) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

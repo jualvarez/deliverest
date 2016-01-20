@@ -7,7 +7,7 @@ from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Q, Sum
 from django.template import RequestContext
-from django.conf.urls import url, patterns
+from django.conf.urls import url
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
@@ -61,7 +61,7 @@ class StatusFilter(DefaultListFilter):
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    form = autocomplete_light.modelform_factory(OrderItem)
+    form = autocomplete_light.modelform_factory(OrderItem, fields='__all__')
 
 class OrderAdminChangeList(ChangeList):
     def get_results(self, *args, **kwargs):
@@ -79,7 +79,7 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     actions = ['close_orders', 'deliver_orders', 'reconcile_orders', 'balance_report']
 
-    form = autocomplete_light.modelform_factory(Order)
+    form = autocomplete_light.modelform_factory(Order, fields='__all__')
 
     def get_changelist(self, request):
         return OrderAdminChangeList
@@ -101,11 +101,11 @@ class OrderAdmin(admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(OrderAdmin, self).get_urls()
-        my_urls = patterns('',
+        my_urls = [
             url(r'^products_report/$', self.products_report, name='admin_order_products_report'),
             url(r'^print_orders/$', self.print_orders, name='admin_order_print'),
             url(r'^print_orders/(?P<delivery_method_id>[0-9])/$', self.print_orders, name='admin_order_print'),
-        )
+        ]
         return my_urls + urls
 
     def products_report(self, request):

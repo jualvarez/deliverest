@@ -11,9 +11,6 @@ from django.contrib.auth import logout as auth_logout, login
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
 
-from social.backends.utils import load_backends
-from social.apps.django_app.utils import psa
-
 from deliverest.decorators import render_to
 from deliproducts.models import Category, Product, Price
 from deliorders.models import Order, OrderItem
@@ -42,7 +39,6 @@ def home(request, *args, **kwargs):
         context['category_browse'] = True
     else:
         context['products'] = Product.objects.filter(featured=True)
-    context['available_backends'] = load_backends(settings.AUTHENTICATION_BACKENDS)
 
     return context
 

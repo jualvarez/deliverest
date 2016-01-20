@@ -4,7 +4,7 @@ import autocomplete_light
 from delicontacts.models import Customer
 
 # This will generate a PersonAutocomplete class
-autocomplete_light.register(Customer,
+autocomplete_light.registry.register(Customer,
     # Just like in ModelAdmin.search_fields
     search_fields=['name','address'],
     attrs={
