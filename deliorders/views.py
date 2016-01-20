@@ -17,6 +17,7 @@ from deliorders.models import Order, OrderItem
 from deliorders import utils
 from delicontacts.models import Customer
 from delidelivery.models import DeliveryMethod
+from delicontent.models import PromoImage
 
 def logout(request):
     """Logs out user"""
@@ -39,6 +40,7 @@ def home(request, *args, **kwargs):
         context['category_browse'] = True
     else:
         context['products'] = Product.objects.filter(featured=True)
+        context['promo_images'] = PromoImage.objects.filter(is_active=True)
 
     return context
 
