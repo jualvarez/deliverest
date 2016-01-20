@@ -122,11 +122,14 @@ def cart_status(request, *args, **kwargs):
     return context
 
 
-@login_required
 @render_to('add_dialog.html')
 def add_dialog(request):
-    c = request.user.customer
-    o = Order.objects.get_active(c)
+    is_logged_in = request.user.is_authenticated()
+
+    o = None
+    if is_logged_in:
+        c = request.user.customer
+        o = Order.objects.get_active(c)
 
     product_id = request.GET.get('product_id', None)
     product = get_object_or_404(Product, pk=product_id)
@@ -136,7 +139,8 @@ def add_dialog(request):
         existing_items = []
     return {
         'product': product,
-        'existing_items': existing_items
+        'existing_items': existing_items,
+        'is_logged_in': is_logged_in
     }
 
 def add_to_cart(request):

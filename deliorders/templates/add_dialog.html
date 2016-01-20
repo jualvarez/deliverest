@@ -16,6 +16,11 @@ Ya tenés en tu carrito:
     <input name="quantity" value="1" class="form-control input" />
 </div>
 <div class="modal-footer">
+  {% if is_logged_in %}
   <button type="button" class="btn btn-info" onclick="btnAddToCart(event)" data-dismiss="modal">Agregar</button>
+  {% else %}
+  <p style="text-align:center">Necesitas iniciar sesión para agregar productos al carrito.</p>
+  <a class="btn btn-primary form-control" data-dismiss="modal" data-toggle="modal" data-target="#login-modal">Inicia sesión</a>
+  {% endif %}
 </div>
 </form>
