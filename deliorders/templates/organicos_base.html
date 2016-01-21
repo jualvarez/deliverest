@@ -324,19 +324,19 @@
         });
 
         jqProm.then(function(ret){
+            updateCartStatus();
             if (ret.success)
                 elAlert = $('<div id="cart-success" class="alert alert-success alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>¡Listo!</strong> '+ret.message+'</div>');
             else
                 elAlert = $('<div id="cart-success" class="alert alert-warning alert-dismissible alert-fixed"><button type="button" class="close" data-dismiss="alert" aria-label="Close" role="alert"><span aria-hidden="true">&times;</span></button>'+ret.error+'</div>');
         })
         .fail(function(){
-            elAlert = $('<div id="cart-success" class="alert alert-danger alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Disculpanos, algo salió mal y no pudimos agregar el producto. Por favor intentá de nuevo mas tarde.</div>');
+            elAlert = $('<div id="cart-success" class="alert alert-danger alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Disculpanos, algo salió mal y no pudimos modificar el producto. Por favor intentá de nuevo mas tarde.</div>');
         })
         .always(function(){
             // Get an updated cart list
             if (typeof updateCartStatus == 'undefined')
-            location.reload();
-            updateCartStatus();
+                location.reload();
             function closeAlert() {
                 elAlert.alert('close');
             }

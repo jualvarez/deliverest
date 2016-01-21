@@ -126,12 +126,12 @@ class Product(models.Model):
 
     name = models.CharField(
         max_length=200,
-        verbose_name=_(u'nombre'))
-    description = models.CharField(
-        max_length=500,
-        verbose_name=_(u'descripción'))
+        verbose_name=_(u'nombre'),
+        unique=True
+    )
+    description = models.TextField(verbose_name=_(u'descripción'))
     presentations = models.ManyToManyField(Presentation, through='Price')
-    provider = models.ForeignKey('Provider', blank=True, null=True)
+    provider = models.ForeignKey('Provider', verbose_name=_(u'proveedor'), blank=True, null=True)
 
     category = models.ForeignKey(
         'Category',
@@ -139,6 +139,7 @@ class Product(models.Model):
         null=True,
         blank=True)
     featured = models.BooleanField(default=False, verbose_name=_(u'destacado'))
+    is_active = models.BooleanField(verbose_name=_(u'activo'), default=True)
 
     class Meta:
         verbose_name = _(u'producto')
