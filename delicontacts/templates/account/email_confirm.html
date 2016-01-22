@@ -7,6 +7,8 @@
 
 
 {% block content %}
+<div class="container container-bar">
+<div class="row">
 <h1>{% trans "Confirme la dirección de email" %}</h1>
 
 {% if confirmation %}
@@ -27,5 +29,6 @@
 <p>{% blocktrans %}Este link de confirmación expiró o es inválido. Por favor <a href="{{ email_url }}">genere una nueva solicitud de confirmación</a>.{% endblocktrans %}</p>
 
 {% endif %}
-
+</div>
+</div>
 {% endblock %}
