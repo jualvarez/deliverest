@@ -17,6 +17,8 @@ def search_ajax(request):
     ret = []
     for product in products:
         price = product.price_set.aggregate(Min('sell_price'))['sell_price__min']
+        if not price:
+            continue
         ret.append(
             {
                 'id': product.id,
