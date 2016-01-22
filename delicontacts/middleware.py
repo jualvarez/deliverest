@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import redirect, render
 
 from allauth.account.views import confirm_email, email

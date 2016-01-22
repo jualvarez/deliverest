@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 from django.forms.models import modelform_factory
