@@ -52,7 +52,7 @@ class ApplyProductCategory(object):
 
 class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
-    list_display = ('name', 'description', 'category')
+    list_display = ('name', 'description', 'category', 'is_active')
     
     def get_actions(self, request):
         actions = super(ProductAdmin, self).get_actions(request)
