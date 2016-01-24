@@ -28,5 +28,5 @@ class DeliveryMethod(models.Model):
         verbose_name = _(u'método de envío')
         verbose_name_plural = _(u'métodos de envío')
 
-    def __str__(self):
-        return self.name
+    def __unicode__(self):
+        return unicode(self.name)

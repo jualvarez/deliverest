@@ -67,13 +67,13 @@ class Category(models.Model):
             crumb_str = self.name
 
         if instance.parent is not None:
-            crumb_str = "%s > %s" % (instance.parent.name, crumb_str)
+            crumb_str = u"%s > %s" % (instance.parent.name, crumb_str)
             return self.parent_crumbs(instance.parent, crumb_str)
 
         else:
             return crumb_str
 
-    def __str__(self):
+    def __unicode__(self):
         return self.parent_crumbs()
 
 class Presentation(models.Model):
@@ -104,9 +104,9 @@ class Presentation(models.Model):
         verbose_name_plural = _(u'presentaciones')
         unique_together = ('name', 'quantity', 'measure_unit')
 
-    def __str__(self):
+    def __unicode__(self):
         if self.quantity is not None:
-            return "%s %s %s" % (
+            return u"%s %s %s" % (
                 self.name,
                 self.quantity,
                 self.get_measure_unit_display() if (self.quantity == 1) or (self.measure_unit not in UNIT_CHOICES_PLURAL) else UNIT_CHOICES_PLURAL[self.measure_unit])
@@ -145,8 +145,8 @@ class Product(models.Model):
         verbose_name = _(u'producto')
         verbose_name_plural = _(u'productos')
 
-    def __str__(self):
-        return "%s" % (self.name)
+    def __unicode__(self):
+        return u"%s" % (self.name)
 
     def lowest_price(self):
         try:
@@ -193,8 +193,8 @@ class Price(models.Model):
         unique_together = ('product', 'presentation', 'wholesale')
         ordering=('sell_price',)
 
-    def __str__(self):
-        return "%s (%s): $%.2f" % (
+    def __unicode__(self):
+        return u"%s (%s): $%.2f" % (
             self.product.name,
             self.presentation,
             self.sell_price)
@@ -224,5 +224,5 @@ class Provider(models.Model):
         verbose_name = _(u'proveedor')
         verbose_name_plural = _(u'proveedores')
 
-    def __str__(self):
-        return "%s (%s)" % (self.name, self.code)
+    def __unicode__(self):
+        return u"%s (%s)" % (self.name, self.code)

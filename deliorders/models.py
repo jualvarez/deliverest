@@ -82,8 +82,8 @@ class Order(models.Model):
         verbose_name = _(u'pedido')
         verbose_name_plural = _(u'pedidos')
 
-    def __str__(self):
-        return "%s: %s (%s)" % (
+    def __unicode__(self):
+        return u"%s: %s (%s)" % (
             self.code,
             self.customer,
             self.when_create.strftime('%d/%m/%Y'))
@@ -159,8 +159,8 @@ class OrderItem(models.Model):
         verbose_name = _(u'ítem de pedido')
         verbose_name_plural = _(u'ítems de pedido')
 
-    def __str__(self):
-        return "%s: %d * $%.2f = $%.2f" % (self.product,
+    def __unicode__(self):
+        return u"%s: %d * $%.2f = $%.2f" % (self.product,
             self.quantity, self.item_sell_price(), self.item_total())
 
     def save(self, *args, **kwargs):

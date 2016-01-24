@@ -24,8 +24,8 @@ class Person(models.Model):
         verbose_name_plural = _(u'personas')
         ordering = ('name',)
 
-    def __str__(self):
-        return "%s" % (self.name)
+    def __unicode__(self):
+        return u"%s" % (self.name)
 
 
 class Customer(Person):
@@ -39,8 +39,8 @@ class Customer(Person):
         verbose_name = _(u'cliente')
         verbose_name_plural = _(u'clientes')
 
-    def __str__(self):
-        return "%s <%s> (%s)" % (self.name, self.email if self.email else u'sin email', self.address)
+    def __unicode__(self):
+        return u"%s <%s> (%s)" % (self.name, self.email if self.email else u'sin email', self.address)
 
     def delivery_method_name(self):
         return self.prefered_delivery_method.name

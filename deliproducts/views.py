@@ -24,8 +24,8 @@ def search_ajax(request):
         ret.append(
             {
                 'id': product.id,
-                'category': product.category.__str__(),
-                'name': "%s ($%.2f)" % (product.__str__(), price),
+                'category': unicode(product.category),
+                'name': "%s ($%.2f)" % (unicode(product), price),
                 'price': price
             }
         )
