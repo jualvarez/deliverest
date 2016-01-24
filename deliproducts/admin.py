@@ -11,6 +11,7 @@ from .models import Category, Presentation, Product, Price, Provider
 
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name',]
+    list_display = ('name', 'order', 'is_active')
 
 admin.site.register(Category, CategoryAdmin)
 

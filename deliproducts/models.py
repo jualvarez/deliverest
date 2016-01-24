@@ -36,6 +36,8 @@ class Category(models.Model):
         verbose_name=_(u'direccion web'),
         unique=True,
         null=True)
+    order = models.PositiveIntegerField(verbose_name=_('orden'), null=True)
+    is_active = models.BooleanField(verbose_name=_('activo'), default=True)
     parent = models.ForeignKey(
         'self',
         verbose_name=(u'categoría padre'),
@@ -60,6 +62,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = _(u'categoría')
         verbose_name_plural = _(u'categorías')
+        ordering = ('order',)
 
     def parent_crumbs(self, instance=None, crumb_str=None):
         if instance is None:
