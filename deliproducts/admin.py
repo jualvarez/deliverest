@@ -95,10 +95,10 @@ class PriceAdmin(admin.ModelAdmin):
 
         def delivery_cost():
             try:
-                delivery_price = Price.objects.get(product__name='Envío')
+                delivery_price = Price.objects.get(product__name=u'Envío')
             except DoesNotExist:
                 return '0'
-            return "%.2f" % delivery_price.sell_price
+            return u"%.2f" % delivery_price.sell_price
 
         queryset.order_by('product__name')
         categories = []

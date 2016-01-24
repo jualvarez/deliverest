@@ -193,9 +193,9 @@ def add_to_cart(request):
     # Check for final quantity, delete if 0 or negative
     if i.quantity <= 0:
         i.delete()
-        return JsonResponse({'success': True, 'message':_(('Sacamos <strong>%s</strong> del carrito de compras') % (p.product.name))})
+        return JsonResponse({'success': True, 'message':_((u'Sacamos <strong>%s</strong> del carrito de compras') % (p.product.name))})
 
-    return JsonResponse({'success': True, 'message':_(('Ahora tenés %d <strong>%s</strong> en el carrito de compras') % (i.quantity, p.product.name))})
+    return JsonResponse({'success': True, 'message':_((u'Ahora tenés %d <strong>%s</strong> en el carrito de compras') % (i.quantity, p.product.name))})
 
 @login_required
 def user_confirmed_tf(request):

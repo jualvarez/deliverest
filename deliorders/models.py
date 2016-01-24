@@ -135,11 +135,11 @@ class Order(models.Model):
         message = "Need an HTML enabled email client" #render_to_string("email/order_email.txt", {'order':self})
         html_message = render_to_string("email/order_email.html", {'url':absolute_url, 'order': self})
         send_mail(
-            subject="Tu pedido está confirmado",
-            from_email="Pedidos Organicos de mi Tierra <pedidos@organicosdemitierra.com>",
+            subject=u"Tu pedido está confirmado",
+            from_email=u"Pedidos Organicos de mi Tierra <pedidos@organicosdemitierra.com>",
             message=message,
             html_message=html_message,
-            recipient_list=["jualvarez@gmail.com",]
+            recipient_list=[u"jualvarez@gmail.com",]
         )
 
     get_order_total.short_description = _(u"Total de pedido")
