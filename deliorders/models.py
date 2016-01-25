@@ -110,6 +110,8 @@ class Order(models.Model):
         # Calculate next delivery date
         self.delivery_date = self.delivery_date or date.today() + datetime.timedelta( (self.delivery_method.delivery_day-date.today().weekday()) % 7 )
 
+        return super(Order, self).save(*args, **kwargs)
+        
         # If the order is closed, send notification email to user
         old_status = 0
         if self.pk:
@@ -117,8 +119,6 @@ class Order(models.Model):
             old_status = old_value.status
         if old_status < 200 and self.status >= 200:
             self.send_close_email()
-
-        return super(Order, self).save(*args, **kwargs)
 
     def get_order_total(self):
         total = self.orderitem_set.aggregate(total=models.Sum('sell_price',field='quantity*sell_price'))['total']
