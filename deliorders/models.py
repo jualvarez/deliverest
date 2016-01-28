@@ -121,7 +121,13 @@ class Order(models.Model):
             self.send_close_email()
 
     def get_order_total(self):
-        total = self.orderitem_set.aggregate(total=models.Sum('sell_price',field='quantity*sell_price'))['total']
+        total = self.orderitem_set.aggregate(
+            total=models.Sum(
+                models.ExpressionWrapper(
+                    models.F('sell_price')*models.F('quantity'), output_field=models.DecimalField()
+                )
+            )
+        )['total']
         return total if total is not None else 0
 
     def user_can_open(self):
