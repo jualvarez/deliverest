@@ -21,7 +21,7 @@ class DeliveryMethod(models.Model):
     name = models.CharField(max_length=150, verbose_name=_(u'nombre'))
     is_delivery = models.BooleanField(default=False, verbose_name=_(u'se entrega a domicilio'))
     pickup_address = models.TextField(verbose_name=_(u'dirección de recogida'), blank=True)
-    delivery_day = models.IntegerField(verbose_name=_(u'día de entrega'), choices=DELIVERY_DAY_CHOICES, null=True)
+    delivery_day = models.IntegerField(verbose_name=_(u'día de entrega'), choices=DELIVERY_DAY_CHOICES)
     delivery_time = models.CharField(max_length=50, verbose_name=_(u'hora de entrega'), blank=True)
 
     class Meta:
