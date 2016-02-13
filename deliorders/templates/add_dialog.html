@@ -8,7 +8,7 @@ Ya tenés en tu carrito:
 <div class="form-group">
     <p>Producto</p>
     {% for price in product.price_set.all %}
-    <input type="radio" name="price_id" value="{{ price.id }}" id="price_id_{{ price.id }}" {% if forloop.first %}checked{% endif %}><label for="price_id_{{ price.id }}">{{ price }}</label><br>
+    <input type="radio" name="price_id" value="{{ price.id }}" id="price_id_{{ price.id }}" {% if price.id == selected_price.id %}checked{% endif %}><label for="price_id_{{ price.id }}">{{ price }}</label><br>
     {% endfor %}
 </div>
 <div class="form-group">

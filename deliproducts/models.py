@@ -118,7 +118,7 @@ class Presentation(models.Model):
 
     def unit_display(self):
         if self.quantity is not None:
-            return "%s %s" % (
+            return "%0.f %s" % (
                 self.quantity,
                 self.get_measure_unit_display() if (self.quantity == 1) or (self.measure_unit not in UNIT_CHOICES_PLURAL) else UNIT_CHOICES_PLURAL[self.measure_unit])
         else:
@@ -189,12 +189,13 @@ class Price(models.Model):
         max_digits=20,
         decimal_places=4,
         verbose_name=_(u'precio de compra'))
+    is_active = models.BooleanField(verbose_name=_(u'activo'), default=True)
 
     class Meta:
         verbose_name = _(u'precio')
         verbose_name_plural = _(u'precios')
         unique_together = ('product', 'presentation', 'wholesale')
-        ordering=('sell_price',)
+        ordering=('product__name',)
 
     def __unicode__(self):
         return u"%s (%s): $%.2f" % (

@@ -38,10 +38,10 @@ def home(request, *args, **kwargs):
             category = None
         else:
             category = get_object_or_404(Category, slug=catslug)
-        context['products'] = Product.objects.filter(category=category, is_active=True)
+        context['products'] = Price.objects.filter(product__category=category, product__is_active=True, is_active=True)
         context['category_browse'] = True
     else:
-        context['products'] = Product.objects.filter(featured=True, is_active=True)
+        context['products'] = Price.objects.filter(product__featured=True, product__is_active=True, is_active=True)
         context['promo_images'] = PromoImage.objects.filter(is_active=True)
 
     return context
@@ -135,14 +135,16 @@ def add_dialog(request):
         c = request.user.customer
         o = Order.objects.get_active(c)
 
-    product_id = request.GET.get('product_id', None)
-    product = get_object_or_404(Product, pk=product_id)
+    price_id = request.GET.get('product_id', None)
+    price = get_object_or_404(Price, pk=price_id)
+    product = price.product
     if o is not None:
         existing_items = o.orderitem_set.filter(product__product=product)
     else:
         existing_items = []
     return {
         'product': product,
+        'selected_price': price,
         'existing_items': existing_items,
         'is_logged_in': is_logged_in
     }

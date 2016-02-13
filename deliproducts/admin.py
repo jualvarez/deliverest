@@ -12,6 +12,7 @@ from .models import Category, Presentation, Product, Price, Provider
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name',]
     list_display = ('name', 'order', 'is_active')
+    list_editable = ('order', 'is_active')
 
 admin.site.register(Category, CategoryAdmin)
 
@@ -53,6 +54,7 @@ class ApplyProductCategory(object):
 class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
     list_display = ('name', 'description', 'category', 'is_active')
+    list_editable = ('category', 'is_active')
     
     def get_actions(self, request):
         actions = super(ProductAdmin, self).get_actions(request)
@@ -74,8 +76,10 @@ admin.site.register(Product, ProductAdmin)
 
 class PriceAdmin(admin.ModelAdmin):
     search_fields = ['product__name', 'product__description','presentation__name']
-    list_display = ('product', 'presentation', 'currency', 'sell_price', 'buy_price')
-    list_filter = ('presentation', 'sell_price', 'buy_price')
+    list_display = ('product', 'presentation', 'currency', 'sell_price', 'buy_price', 'is_active')
+    list_editable = ('sell_price', 'buy_price', 'is_active')
+    list_filter = ('product__category', 'presentation',)
+    list_per_page = 25
     ordering = ('product__name',)
     actions = ['build_email',]
 

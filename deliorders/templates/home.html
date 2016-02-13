@@ -46,22 +46,20 @@
 
         <div class="col-md-9">
 
-            {% for product in products %}
+            {% for price in products %}
             {% if forloop.counter|divisibleby:3 %}
             <div class="row">
                 {% endif %}
-
-                <a name="{{ product.id }}"></a>
                 <div class="col-sm-4 col-lg-4 col-md-4">
                     <div class="thumbnail">
-                        <!-- <img src="http://placehold.it/320x150" alt=""> -->
                         <div class="caption-full">
-                            <h4><a href="#" onclick="btnAddProductDialog({{ product.id }}, event)">{{ product.name }}</a></h4>
-                            <p>{{ product.description }}</p>
+                            <h4><a href="#" onclick="btnAddProductDialog({{ price.id }}, event)">{{ price.product.name }}</a></h4>
+                            <p>{{ price.presentation.name }} de {{ price.presentation.unit_display }}</p>
+                            <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
                             <form method="post" action="{% url 'shopping_cart' %}" class="form-inline">
                                 {% csrf_token %}
                                 <div class="form-group">
-                                    <button onclick="btnAddProductDialog({{ product.id }}, event)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
+                                    <button onclick="btnAddProductDialog({{ price.id }}, event)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
                                 </div>
                             </form>
                         </div>
