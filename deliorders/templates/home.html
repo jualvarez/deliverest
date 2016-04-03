@@ -38,6 +38,9 @@
             <div class="list-group">
                 {% for category in categories %}
                 <a href="{% url 'category' category=category.slug %}" class="list-group-item">{{ category.name }}</a>
+                    {% for subcategory in category.subcategories.all %}
+                    <a href="{% url 'category' category=subcategory.slug %}" class="list-group-item inner">{{ subcategory.name }}</a>
+                    {% endfor %}
                 {% endfor %}
             </div>
             <div class="hidden-sm hidden-xs" id="cart-status">

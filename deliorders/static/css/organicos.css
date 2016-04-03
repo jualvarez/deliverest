@@ -41,6 +41,15 @@ a.list-group-item:focus, a.list-group-item:hover {
 	color: #f5ead4;
 }
 
+a.list-group-item.inner {
+    padding-left: 40px;
+    background-color: #b94179;
+}
+
+a.list-group-item.inner:focus, a.list-group-item.inner:hover {
+    background-color: #ca4683;
+}
+
 a,a:focus, a:hover {
 	color: #b5286a;
 }

@@ -32,7 +32,7 @@ def home(request, *args, **kwargs):
     catslug = kwargs.get('category', None)
 
     context = {}
-    context['categories'] = Category.objects.filter(is_active=True)
+    context['categories'] = Category.objects.filter(is_active=True, parent=None)
     if catslug is not None:
         if catslug == settings.CATEGORY_SLUG_FOR_OTHER:
             category = None

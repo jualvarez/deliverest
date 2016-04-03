@@ -41,7 +41,7 @@ class Category(models.Model):
     parent = models.ForeignKey(
         'self',
         verbose_name=(u'categoría padre'),
-        related_name='category',
+        related_name='subcategories',
         null=True,
         blank=True)
 
