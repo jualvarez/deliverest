@@ -26,6 +26,11 @@ UNIT_CHOICES_PLURAL = {
 }
 
 
+class ActiveManager(models.Manager):
+    use_for_related_fields = True
+    def active(self):
+        return super(ActiveManager, self).all().filter(is_active=True)
+
 class Category(models.Model):
     name = models.CharField(
         verbose_name=_(u'nombre'),
@@ -58,6 +63,8 @@ class Category(models.Model):
         max_length=8,
         null=True,
         blank=True)
+
+    objects = ActiveManager()
 
     class Meta:
         verbose_name = _(u'categoría')
@@ -143,6 +150,8 @@ class Product(models.Model):
         blank=True)
     is_active = models.BooleanField(verbose_name=_(u'activo'), default=True)
 
+    objects = ActiveManager()
+
     class Meta:
         verbose_name = _(u'producto')
         verbose_name_plural = _(u'productos')
@@ -190,6 +199,8 @@ class Price(models.Model):
         verbose_name=_(u'precio de compra'))
     featured = models.BooleanField(default=False, verbose_name=_(u'destacado'))
     is_active = models.BooleanField(verbose_name=_(u'activo'), default=True)
+
+    objects = ActiveManager()
 
     class Meta:
         verbose_name = _(u'precio')
