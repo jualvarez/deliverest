@@ -26,6 +26,7 @@ admin.site.register(Provider, ProviderAdmin)
 class PresentationAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_display = ('name', 'quantity', 'measure_unit')
+    list_filter = ('name', 'measure_unit')
 
 admin.site.register(Presentation, PresentationAdmin)
 
@@ -80,7 +81,7 @@ class PriceAdmin(admin.ModelAdmin):
     search_fields = ['product__name', 'product__description','presentation__name']
     list_display = ('product', 'presentation', 'currency', 'sell_price', 'buy_price', 'is_active', 'featured')
     list_editable = ('sell_price', 'buy_price', 'is_active', 'featured')
-    list_filter = ('product__category', 'presentation',)
+    list_filter = ('product__category', 'presentation__name',)
     list_per_page = 25
     ordering = ('product__name',)
     actions = ['build_email',]
