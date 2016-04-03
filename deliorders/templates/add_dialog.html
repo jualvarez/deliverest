@@ -6,9 +6,10 @@ Ya tenés en tu carrito:
 {% endif %}
 <form action="#" method="post">
 <div class="form-group">
-    <p>Producto</p>
     {% for price in product.price_set.active %}
-    <input type="radio" name="price_id" value="{{ price.id }}" id="price_id_{{ price.id }}" {% if price.id == selected_price.id %}checked{% endif %}><label for="price_id_{{ price.id }}">{{ price }}</label><br>
+    <div class="radio">
+      <label class="radio-inline"><input type="radio" name="price_id" value="{{ price.id }}" id="price_id_{{ price.id }}" {% if price.id == selected_price.id %}checked{% endif %}>{{ price }}</label>
+    </div>
     {% endfor %}
 </div>
 <div class="form-group">
