@@ -41,7 +41,7 @@ def home(request, *args, **kwargs):
         context['products'] = Price.objects.filter(product__category=category, product__is_active=True, is_active=True)
         context['category_browse'] = True
     else:
-        context['products'] = Price.objects.filter(product__featured=True, product__is_active=True, is_active=True)
+        context['products'] = Price.objects.filter(featured=True, product__is_active=True, is_active=True)
         context['promo_images'] = PromoImage.objects.filter(is_active=True)
 
     return context

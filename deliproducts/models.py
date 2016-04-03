@@ -141,7 +141,6 @@ class Product(models.Model):
         verbose_name=_(u'categoría'),
         null=True,
         blank=True)
-    featured = models.BooleanField(default=False, verbose_name=_(u'destacado'))
     is_active = models.BooleanField(verbose_name=_(u'activo'), default=True)
 
     class Meta:
@@ -189,6 +188,7 @@ class Price(models.Model):
         max_digits=20,
         decimal_places=4,
         verbose_name=_(u'precio de compra'))
+    featured = models.BooleanField(default=False, verbose_name=_(u'destacado'))
     is_active = models.BooleanField(verbose_name=_(u'activo'), default=True)
 
     class Meta:

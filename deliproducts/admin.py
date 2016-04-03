@@ -78,8 +78,8 @@ admin.site.register(Product, ProductAdmin)
 
 class PriceAdmin(admin.ModelAdmin):
     search_fields = ['product__name', 'product__description','presentation__name']
-    list_display = ('product', 'presentation', 'currency', 'sell_price', 'buy_price', 'is_active')
-    list_editable = ('sell_price', 'buy_price', 'is_active')
+    list_display = ('product', 'presentation', 'currency', 'sell_price', 'buy_price', 'is_active', 'featured')
+    list_editable = ('sell_price', 'buy_price', 'is_active', 'featured')
     list_filter = ('product__category', 'presentation',)
     list_per_page = 25
     ordering = ('product__name',)
