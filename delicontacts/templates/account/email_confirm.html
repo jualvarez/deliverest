@@ -15,7 +15,7 @@
 
 {% user_display confirmation.email_address.user as user_display %}
 
-<p>{% blocktrans with confirmation.email_address.email as email %}Por favor confirme que la dirección de email <a href="mailto:{{ email }}">{{ email }}</a> corresponde a {{ user_display }}.{% endblocktrans %}</p>
+<p>{% blocktrans with confirmation.email_address.email as email %}Por favor confirme que la dirección de email <a href="mailto:{{ email }}">{{ email }}</a> corresponde a su usuario.{% endblocktrans %}</p>
 
 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
 {% csrf_token %}

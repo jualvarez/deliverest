@@ -4,29 +4,42 @@
 
 import datetime
 from django.conf import settings
+from django.utils import timezone
 
 
 def is_tf_closed(date):
     """Check if order timeframe is closed for a given date."""
-    tf_start = settings.WEEKLY_WINDOW_START
-    tf_end = settings.WEEKLY_WINDOW_END
+    now = timezone.now()
+    now = timezone.datetime(year=now.year, month=now.month, day=now.day)
+    now = timezone.make_aware(now)
+    days_to_start = (settings.WEEKLY_WINDOW_START - now.weekday()) % 7
+    start_hour = settings.WEEKLY_WINDOW_START_HOUR
+    td_start = datetime.timedelta(days=days_to_start, hours=start_hour)
 
-    if tf_start > tf_end:
-        tf_window = tf_start - tf_end
-    else:
-        tf_window = (tf_start + 7) - tf_end
+    days_to_end = (settings.WEEKLY_WINDOW_END - now.weekday()) % 7
+    end_hour = settings.WEEKLY_WINDOW_END_HOUR
+    td_end = datetime.timedelta(days=days_to_end, hours=end_hour)
 
-    tf_days = [d % 7 for d in range(tf_end, tf_end + tf_window)]
-    return date.weekday() in tf_days
+    tf_start = now + td_start
+    tf_end = now + td_end
+
+    if tf_start < tf_end:
+        tf_end = tf_end + datetime.timedelta(days=7)
+
+    now = timezone.now()
+    return now > tf_start and now < tf_end
 
 
-def tf_is_after_last_window(date):
+def tf_is_after_last_window(tzdatetime):
     """Check if given date falls after the last window has closed."""
-    tf_end = settings.WEEKLY_WINDOW_END
-    weekday = date.weekday()
-    delta = datetime.timedelta(days=((weekday-tf_end) % 7))
-    last_frame_close = datetime.date.today() - delta
-    return date >= last_frame_close
+    now = timezone.now()
+    now = timezone.datetime(year=now.year, month=now.month, day=now.day)
+    now = timezone.make_aware(now)
+    days_from_end = (now.weekday() - settings.WEEKLY_WINDOW_END) % 7
+    end_hour = settings.WEEKLY_WINDOW_END_HOUR
+    td_end = datetime.timedelta(days=days_from_end, hours=end_hour)
+    last_tf_end = now - td_end
+    return tzdatetime >= last_tf_end
 
 
 def delivery_days(date):

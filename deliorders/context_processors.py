@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import datetime
+from django.utils import timezone
 from deliorders.utils import *
 
 def check_timeframe(request):
@@ -12,10 +12,10 @@ def check_timeframe(request):
     }
 
     if request.user.is_authenticated():
-        today = datetime.date.today()
+        now = timezone.now()
 
-        ret['tf_closed'] = is_tf_closed(today)
-        ret['tf_delivery_start'], ret['tf_delivery_end'] = delivery_days(today)
+        ret['tf_closed'] = is_tf_closed(now)
+        ret['tf_delivery_start'], ret['tf_delivery_end'] = delivery_days(now)
 
         if ret['tf_closed']:
             # Check if user already confirmed timeframe for this week
@@ -23,7 +23,7 @@ def check_timeframe(request):
                 ret['tf_confirmed'] = True
                 return ret
             customer = request.user.customer
-            when_last_confirmed = customer.last_confirmed_tf or datetime.date(2015,1,1)
+            when_last_confirmed = customer.last_confirmed_tf or datetime.datetime(2015,1,1,0,0,0)
 
             if tf_is_after_last_window(when_last_confirmed):
                 ret['tf_confirmed'] = True

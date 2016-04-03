@@ -54,7 +54,8 @@
                     <div class="thumbnail">
                         <div class="caption-full">
                             <h4><a href="#" onclick="btnAddProductDialog({{ price.id }}, event)">{{ price.product.name }}</a></h4>
-                            <p>{{ price.presentation.name }} de {{ price.presentation.unit_display }}</p>
+                            <p>{{ price.presentation }}</p>
+                            {% if price.product.description %}<p>{{ price.product.description }}</p>{% endif %}
                             <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
                             <form method="post" action="{% url 'shopping_cart' %}" class="form-inline">
                                 {% csrf_token %}

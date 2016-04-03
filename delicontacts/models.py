@@ -32,7 +32,7 @@ class Customer(Person):
     contact_mode = models.IntegerField(choices=CONTACT_MODE_CHOICES, default=100, verbose_name=_(u'forma de contacto'))
     prefered_delivery_method = models.ForeignKey(DeliveryMethod,
         verbose_name=_(u'forma de envío preferida'))
-    last_confirmed_tf = models.DateField(verbose_name=_(u'última confirmación de ventana de entrega'), null=True)
+    last_confirmed_tf = models.DateTimeField(verbose_name=_(u'última confirmación de ventana de entrega'), null=True)
     associated_user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_(u'usuario vinculado'), null=True, blank=True)
 
     class Meta:
