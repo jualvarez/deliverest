@@ -109,9 +109,9 @@ class Presentation(models.Model):
 
     def __unicode__(self):
         if self.quantity is not None:
-            return u"%s %s %s" % (
+            return u"%s de %s %s" % (
                 self.name,
-                self.quantity,
+                self.quantity if self.quantity.to_integral() - self.quantity else self.quantity.to_integral(),
                 self.get_measure_unit_display() if (self.quantity == 1) or (self.measure_unit not in UNIT_CHOICES_PLURAL) else UNIT_CHOICES_PLURAL[self.measure_unit])
         else:
             return self.name
@@ -132,7 +132,7 @@ class Product(models.Model):
         verbose_name=_(u'nombre'),
         unique=True
     )
-    description = models.TextField(verbose_name=_(u'descripción'))
+    description = models.TextField(verbose_name=_(u'descripción'), blank=True)
     presentations = models.ManyToManyField(Presentation, through='Price')
     provider = models.ForeignKey('Provider', verbose_name=_(u'proveedor'), blank=True, null=True)
 
