@@ -3,6 +3,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
 UNIT_L = 'L'
 UNIT_ML = 'CC'
@@ -28,9 +29,12 @@ UNIT_CHOICES_PLURAL = {
 
 class ActiveManager(models.Manager):
     use_for_related_fields = True
+
     def active(self):
         return super(ActiveManager, self).all().filter(is_active=True)
 
+
+@python_2_unicode_compatible
 class Category(models.Model):
     name = models.CharField(
         verbose_name=_(u'nombre'),
@@ -83,9 +87,11 @@ class Category(models.Model):
         else:
             return crumb_str
 
-    def __unicode__(self):
+    def __str__(self):
         return self.parent_crumbs()
 
+
+@python_2_unicode_compatible
 class Presentation(models.Model):
 
     name = models.CharField(
@@ -114,7 +120,7 @@ class Presentation(models.Model):
         verbose_name_plural = _(u'presentaciones')
         unique_together = ('name', 'quantity', 'measure_unit')
 
-    def __unicode__(self):
+    def __str__(self):
         if self.quantity is not None:
             return u"%s de %s %s" % (
                 self.name,
@@ -132,6 +138,7 @@ class Presentation(models.Model):
             return self.name
 
 
+@python_2_unicode_compatible
 class Product(models.Model):
 
     name = models.CharField(
@@ -156,7 +163,7 @@ class Product(models.Model):
         verbose_name = _(u'producto')
         verbose_name_plural = _(u'productos')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s" % (self.name)
 
     def lowest_price(self):
@@ -173,6 +180,7 @@ CURRENCY_CHOICE = (
 )
 
 
+@python_2_unicode_compatible
 class Price(models.Model):
     product = models.ForeignKey(Product, verbose_name=_(u'producto'))
     presentation = models.ForeignKey(
@@ -208,7 +216,7 @@ class Price(models.Model):
         unique_together = ('product', 'presentation', 'wholesale')
         ordering=('product__name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s (%s): $%.2f" % (
             self.product.name,
             self.presentation,
@@ -226,6 +234,7 @@ class Price(models.Model):
             kwargs={'category': category}) + '#' + str(self.id)
 
 
+@python_2_unicode_compatible
 class Provider(models.Model):
     code = models.CharField(max_length=50, verbose_name=_(u'código'))
     name = models.CharField(max_length=150, verbose_name=_(u'nombre'))
@@ -239,5 +248,5 @@ class Provider(models.Model):
         verbose_name = _(u'proveedor')
         verbose_name_plural = _(u'proveedores')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s (%s)" % (self.name, self.code)

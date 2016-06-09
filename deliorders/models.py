@@ -6,6 +6,8 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
+from django.utils.encoding import python_2_unicode_compatible
+
 from datetime import date
 
 from django.utils.translation import ugettext_lazy as _
@@ -38,6 +40,7 @@ class OrderManager(models.Manager):
         return o
 
 
+@python_2_unicode_compatible
 class Order(models.Model):
     code = models.CharField(
         max_length=50,
@@ -82,7 +85,7 @@ class Order(models.Model):
         verbose_name = _(u'pedido')
         verbose_name_plural = _(u'pedidos')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s: %s (%s)" % (
             self.code,
             self.customer,
@@ -151,6 +154,7 @@ class Order(models.Model):
     get_order_total.short_description = _(u"Total de pedido")
 
 
+@python_2_unicode_compatible
 class OrderItem(models.Model):
     order = models.ForeignKey(Order)
     quantity = models.IntegerField(verbose_name=_(u'cantidad'))
@@ -165,9 +169,13 @@ class OrderItem(models.Model):
         verbose_name = _(u'ítem de pedido')
         verbose_name_plural = _(u'ítems de pedido')
 
-    def __unicode__(self):
-        return u"%s: %d * $%.2f = $%.2f" % (self.product,
-            self.quantity, self.item_sell_price(), self.item_total())
+    def __str__(self):
+        return u"%s: %d * $%.2f = $%.2f" % (
+            self.product,
+            self.quantity,
+            self.item_sell_price(),
+            self.item_total()
+        )
 
     def save(self, *args, **kwargs):
         self.sell_price = self.sell_price or self.product.sell_price

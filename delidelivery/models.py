@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
 DELIVERY_DAY_CHOICES = (
         (0, _(u'Lunes')),
@@ -15,6 +16,7 @@ DELIVERY_DAY_CHOICES = (
 
 
 
+@python_2_unicode_compatible
 class DeliveryMethod(models.Model):
     code = models.CharField(max_length=50, unique=True,
         verbose_name=_(u'código'))
@@ -28,5 +30,5 @@ class DeliveryMethod(models.Model):
         verbose_name = _(u'método de envío')
         verbose_name_plural = _(u'métodos de envío')
 
-    def __unicode__(self):
-        return unicode(self.name)
+    def __str__(self):
+        return self.name

@@ -3,6 +3,8 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
+
 from delidelivery.models import DeliveryMethod
 
 CONTACT_MODE_CHOICES = (
@@ -13,6 +15,7 @@ CONTACT_MODE_CHOICES = (
         (400, _(u'Otro')),
     )
 
+@python_2_unicode_compatible
 class Person(models.Model):
     name = models.CharField(max_length=100, verbose_name=_(u'nombre'))
     email = models.EmailField(verbose_name=_(u'e-mail'))
@@ -24,10 +27,11 @@ class Person(models.Model):
         verbose_name_plural = _(u'personas')
         ordering = ('name',)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s" % (self.name)
 
 
+@python_2_unicode_compatible
 class Customer(Person):
     contact_mode = models.IntegerField(choices=CONTACT_MODE_CHOICES, default=100, verbose_name=_(u'forma de contacto'))
     prefered_delivery_method = models.ForeignKey(DeliveryMethod,
@@ -39,7 +43,7 @@ class Customer(Person):
         verbose_name = _(u'cliente')
         verbose_name_plural = _(u'clientes')
 
-    def __unicode__(self):
+    def __str__(self):
         return u"%s <%s> (%s)" % (self.name, self.email if self.email else u'sin email', self.address)
 
     def delivery_method_name(self):
