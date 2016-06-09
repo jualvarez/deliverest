@@ -5,7 +5,7 @@ from decimal import Decimal
 from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import SimpleListFilter
-from django.db.models import Q, Sum
+from django.db.models import Q
 from django.template import RequestContext
 from django.conf.urls import url
 from django.shortcuts import render_to_response, get_object_or_404
@@ -16,6 +16,7 @@ from .models import Order, OrderItem, ORDER_STATUS_CHOICES
 from delidelivery.models import DeliveryMethod
 
 import autocomplete_light
+
 
 # Help class for default filter
 class DefaultListFilter(SimpleListFilter):
@@ -29,9 +30,9 @@ class DefaultListFilter(SimpleListFilter):
             return queryset
 
         if self.parameter_name in request.GET:
-            return queryset.filter(**{self.parameter_name:request.GET[self.parameter_name]})
+            return queryset.filter(**{self.parameter_name: request.GET[self.parameter_name]})
 
-        return queryset.filter(**{self.parameter_name:self.default_value()})
+        return queryset.filter(**{self.parameter_name: self.default_value()})
 
     def choices(self, cl):
         yield {
@@ -48,6 +49,7 @@ class DefaultListFilter(SimpleListFilter):
                 'display': title,
             }
 
+
 class StatusFilter(DefaultListFilter):
     title = _(u'Estado ')
     parameter_name = 'status__exact'
@@ -63,6 +65,7 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     form = autocomplete_light.modelform_factory(OrderItem, fields='__all__')
 
+
 class OrderAdminChangeList(ChangeList):
     def get_results(self, *args, **kwargs):
         super(OrderAdminChangeList, self).get_results(*args, **kwargs)
@@ -70,11 +73,12 @@ class OrderAdminChangeList(ChangeList):
         for order in self.result_list.all():
             self.order_sum = self.order_sum + order.get_order_total()
 
+
 class OrderAdmin(admin.ModelAdmin):
     list_filter = (StatusFilter, 'delivery_method', 'delivery_date', 'when_create')
     exclude = ('code', 'when_closed', 'when_delivered', 'reconciled', 'delivery_address')
     search_fields = ('code', 'customer__name')
-    list_display =  ('code', 'customer', 'get_contact_mode', 'delivery_method', 'get_order_total',
+    list_display = ('code', 'customer', 'get_contact_mode', 'delivery_method', 'get_order_total',
         'get_customer_address', 'get_customer_phone', 'delivery_date', 'when_create', 'status')
     inlines = [OrderItemInline]
     actions = ['close_orders', 'deliver_orders', 'reconcile_orders', 'balance_report']
@@ -132,10 +136,10 @@ class OrderAdmin(admin.ModelAdmin):
                 results[item.product.pk][-1] += item.quantity
 
         return render_to_response(self.order_report_template, {
-                'title': _(u'Reporte de cantidades de producto'),
-                'result_headers': result_headers,
-                'results': results
-            }, context_instance=RequestContext(request))
+            'title': _(u'Reporte de cantidades de producto'),
+            'result_headers': result_headers,
+            'results': results
+        }, context_instance=RequestContext(request))
 
     def print_orders(self, request, delivery_method_id=None):
         pending_orders = Order.objects.filter(Q(status=200) | Q(status=400))
@@ -144,18 +148,20 @@ class OrderAdmin(admin.ModelAdmin):
         title_append = ""
 
         if delivery_method_id:
-            delivery_method = get_object_or_404(DeliveryMethod,
-                                    pk=delivery_method_id)
+            delivery_method = get_object_or_404(
+                DeliveryMethod,
+                pk=delivery_method_id
+            )
             pending_orders = pending_orders.filter(
                 delivery_method_id=delivery_method_id)
             title_append = _(u" para ") + '"' + delivery_method.name + '"'
 
         return render_to_response(self.order_print_template, {
-                'title': _(u'Ordenes a entregar') + title_append,
-                'delivery_method': delivery_method,
-                'delivery_methods': delivery_methods,
-                'orders': pending_orders
-            }, context_instance=RequestContext(request))
+            'title': _(u'Ordenes a entregar') + title_append,
+            'delivery_method': delivery_method,
+            'delivery_methods': delivery_methods,
+            'orders': pending_orders
+        }, context_instance=RequestContext(request))
 
     def balance_report(self, request, queryset):
         results = {}
@@ -171,7 +177,7 @@ class OrderAdmin(admin.ModelAdmin):
                         prod.presentation
                     )
                     results[item.product.pk] = [item_display] + [0, 0, 0, 0]
-                
+
                 quantity = item.quantity
                 cost = item.product.buy_price * quantity
                 sell_price = item.sell_price * quantity
@@ -188,10 +194,10 @@ class OrderAdmin(admin.ModelAdmin):
                 totals[4] += profit
 
         return render_to_response(self.order_balance_template, {
-                'title': _(u'Balance'),
-                'results': results,
-                'totals': totals
-            }, context_instance=RequestContext(request))
+            'title': _(u'Balance'),
+            'results': results,
+            'totals': totals
+        }, context_instance=RequestContext(request))
 
     def change_orders_status(self, queryset, from_status, to_status):
         if hasattr(from_status, '__contains__'):
@@ -205,13 +211,13 @@ class OrderAdmin(admin.ModelAdmin):
                 order.save()
 
     def close_orders(self, request, queryset):
-        self.change_orders_status(queryset, (20,100), 200)
+        self.change_orders_status(queryset, (20, 100), 200)
 
     def deliver_orders(self, request, queryset):
         self.change_orders_status(queryset, 200, 300)
 
     def reconcile_orders(self, request, queryset):
-        self.change_orders_status(queryset, (300,400), 600)
+        self.change_orders_status(queryset, (300, 400), 600)
 
     close_orders.short_description = _(u"Cerrar pedidos")
     deliver_orders.short_description = _(u"Marcar pedidos entregados")
@@ -221,5 +227,6 @@ class OrderAdmin(admin.ModelAdmin):
     order_report_template = 'admin/products_report.html'
     order_print_template = 'admin/orders_print.html'
     order_balance_template = 'admin/orders_balance.html'
+
 
 admin.site.register(Order, OrderAdmin)

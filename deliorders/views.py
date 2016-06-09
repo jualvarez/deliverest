@@ -21,6 +21,7 @@ from delicontacts.models import Customer
 from delidelivery.models import DeliveryMethod
 from delicontent.models import PromoImage
 
+
 def logout(request):
     """Logs out user"""
     auth_logout(request)
@@ -46,6 +47,7 @@ def home(request, *args, **kwargs):
 
     return context
 
+
 @login_required
 @render_to('cart.html')
 def cart(request, *args, **kwargs):
@@ -61,7 +63,7 @@ def cart(request, *args, **kwargs):
                     continue
                 item_id = mod.split("_")[1]
                 if int(item_id) not in item_ids:
-                    return HttpResponseBadRequest("Intent to change inexistent item: "+mod)
+                    return HttpResponseBadRequest("Intent to change inexistent item: " + mod)
                 item = OrderItem.objects.get(id=item_id)
                 val = int(request.POST[mod])
                 if val == 0:
@@ -77,6 +79,7 @@ def cart(request, *args, **kwargs):
         'customer': c
     }
     return context
+
 
 @login_required
 def confirm_cart(request, *args, **kwargs):
@@ -149,6 +152,7 @@ def add_dialog(request):
         'is_logged_in': is_logged_in
     }
 
+
 def add_to_cart(request):
     if not request.user.is_authenticated():
         return JsonResponse({'success': False, 'error': _(u'Antes de crear un carrito de compras, tenés que acceder al sistema.')})
@@ -198,6 +202,7 @@ def add_to_cart(request):
         return JsonResponse({'success': True, 'message':_((u'Sacamos <strong>%s</strong> del carrito de compras') % (p.product.name))})
 
     return JsonResponse({'success': True, 'message':_((u'Ahora tenés %d <strong>%s</strong> en el carrito de compras') % (i.quantity, p.product.name))})
+
 
 @login_required
 def user_confirmed_tf(request):

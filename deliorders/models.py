@@ -18,23 +18,24 @@ from deliorders import utils
 
 
 ORDER_STATUS_CHOICES = (
-        (10, _(u'Iniciada por el usuario')),
-        (20, _(u'Confirmada por el usuario')),
-        (100, _(u'Abierto')),
-        (200, _(u'Cerrado')),
-        (300, _(u'Entregado')),
-        (400, _(u'Pagado pero no entregado')),
-        (500, _(u'Entregado pero no pagado')),
-        (600, _(u'Conciliado')),
-    )
+    (10, _(u'Iniciada por el usuario')),
+    (20, _(u'Confirmada por el usuario')),
+    (100, _(u'Abierto')),
+    (200, _(u'Cerrado')),
+    (300, _(u'Entregado')),
+    (400, _(u'Pagado pero no entregado')),
+    (500, _(u'Entregado pero no pagado')),
+    (600, _(u'Conciliado')),
+)
 
 DELIVERED_STATUSES = (300, 500)
+
 
 class OrderManager(models.Manager):
     def get_active(self, customer):
         """Try to get an unprocessed order for a customer."""
         try:
-            o = Order.objects.get(customer=customer, status__in=[10,20])
+            o = Order.objects.get(customer=customer, status__in=[10, 20])
         except ObjectDoesNotExist:
             o = None
         return o
@@ -111,7 +112,7 @@ class Order(models.Model):
         self.delivery_address = self.delivery_address or self.customer.address
 
         # Calculate next delivery date
-        self.delivery_date = self.delivery_date or date.today() + datetime.timedelta( (self.delivery_method.delivery_day-date.today().weekday()) % 7 )
+        self.delivery_date = self.delivery_date or date.today() + datetime.timedelta((self.delivery_method.delivery_day - date.today().weekday()) % 7)
 
         return super(Order, self).save(*args, **kwargs)
         
@@ -127,7 +128,7 @@ class Order(models.Model):
         total = self.orderitem_set.aggregate(
             total=models.Sum(
                 models.ExpressionWrapper(
-                    models.F('sell_price')*models.F('quantity'), output_field=models.DecimalField()
+                    models.F('sell_price') * models.F('quantity'), output_field=models.DecimalField()
                 )
             )
         )['total']
@@ -159,11 +160,17 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order)
     quantity = models.IntegerField(verbose_name=_(u'cantidad'))
     product = models.ForeignKey(Price, verbose_name=_(u'producto'))
-    sell_price = models.DecimalField(max_digits=20, decimal_places=4,
+    sell_price = models.DecimalField(
+        max_digits=20,
+        decimal_places=4,
         blank=True,
-        verbose_name=_(u'precio de venta (si difiere)'))
-    comments = models.CharField(max_length=200, verbose_name='Notas',
-        blank=True)
+        verbose_name=_(u'precio de venta (si difiere)')
+    )
+    comments = models.CharField(
+        max_length=200,
+        verbose_name='Notas',
+        blank=True
+    )
 
     class Meta:
         verbose_name = _(u'ítem de pedido')

@@ -8,12 +8,13 @@ from django.utils.encoding import python_2_unicode_compatible
 from delidelivery.models import DeliveryMethod
 
 CONTACT_MODE_CHOICES = (
-        (50, _(u'Web')),
-        (100, _(u'E-mail')),
-        (200, _(u'Facebook')),
-        (300, _(u'Telefono')),
-        (400, _(u'Otro')),
-    )
+    (50, _(u'Web')),
+    (100, _(u'E-mail')),
+    (200, _(u'Facebook')),
+    (300, _(u'Telefono')),
+    (400, _(u'Otro')),
+)
+
 
 @python_2_unicode_compatible
 class Person(models.Model):
@@ -34,10 +35,20 @@ class Person(models.Model):
 @python_2_unicode_compatible
 class Customer(Person):
     contact_mode = models.IntegerField(choices=CONTACT_MODE_CHOICES, default=100, verbose_name=_(u'forma de contacto'))
-    prefered_delivery_method = models.ForeignKey(DeliveryMethod,
-        verbose_name=_(u'forma de envío preferida'))
-    last_confirmed_tf = models.DateTimeField(verbose_name=_(u'última confirmación de ventana de entrega'), null=True)
-    associated_user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_(u'usuario vinculado'), null=True, blank=True)
+    prefered_delivery_method = models.ForeignKey(
+        DeliveryMethod,
+        verbose_name=_(u'forma de envío preferida')
+    )
+    last_confirmed_tf = models.DateTimeField(
+        verbose_name=_(u'última confirmación de ventana de entrega'),
+        null=True
+    )
+    associated_user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        verbose_name=_(u'usuario vinculado'),
+        null=True,
+        blank=True
+    )
 
     class Meta:
         verbose_name = _(u'cliente')

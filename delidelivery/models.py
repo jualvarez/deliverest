@@ -5,15 +5,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 
 DELIVERY_DAY_CHOICES = (
-        (0, _(u'Lunes')),
-        (1, _(u'Martes')),
-        (2, _(u'Miércoles')),
-        (3, _(u'Jueves')),
-        (4, _(u'Viernes')),
-        (5, _(u'Sábado')),
-        (6, _(u'Domingo')),
-    )
-
+    (0, _(u'Lunes')),
+    (1, _(u'Martes')),
+    (2, _(u'Miércoles')),
+    (3, _(u'Jueves')),
+    (4, _(u'Viernes')),
+    (5, _(u'Sábado')),
+    (6, _(u'Domingo')),
+)
 
 
 @python_2_unicode_compatible

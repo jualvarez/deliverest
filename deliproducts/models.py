@@ -214,7 +214,7 @@ class Price(models.Model):
         verbose_name = _(u'precio')
         verbose_name_plural = _(u'precios')
         unique_together = ('product', 'presentation', 'wholesale')
-        ordering=('product__name',)
+        ordering = ('product__name', )
 
     def __str__(self):
         return u"%s (%s): $%.2f" % (
