@@ -72,6 +72,8 @@ def cart(request, *args, **kwargs):
                     item.quantity = val
                     item.save()
 
+        o.save()
+
     context = {
         'empty_cart': o is None or not o.orderitem_set.all().count,
         'order': o,
