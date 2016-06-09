@@ -1,3 +1,4 @@
+{% load l10n %}
 {% load static from staticfiles %}
 <html>
 <body>
@@ -40,11 +41,20 @@
 		<tbody>
 			{% for item in order.orderitem_set.all %}
 			<tr>
-				<td align="center" valign="middle" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">{{ item.quantity }}</td>
-				<td align="left" valign="middle" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">{{ item.display }}</td>
-				<td align="right" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" valign="middle" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">${{ item.item_total|floatformat:2 }}</td>
+				<td align="center" width="7%" valign="middle" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">{{ item.quantity }}</td>
+				<td align="left" width="78%" valign="middle" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">{{ item.display }}</td>
+				<td align="right" width="15%" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" valign="middle" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">${{ item.item_total|floatformat:2 }}</td>
 			</tr>
 			{% endfor %}
+			{% if order.delivery_price %}
+			{% with lastloop=order.orderitem_set.count|add:'1' %}
+			<tr>
+				<td align="center" valign="middle" bgcolor="{% if lastloop|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">1</td>
+				<td align="left" valign="middle" bgcolor="{% if lastloop|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">{{ order.delivery_method }}</td>
+				<td align="right" bgcolor="{% if lastloop|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" valign="middle" style="color:#000000;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">${{ order.delivery_price|floatformat:2 }}</td>
+			</tr>
+			{% endwith %}
+			{% endif %}
 			<tr>
 				<td colspan="2" align="center" valign="middle" bgcolor="#b41b62" style="color:#ecd9a8;font-size:18px">TOTAL</td>
 				<td bgcolor="#b41b62" align="right" style="color:#ecd9a8;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:18px">${{ order.get_order_total|floatformat:2 }}</td>

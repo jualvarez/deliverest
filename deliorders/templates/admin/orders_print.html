@@ -51,6 +51,16 @@
             <td align="right">{{ item.item_total|floatformat:2 }}</td>
         </tr>
         {% endfor %}
+        {% if order.delivery_price %}
+        <tr class="row2">
+            <td>1</td>
+            <td>{{ order.delivery_method.name }}</td>
+            <td></td>
+            <td></td>
+            <td>$</td>
+            <td align="right">{{ order.delivery_price|floatformat:2 }}</td>
+        </tr>
+        {% endif %}
         <tr class="order-total">
             <td colspan="4">Total</td>
             <td>$</td>

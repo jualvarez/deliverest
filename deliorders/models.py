@@ -63,6 +63,13 @@ class Order(models.Model):
         verbose_name=_(u"fecha de entrega"),
         blank=True)
     comments = models.TextField(verbose_name=_(u'notas'), blank=True)
+    delivery_price = models.DecimalField(
+        max_digits=20,
+        decimal_places=4,
+        default=0.0,
+        verbose_name=_(u'precio de envío'),
+        help_text=_(u'Se completará automáticamente con la información del envío')
+    )
     when_create = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_(u'fecha de pedido'))
@@ -111,6 +118,9 @@ class Order(models.Model):
         # Customer's default address is default
         self.delivery_address = self.delivery_address or self.customer.address
 
+        # Include delivery price
+        self.delivery_price = self.delivery_method.delivery_price
+
         # Calculate next delivery date
         self.delivery_date = self.delivery_date or date.today() + datetime.timedelta((self.delivery_method.delivery_day - date.today().weekday()) % 7)
 
@@ -132,7 +142,9 @@ class Order(models.Model):
                 )
             )
         )['total']
-        return total if total is not None else 0
+        total = total if total is not None else 0.0
+        total = total + self.delivery_price
+        return total
 
     def user_can_open(self):
         # Check if delivery date is open

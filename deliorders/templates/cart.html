@@ -40,6 +40,16 @@
                             <td align="right" class="cart-price">$&nbsp;{{ item.item_total|floatformat:2 }}</td>
                         </tr>
                         {% endfor %}
+                        {% if order.status >= 20 and order.delivery_price %}
+                        <tr>
+                            <td id="delivery_price"></td>
+                            <td>1</td>
+                            <td>{{ order.delivery_method }}</td>
+                            <td></td>
+                            <td align="right" class="cart-price">$&nbsp;{{ order.delivery_price|floatformat:2 }}</td>
+                            <td align="right" class="cart-price">$&nbsp;{{ order.delivery_price|floatformat:2 }}</td>
+                        </tr>
+                        {% endif %}
                         <tr>
                             <td>&nbsp;</td>
                             <td colspan="4" align="right" class="cart-price"><strong>Total</strong></td>
@@ -63,7 +73,7 @@
                     <label for="delivery_method">Método de entrega</label>
                     <select class="form-control" id="delivery_method" name="delivery_method">
                         {% for dm in delivery_methods %}
-                        <option value="{{dm.id}}" {% if order.delivery_method_id == dm.id %}selected{% endif %}>{{ dm.name }}</option>
+                        <option value="{{dm.id}}" {% if order.delivery_method_id == dm.id %}selected{% endif %}>{{ dm.name }} {% if dm.delivery_price %}($&nbsp;{{ dm.delivery_price|floatformat:2 }}){% else %}({% trans 'sin costo' %}){% endif %}</option>
                         {% endfor %}
                     </select>
                 </div>
