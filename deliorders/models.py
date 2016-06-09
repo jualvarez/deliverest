@@ -130,7 +130,8 @@ class Order(models.Model):
         if self.pk:
             old_value = Order.objects.get(pk=self.pk)
             old_status = old_value.status
-        if old_status < 200 and self.status >= 200:
+        # Send confirmation email only for orders generated in the web that are closed
+        if self.contact_mode == 50 and old_status < 200 and self.status >= 200:
             self.send_close_email()
 
         return super(Order, self).save(*args, **kwargs)
