@@ -1,5 +1,5 @@
 {% extends "organicos_base.html" %}
-
+{% load i18n %}
 {% block content %}
 
 <div class="container container-bar">
@@ -83,7 +83,7 @@
                 </div>
                 <div class="form-group">
                     <label for="comments">Comentarios y pedidos especiales</label>
-                    <textarea class="form-control" id="comments" name="comments">{{ order.comments }}</textarea>
+                    <textarea class="form-control" id="user_comments" name="user_comments">{{ order.user_comments }}</textarea>
                 </div>
             </div>
         </div>

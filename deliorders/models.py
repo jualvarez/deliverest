@@ -62,7 +62,6 @@ class Order(models.Model):
     delivery_date = models.DateField(
         verbose_name=_(u"fecha de entrega"),
         blank=True)
-    comments = models.TextField(verbose_name=_(u'notas'), blank=True)
     delivery_price = models.DecimalField(
         max_digits=20,
         decimal_places=4,
@@ -70,6 +69,8 @@ class Order(models.Model):
         verbose_name=_(u'precio de envío'),
         help_text=_(u'Se completará automáticamente con la información del envío')
     )
+    user_comments = models.TextField(verbose_name=_(u'notas del usuario'), blank=True)
+    staff_comments = models.TextField(verbose_name=_(u'notas para el usuario'), blank=True)
     when_create = models.DateTimeField(
         auto_now_add=True,
         verbose_name=_(u'fecha de pedido'))
@@ -124,8 +125,6 @@ class Order(models.Model):
         # Calculate next delivery date
         self.delivery_date = self.delivery_date or date.today() + datetime.timedelta((self.delivery_method.delivery_day - date.today().weekday()) % 7)
 
-        return super(Order, self).save(*args, **kwargs)
-        
         # If the order is closed, send notification email to user
         old_status = 0
         if self.pk:
@@ -133,6 +132,8 @@ class Order(models.Model):
             old_status = old_value.status
         if old_status < 200 and self.status >= 200:
             self.send_close_email()
+
+        return super(Order, self).save(*args, **kwargs)
 
     def get_order_total(self):
         total = self.orderitem_set.aggregate(
@@ -154,14 +155,14 @@ class Order(models.Model):
 
     def send_close_email(self):
         absolute_url = settings.ABSOLUTE_URL
-        message = "Need an HTML enabled email client" #render_to_string("email/order_email.txt", {'order':self})
-        html_message = render_to_string("email/order_email.html", {'url':absolute_url, 'order': self})
+        message = "Need an HTML enabled email client"  # render_to_string("email/order_email.txt", {'order':self})
+        html_message = render_to_string("email/order_email.html", {'url': absolute_url, 'order': self})
         send_mail(
             subject=u"Tu pedido está confirmado",
             from_email=u"Pedidos Organicos de mi Tierra <pedidos@organicosdemitierra.com>",
             message=message,
             html_message=html_message,
-            recipient_list=[u"jualvarez@gmail.com",]
+            recipient_list=[self.customer.email]
         )
 
     get_order_total.short_description = _(u"Total de pedido")

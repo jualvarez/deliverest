@@ -101,7 +101,7 @@ def confirm_cart(request, *args, **kwargs):
     o.contact_mode = 50 # Web
     o.delivery_date = utils.next_open_day(datetime.today(), o.delivery_method.delivery_day)
     o.status = 20 # User confirmed order
-    OrderForm = modelform_factory(Order, fields=('delivery_method', 'delivery_address', 'comments'))
+    OrderForm = modelform_factory(Order, fields=('delivery_method', 'delivery_address', 'user_comments'))
     form = OrderForm(request.POST, request.FILES, instance=o)
     if form.is_valid():
         form.save()
