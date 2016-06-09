@@ -122,9 +122,7 @@ class OrderAdmin(admin.ModelAdmin):
         results = {}
         for order in pending_orders:
             for item in order.orderitem_set.all():
-                try:
-                    edit_item = results[item.product.pk]
-                except KeyError:
+                if item.product.pk not in results:
                     prod = item.product
                     item_display = "%s (%s)" % (
                         prod.product.name,
