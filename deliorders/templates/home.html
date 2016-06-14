@@ -60,12 +60,9 @@
                             <p>{{ price.presentation }}</p>
                             {% if price.product.description %}<p>{{ price.product.description }}</p>{% endif %}
                             <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
-                            <form method="post" action="{% url 'shopping_cart' %}" class="form-inline">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    <button onclick="btnAddProductDialog({{ price.id }}, event)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
-                                </div>
-                            </form>
+                            <div class="form-group">
+                                <button onclick="addToCart({{ price.id }}, 1)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,17 +88,21 @@
             updateCartStatus();
         });
 
-    function updateCartStatus() {
+    function updateCartStatus(promise) {
         var $cartStatus = $('#cart-status');
         if (!$cartStatus.is(':visible'))
             $cartStatus = $('#cart-status-sm');
         $cartStatus.fadeOut(100);
-        $.ajax({
-            url: '{% url "cart_status" %}',
-        })
-        .then(function(data) {
-            $cartStatus.html(data);
-            $cartStatus.fadeIn(200);
+        
+        $.when(promise)
+        .then(function(){
+            $.ajax({
+                url: '{% url "cart_status" %}',
+            })
+            .then(function(data) {
+                $cartStatus.html(data);
+                $cartStatus.fadeIn(200);
+            });            
         });
     }
     </script>

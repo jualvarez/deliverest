@@ -325,7 +325,6 @@
         });
 
         jqProm.then(function(ret){
-            updateCartStatus();
             if (ret.success)
                 elAlert = $('<div id="cart-success" class="alert alert-success alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>¡Listo!</strong> '+ret.message+'</div>');
             else
@@ -348,6 +347,7 @@
             elAlert.fadeIn(800);
             setTimeout(closeAlert, 5000);
         });
+        updateCartStatus(jqProm);
 
         return jqProm;
     }
