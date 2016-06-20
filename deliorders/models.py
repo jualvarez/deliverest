@@ -146,9 +146,9 @@ class Order(models.Model):
                 )
             )
         )['total']
-        total = total if total is not None else Decimal(0)
-        total = total + self.delivery_price
-        return total
+        total = total if total is not None else 0.0
+        total = float(total) + float(self.delivery_price)
+        return Decimal(total)
 
     def user_can_open(self):
         # Check if delivery date is open
