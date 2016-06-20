@@ -1,4 +1,4 @@
 *.pyc
-settings.py
+settings_local.py
 *.json
 db.sqlite3
