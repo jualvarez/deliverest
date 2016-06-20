@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from decimal import Decimal
 import datetime
+
 from django.db import models
 from django.conf import settings
 from django.template.loader import render_to_string
@@ -144,7 +146,7 @@ class Order(models.Model):
                 )
             )
         )['total']
-        total = total if total is not None else 0.0
+        total = total if total is not None else Decimal(0)
         total = total + self.delivery_price
         return total
 
