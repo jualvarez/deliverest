@@ -9,12 +9,14 @@ from django.conf import settings
 
 from .models import Category, Presentation, Product, Price, Provider
 
+
 class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name',]
     list_display = ('name', 'order', 'is_active')
     list_editable = ('order', 'is_active')
 
 admin.site.register(Category, CategoryAdmin)
+
 
 class ProviderAdmin(admin.ModelAdmin):
     search_fields = ['code', 'name']
@@ -30,10 +32,11 @@ class PresentationAdmin(admin.ModelAdmin):
 
 admin.site.register(Presentation, PresentationAdmin)
 
+
 class ApplyProductCategory(object):
     """
     Action class to move products in queryset to
-    a specified category defined in class 
+    a specified category defined in class
     initialization
     """
     def __init__(self, category):
@@ -52,12 +55,13 @@ class ApplyProductCategory(object):
     def name(self):
         return u'apply_cat_%s' % self.category.name
 
+
 class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
     list_display = ('name', 'description', 'category', 'is_active')
     list_editable = ('category', 'is_active')
     list_filter = ('category',)
-    
+
     def get_actions(self, request):
         actions = super(ProductAdmin, self).get_actions(request)
         category_actions_list = [ApplyProductCategory(cat) for cat in Category.objects.all()]
@@ -74,17 +78,17 @@ class ProductAdmin(admin.ModelAdmin):
         actions.update(additional_actions)
         return actions
 
-
 admin.site.register(Product, ProductAdmin)
 
+
 class PriceAdmin(admin.ModelAdmin):
-    search_fields = ['product__name', 'product__description','presentation__name']
+    search_fields = ['product__name', 'product__description', 'presentation__name']
     list_display = ('product', 'presentation', 'currency', 'sell_price', 'buy_price', 'is_active', 'featured')
     list_editable = ('sell_price', 'buy_price', 'is_active', 'featured')
     list_filter = ('product__category', 'presentation__name',)
     list_per_page = 25
     ordering = ('product__name',)
-    actions = ['build_email',]
+    actions = ['build_email']
 
     def build_email(self, request, queryset):
         def closing_date():

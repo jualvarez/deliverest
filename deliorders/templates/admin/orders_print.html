@@ -32,8 +32,10 @@
         {{ order.customer.address }}
         {% endif %} {% if order.customer.phone %}<br>
         {{ order.customer.phone }}
-        {% endif %}{% if order.comments %}<br>
-        {{ order.comments }}
+        {% endif %}{% if order.staff_comments %}<br>
+        {{ order.staff_comments }}
+        {% endif %}{% if order.user_comments %}<br>
+        {{ order.user_comments }}
         {% endif %}
         </div>
         <div class="customer-details">
