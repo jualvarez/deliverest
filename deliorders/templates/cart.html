@@ -28,7 +28,7 @@
                         <th>Presentación</th>
                         <th width="10%" class="cart-price">Unitario</th>
                         <th width="10%" class="cart-price">Total</th>
-                        <th class="cart-price">Pedidos especiales</th>
+                        <th>Pedidos especiales</th>
                     </thead>
                     <tbody>
                         {% for item in order.orderitem_set.all %}
@@ -39,7 +39,10 @@
                             <td>{{ item.product.presentation }}</td>
                             <td align="right" class="cart-price">$&nbsp;{{ item.sell_price|floatformat:2 }}</td>
                             <td align="right" class="cart-price">$&nbsp;{{ item.item_total|floatformat:2 }}</td>
-                            <td>{% if order.status == 10 %}<input type="text" class="form-control input-sm comment" onchange="checkQtyValue(this)" class="form-control input-sm" name="comment_{{ item.id }}" value="{{ item.comments }}" />{% else %}{{ item.comments }}{% endif %}</td>
+                            <td>
+                                <button type="button" {% if item.comments %}style="display:none;"{% endif %} class="btn btn-info btn-xs" onclick="toggleInput(this)"><i class="glyphicon glyphicon-comment"></i></button>{% if order.status == 10 %}
+                                <input type="text" {% if not item.comments %}style="display:none;"{% endif %} class="form-control input-sm comment" onchange="checkQtyValue(this)" class="form-control input-sm" name="comment_{{ item.id }}" value="{{ item.comments }}" onblur="blurComments(this)" />{% else %}{{ item.comments }}{% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                         {% if order.status >= 20 and order.delivery_price %}
@@ -157,6 +160,22 @@
                 $(inpt).closest('tr').addClass('removed');
             }
         }
+    }
+
+    function toggleInput(btn) {
+        $(btn).toggle();
+        var input = $(btn).next();
+        input.fadeToggle();
+        input.focus();
+        return false;
+    }
+
+    function blurComments(input) {
+        input = $(input);
+        if (input.val())
+            return;
+        input.prev().toggle();
+        input.toggle();
     }
 </script>
 {% endif %}
