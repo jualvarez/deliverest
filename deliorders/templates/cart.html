@@ -28,16 +28,18 @@
                         <th>Presentación</th>
                         <th width="10%" class="cart-price">Unitario</th>
                         <th width="10%" class="cart-price">Total</th>
+                        <th class="cart-price">Pedidos especiales</th>
                     </thead>
                     <tbody>
                         {% for item in order.orderitem_set.all %}
                         <tr>
                             <td id="{{ item.id }}">{% if order.status == 10 %}<a href="#" onclick="removeItem(event)"><span class="glyphicon glyphicon-trash"></span></a>{% endif %}</td>
-                            <td>{% if order.status == 10 %}<input type="number" onchange="checkQtyValue(this)" class="form-control input-sm" name="modify_{{ item.id }}" value="{{ item.quantity }}" />{% else %}{{ item.quantity }}{% endif %}</td>
+                            <td>{% if order.status == 10 %}<input type="number" onchange="checkQtyValue(this)" class="form-control input-sm quantity" name="quantity_{{ item.id }}" value="{{ item.quantity }}" />{% else %}{{ item.quantity }}{% endif %}</td>
                             <td>{{ item.product.product }}</td>
                             <td>{{ item.product.presentation }}</td>
                             <td align="right" class="cart-price">$&nbsp;{{ item.sell_price|floatformat:2 }}</td>
                             <td align="right" class="cart-price">$&nbsp;{{ item.item_total|floatformat:2 }}</td>
+                            <td>{% if order.status == 10 %}<input type="text" class="form-control input-sm comment" onchange="checkQtyValue(this)" class="form-control input-sm" name="comment_{{ item.id }}" value="{{ item.comments }}" />{% else %}{{ item.comments }}{% endif %}</td>
                         </tr>
                         {% endfor %}
                         {% if order.status >= 20 and order.delivery_price %}
@@ -48,12 +50,14 @@
                             <td></td>
                             <td align="right" class="cart-price">$&nbsp;{{ order.delivery_price|floatformat:2 }}</td>
                             <td align="right" class="cart-price">$&nbsp;{{ order.delivery_price|floatformat:2 }}</td>
+                            <td></td>
                         </tr>
                         {% endif %}
                         <tr>
                             <td>&nbsp;</td>
                             <td colspan="4" align="right" class="cart-price"><strong>Total</strong></td>
                             <td align="right" class="cart-price"><strong>$&nbsp;{{ order.get_order_total|floatformat:2 }}</strong></td>
+                            <td>&nbsp;</td>
                         </tr>
                     </tbody>
                 </table>
@@ -120,7 +124,7 @@
     });
     function removeItem(ev) {
         ev.preventDefault();
-        var $inpt = $(ev.target).closest('tr').find('input');
+        var $inpt = $(ev.target).closest('tr').find('.quantity');
         $inpt.val(0);
         checkQtyValue($inpt);
     }
@@ -136,11 +140,13 @@
             elAlert.alert('close');
         }, 5000);
 
-        if (parseFloat($(inpt).val()) > 0) {
-            $(inpt).closest('tr').removeClass('removed');
-        }
-        else {
-            $(inpt).closest('tr').addClass('removed');
+        if ($(inpt).hasClass('quantity')) {
+            if (parseFloat($(inpt).val()) > 0) {
+                $(inpt).closest('tr').removeClass('removed');
+            }
+            else {
+                $(inpt).closest('tr').addClass('removed');
+            }
         }
     }
 </script>

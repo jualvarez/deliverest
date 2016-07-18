@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import json
 from datetime import datetime
 
 from django.core import urlresolvers
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.utils.translation import ugettext as _
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, Http404
+from django.http import HttpResponseBadRequest, JsonResponse, Http404
 from django.shortcuts import redirect, get_object_or_404
-from django.contrib.auth import logout as auth_logout, login
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
 
 from deliverest.decorators import render_to
-from deliproducts.models import Category, Product, Price
+from deliproducts.models import Category, Price
 from deliorders.models import Order, OrderItem
 from deliorders import utils
 from delicontacts.models import Customer
@@ -59,19 +58,26 @@ def cart(request, *args, **kwargs):
         if request.POST:
             # Modify order
             for mod in request.POST:
-                if "modify_" not in mod:
+                if "quantity_" not in mod and "comment_" not in mod:
                     continue
                 item_id = mod.split("_")[1]
                 if int(item_id) not in item_ids:
                     return HttpResponseBadRequest("Intent to change inexistent item: " + mod)
-                item = OrderItem.objects.get(id=item_id)
-                val = int(request.POST[mod])
-                if val == 0:
-                    item.delete()
-                elif val > 0:
-                    item.quantity = val
+                try:
+                    item = OrderItem.objects.get(id=item_id)
+                except OrderItem.DoesNotExist:
+                    continue
+                if "quantity_" in mod:
+                    val = int(request.POST[mod])
+                    if val == 0:
+                        item.delete()
+                    elif val > 0:
+                        item.quantity = val
+                        item.save()
+                if "comment_" in mod:
+                    val = unicode(request.POST[mod])
+                    item.comments = val
                     item.save()
-
         o.save()
 
     context = {
@@ -100,9 +106,9 @@ def confirm_cart(request, *args, **kwargs):
 
     # Try to get a user unconfirmed cart
     o = get_object_or_404(Order, customer=c, status=10)
-    o.contact_mode = 50 # Web
+    o.contact_mode = 50  # Web
     o.delivery_date = utils.next_open_day(datetime.today(), o.delivery_method.delivery_day)
-    o.status = 20 # User confirmed order
+    o.status = 20  # User confirmed order
     OrderForm = modelform_factory(Order, fields=('delivery_method', 'delivery_address', 'user_comments'))
     form = OrderForm(request.POST, request.FILES, instance=o)
     if form.is_valid():
@@ -169,17 +175,17 @@ def add_to_cart(request):
         return JsonResponse({'success': False, 'error': _(u'¡Ups! No encontramos el producto que quisiste agregar. Lo vamos a verificar.')})
 
     # This should always return a customer. Let the error propagate otherwise.
-    c = Customer.objects.get(associated_user = request.user)
+    c = Customer.objects.get(associated_user=request.user)
 
     # Try to find an order open for this customer
     try:
         o = Order.objects.get(customer=c, status__in=[10, 20])
         if o.status == 20:
-            return JsonResponse({'success': False, 'error': _(u'Tu último pedido todavía no fue procesado. Podés modificarlo entrando al <a href="%s">carrito de compras</a>.') % urlresolvers.reverse('shopping_cart') })
+            return JsonResponse({'success': False, 'error': _(u'Tu último pedido todavía no fue procesado. Podés modificarlo entrando al <a href="%s">carrito de compras</a>.') % urlresolvers.reverse('shopping_cart')})
     except ObjectDoesNotExist:
         o = Order()
         o.customer = c
-        o.contact_mode = 50 # Web
+        o.contact_mode = 50  # Web
         o.status = 10
         o.delivery_method = c.prefered_delivery_method
         o.delivery_address = c.address
@@ -201,9 +207,9 @@ def add_to_cart(request):
     # Check for final quantity, delete if 0 or negative
     if i.quantity <= 0:
         i.delete()
-        return JsonResponse({'success': True, 'message':_((u'Sacamos <strong>%s</strong> del carrito de compras') % (p.product.name))})
+        return JsonResponse({'success': True, 'message': _((u'Sacamos <strong>%s</strong> del carrito de compras') % (p.product.name))})
 
-    return JsonResponse({'success': True, 'message':_((u'Ahora tenés %d <strong>%s</strong> en el carrito de compras') % (i.quantity, p.product.name))})
+    return JsonResponse({'success': True, 'message': _((u'Ahora tenés %d <strong>%s</strong> en el carrito de compras') % (i.quantity, p.product.name))})
 
 
 @login_required
