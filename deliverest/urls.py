@@ -7,7 +7,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
-from deliorders.views import home, add_to_cart, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
+from deliorders.views import home, add_to_cart, load_order, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
 from deliproducts.views import search_ajax
 from delicontacts.views import account_settings
 
@@ -20,6 +20,8 @@ urlpatterns = [
         add_to_cart, name="add_to_cart"),
     url(r'^agregar-producto/$',
         add_dialog, name="add_dialog"),
+    url(r'^recargar-pedido/$',
+        load_order, name="load_order"),
     url(r'^carrito/$',
         cart, name="shopping_cart"),
     url(r'^confirmar-carrito/$',
@@ -34,6 +36,8 @@ urlpatterns = [
 
     url(r'^cuenta/$',
         account_settings, name="account_settings"),
+    url(r'^cuenta/(?P<mode>[^/]+)/$',
+        account_settings, name="account_settings_mode"),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^autocomplete/', include('autocomplete_light.urls')),
@@ -43,7 +47,6 @@ urlpatterns = [
 
     # Social login related
     url(r'^accounts/', include('allauth.urls')),
-    #url(r'', include('social.apps.django_app.urls', namespace='social'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

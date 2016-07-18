@@ -101,6 +101,9 @@ tr.removed {
 	padding-top: 60px;
 }
 
+.history-order-item {
+	display: none;
+}
 
 
 /*

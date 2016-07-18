@@ -71,6 +71,8 @@
             </div>
             {% if order.status == 10 %}
             <button type="submit" id="update-button" disabled class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Modificar pedido</button>
+            &nbsp;
+            <a href="{% url 'home' %}" id="back-button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span>&nbsp;Continuar comprando</a>
         </form>
         {% endif %}
     </div>

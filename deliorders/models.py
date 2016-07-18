@@ -42,6 +42,9 @@ class OrderManager(models.Manager):
             o = None
         return o
 
+    def last_closed(self, number=10):
+        return self.get_queryset().filter(status__gte=300).order_by('-when_closed')[:number]
+
 
 @python_2_unicode_compatible
 class Order(models.Model):

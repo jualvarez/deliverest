@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import redirect
-from django.contrib.auth import get_user_model
 from django.forms.models import modelform_factory
 from django.contrib.auth.decorators import login_required
 
@@ -12,6 +11,10 @@ from delicontacts.models import Customer
 @login_required
 @render_to('account_settings.html')
 def account_settings(request, *args, **kwargs):
+    mode = kwargs.get('mode', 'settings')
+    valid_modes = ['settings', 'orders']
+    if mode not in valid_modes:
+        raise ValueError("Mode '%s' does does not apply to this view" % (mode))
     user = request.user
     if not hasattr(user, 'customer'):
         try:
@@ -36,4 +39,8 @@ def account_settings(request, *args, **kwargs):
     else:
         form = CustomerForm(instance=customer)
 
-    return {'form': form}
+    return {
+        'form': form,
+        'customer': customer,
+        'mode': mode
+    }

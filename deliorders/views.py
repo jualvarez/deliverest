@@ -161,11 +161,51 @@ def add_dialog(request):
     }
 
 
+class UnprocessedOrder(Exception):
+    pass
+
+
+def _add_to_cart(customer, price, quantity):
+    # Try to find an order open for this customer
+    o = Order.objects.get_active(customer)
+    if o and o.status == 20:
+        raise UnprocessedOrder
+    if o is None:
+        o = Order()
+        o.customer = customer
+        o.contact_mode = 50  # Web
+        o.status = 10
+        o.delivery_method = customer.prefered_delivery_method
+        o.delivery_address = customer.address
+        o.save()
+
+    # See if an item of the same Price was already added and add up quantities in it's the case
+    try:
+        # TODO: Could be a problem if the same Price was added manually through admin
+        i = OrderItem.objects.get(order=o, product=price)
+        i.quantity = i.quantity + float(quantity)
+        i.save()
+    except ObjectDoesNotExist:
+        i = OrderItem()
+        i.order = o
+        i.quantity = float(quantity)
+        i.product = price
+        i.save()
+
+    # Check for final quantity, delete if 0 or negative
+    if i.quantity <= 0:
+        i.delete()
+        i = None
+
+    return i
+
+
 def add_to_cart(request):
     if not request.user.is_authenticated():
         return JsonResponse({'success': False, 'error': _(u'Antes de crear un carrito de compras, tenés que acceder al sistema.')})
     price_id = request.GET.get('price_id', '')
     quantity = request.GET.get('quantity', '')
+
     if price_id == '' or quantity == '':
         return JsonResponse({'success': False, 'error': _(u'¿Cuántos querés?')})
 
@@ -175,38 +215,13 @@ def add_to_cart(request):
         return JsonResponse({'success': False, 'error': _(u'¡Ups! No encontramos el producto que quisiste agregar. Lo vamos a verificar.')})
 
     # This should always return a customer. Let the error propagate otherwise.
-    c = Customer.objects.get(associated_user=request.user)
+    c = request.user.customer
 
-    # Try to find an order open for this customer
     try:
-        o = Order.objects.get(customer=c, status__in=[10, 20])
-        if o.status == 20:
-            return JsonResponse({'success': False, 'error': _(u'Tu último pedido todavía no fue procesado. Podés modificarlo entrando al <a href="%s">carrito de compras</a>.') % urlresolvers.reverse('shopping_cart')})
-    except ObjectDoesNotExist:
-        o = Order()
-        o.customer = c
-        o.contact_mode = 50  # Web
-        o.status = 10
-        o.delivery_method = c.prefered_delivery_method
-        o.delivery_address = c.address
-        o.save()
-
-    # See if an item of the same Price was already added and add up quantities in it's the case
-    try:
-        # TODO: Could be a problem if the same Price was added manually through admin
-        i = OrderItem.objects.get(order=o, product=p)
-        i.quantity = i.quantity + float(quantity)
-        i.save()
-    except ObjectDoesNotExist:
-        i = OrderItem()
-        i.order = o
-        i.quantity = float(quantity)
-        i.product = p
-        i.save()
-
-    # Check for final quantity, delete if 0 or negative
-    if i.quantity <= 0:
-        i.delete()
+        i = _add_to_cart(c, p, quantity)
+    except UnprocessedOrder:
+        return JsonResponse({'success': False, 'error': _(u'Tu último pedido todavía no fue procesado. Podés modificarlo entrando al <a href="%s">carrito de compras</a>.') % urlresolvers.reverse('shopping_cart')})
+    if i is None:
         return JsonResponse({'success': True, 'message': _((u'Sacamos <strong>%s</strong> del carrito de compras') % (p.product.name))})
 
     return JsonResponse({'success': True, 'message': _((u'Ahora tenés %d <strong>%s</strong> en el carrito de compras') % (i.quantity, p.product.name))})
@@ -218,3 +233,16 @@ def user_confirmed_tf(request):
     customer.last_confirmed_tf = datetime.today()
     customer.save()
     return JsonResponse({'success': True})
+
+
+@login_required
+def load_order(request):
+    order_id = request.POST.get('order_id')
+
+    customer = request.user.customer
+
+    history_order = Order.objects.get(id=order_id, customer=customer)
+    for item in history_order.orderitem_set.all():
+        _add_to_cart(customer, item.product, item.quantity)
+
+    return redirect(urlresolvers.reverse('shopping_cart'))

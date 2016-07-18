@@ -3,20 +3,51 @@
 
 {% block content %}
 <div class="container container-bar">
-<div class="row">
-<h2>{{ form.instance.name }}</h2>
-<h3>Actualizá la información de tu cuenta</h3>
-<form method="post">
-{% csrf_token %}
-{% bootstrap_form form %}
-    {% buttons %}
-        <button type="submit" class="btn btn-info">
-            {% bootstrap_icon "star" %} Guardar
-        </button>
-    {% endbuttons %}
-</form>
-</div>
-
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{% url 'account_settings_mode' mode='settings' %}" class="list-group-item">Información de la cuenta</a>
+                {% if customer.order_set.last_closed.count %}
+                <a href="{% url 'account_settings_mode' mode='orders' %}" class="list-group-item">Pedidos anteriores</a>
+                {% endif %}
+            </div>
+            <div class="hidden-sm hidden-xs" id="cart-status">
+            </div>
+        </div>
+        
+        {% if mode == 'settings' %}
+        <div class="col-md-9">
+            <h2>{{ form.instance.name }}</h2>
+            <h3>Actualizá la información de tu cuenta</h3>
+            <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-info">
+                        {% bootstrap_icon "star" %} Guardar
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+        {% elif mode == 'orders' %}
+        <div class="col-md-9">
+            <ul>
+            {% for o in customer.order_set.last_closed %}
+                <form action={% url 'load_order' %} method='post'>
+                {% csrf_token %}
+                <input type="hidden" name="order_id" value="{{ o.id }}" />
+                <li><h3 class="history-order">{{o.code}} - {{o.when_closed}}&nbsp;<button type="button" class="btn btn-info" onclick="toggleOrder(this)">Mostrar</button>&nbsp;<button type="submit" class="btn btn-info">Agregar al pedido actual</button></h3></li>
+                <form>
+                <ul>
+                    {% for item in o.orderitem_set.all %}
+                    <li class="history-order-item">{{ item.quantity }} {%if item.quantity == 1%}{{ item.product.presentation.name|lower }}{% else %}{{ item.product.presentation.plural_name|lower }}{% endif %} de <strong>{{ item.product.product.name|lower }}</strong></li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
 
@@ -24,5 +55,9 @@
 <script type="text/javascript">
     $(function(){
     });
+    function toggleOrder(obj) {
+        $(obj).parent().parent().next().find('li').slideToggle();
+        return false;
+    }
 </script>
 {% endblock %}
