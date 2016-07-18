@@ -7,7 +7,7 @@
     <li class="list-group-item row">
     <div class="col-xs-10">
     <input type="hidden" name="price_id" value="{{ item.product.id }}" />
-    <a href="{% url 'shopping_cart' %}#{{ item.id }}">{{ item.quantity }} {%if item.quantity == 1%}{{ item.product.presentation.name|lower }}{% else %}{{ item.product.presentation.plural_name|lower }}{% endif %} de <strong>{{ item.product.product.name|lower }}</strong></a>
+    <a href="{% url 'shopping_cart' %}#{{ item.id }}">{{ item.quantity }} {%if item.quantity == 1%}{{ item.product.presentation.name|lower }}{% else %}{{ item.product.presentation.plural_name|lower }}{% endif %} de <strong>{{ item.product.product.name|lower }}</strong> ($&nbsp;{{ item.item_total|floatformat:2 }})</a>
     </div>
     <div class="col-xs-2 pull-right">
     <a href="#" onclick="btnAddToCart(event, 1)"><span class="glyphicon glyphicon-plus-sign"></span></a>
@@ -16,4 +16,11 @@
     </li>
     </form>
     {% endfor %}
+    {% if order.orderitem_set.count %}
+    <li class="list-group-item row">
+    <div class="col-xs-10 text-muted">
+    Total hasta ahora: <strong>$&nbsp;{{ order.get_order_total_without_delivery|floatformat:2 }}</strong>
+    </div>
+    </li>
+    {% endif %}
 </ul>

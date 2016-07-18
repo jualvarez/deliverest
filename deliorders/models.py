@@ -138,7 +138,7 @@ class Order(models.Model):
 
         return super(Order, self).save(*args, **kwargs)
 
-    def get_order_total(self):
+    def get_order_total(self, include_delivery=True):
         total = self.orderitem_set.aggregate(
             total=models.Sum(
                 models.ExpressionWrapper(
@@ -147,8 +147,12 @@ class Order(models.Model):
             )
         )['total']
         total = total if total is not None else 0.0
-        total = float(total) + float(self.delivery_price)
+        if include_delivery:
+            total = float(total) + float(self.delivery_price)
         return Decimal(total)
+
+    def get_order_total_without_delivery(self):
+        return self.get_order_total(False)
 
     def user_can_open(self):
         # Check if delivery date is open

@@ -52,13 +52,20 @@
                             <td align="right" class="cart-price">$&nbsp;{{ order.delivery_price|floatformat:2 }}</td>
                             <td></td>
                         </tr>
-                        {% endif %}
                         <tr>
                             <td>&nbsp;</td>
                             <td colspan="4" align="right" class="cart-price"><strong>Total</strong></td>
                             <td align="right" class="cart-price"><strong>$&nbsp;{{ order.get_order_total|floatformat:2 }}</strong></td>
                             <td>&nbsp;</td>
                         </tr>
+                        {% else %}
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="4" align="right" class="cart-price"><strong>Total (sin envío)</strong></td>
+                            <td align="right" class="cart-price"><strong>$&nbsp;{{ order.get_order_total_without_delivery|floatformat:2 }}</strong></td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
