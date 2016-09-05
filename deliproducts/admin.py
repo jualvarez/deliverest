@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
 from django.contrib import admin
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
 
+from deliorders import utils
 from .models import Category, Presentation, Product, Price, Provider
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    search_fields = ['name',]
+    search_fields = ['name', ]
     list_display = ('name', 'order', 'is_active')
     list_editable = ('order', 'is_active')
 
@@ -92,25 +93,16 @@ class PriceAdmin(admin.ModelAdmin):
 
     def build_email(self, request, queryset):
         def closing_date():
-            days_to_close = (settings.DELIVEREST['DEFAULT_CLOSING_DAY'] - datetime.weekday(datetime.today())) % 7
-            close_date = datetime.today() + timedelta(days=days_to_close)
-            return close_date
+            tf_start, tf_end = utils.tf_frame()
+            return tf_start
 
         def delivery_dates():
-            default_delivery_days = settings.DELIVEREST['DEFAULT_DELIVERY_DAYS']
-            delivery_dates = []
-            for dday in default_delivery_days:
-                days_to_delivery = (dday - datetime.weekday(datetime.today())) % 7
-                delivery_date = datetime.today() + timedelta(days=days_to_delivery)
-                delivery_dates += [delivery_date]
+            start, end = utils.delivery_days(timezone.now())
+            delivery_dates = [start, end]
             return delivery_dates
 
         def delivery_cost():
-            try:
-                delivery_price = Price.objects.get(product__name=u'Envío')
-            except DoesNotExist:
-                return '0'
-            return u"%.2f" % delivery_price.sell_price
+            return u"%.2f" % settings.DELIVERY_DEFAULT_PRICE
 
         queryset.order_by('product__name')
         categories = []

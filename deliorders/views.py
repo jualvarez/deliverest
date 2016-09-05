@@ -40,6 +40,7 @@ def home(request, *args, **kwargs):
             category = get_object_or_404(Category, slug=catslug)
         context['products'] = Price.objects.filter(product__category=category, product__is_active=True, is_active=True)
         context['category_browse'] = True
+        context['selected_category'] = category
     else:
         context['products'] = Price.objects.filter(featured=True, product__is_active=True, is_active=True)
         context['promo_images'] = PromoImage.objects.filter(is_active=True)
@@ -165,7 +166,7 @@ class UnprocessedOrder(Exception):
     pass
 
 
-def _add_to_cart(customer, price, quantity):
+def _add_to_cart(customer, price, quantity, comments):
     # Try to find an order open for this customer
     o = Order.objects.get_active(customer)
     if o and o.status == 20:
@@ -179,18 +180,20 @@ def _add_to_cart(customer, price, quantity):
         o.delivery_address = customer.address
         o.save()
 
-    # See if an item of the same Price was already added and add up quantities in it's the case
+    # See if an item of the same Price was already added and add up quantities if it's the case
     try:
         # TODO: Could be a problem if the same Price was added manually through admin
         i = OrderItem.objects.get(order=o, product=price)
         i.quantity = i.quantity + float(quantity)
-        i.save()
     except ObjectDoesNotExist:
         i = OrderItem()
         i.order = o
         i.quantity = float(quantity)
         i.product = price
-        i.save()
+
+    if comments:
+        i.comments = comments
+    i.save()
 
     # Check for final quantity, delete if 0 or negative
     if i.quantity <= 0:
@@ -205,6 +208,7 @@ def add_to_cart(request):
         return JsonResponse({'success': False, 'error': _(u'Antes de crear un carrito de compras, tenés que acceder al sistema.')})
     price_id = request.GET.get('price_id', '')
     quantity = request.GET.get('quantity', '')
+    comments = request.GET.get('comments', '')
 
     if price_id == '' or quantity == '':
         return JsonResponse({'success': False, 'error': _(u'¿Cuántos querés?')})
@@ -218,7 +222,7 @@ def add_to_cart(request):
     c = request.user.customer
 
     try:
-        i = _add_to_cart(c, p, quantity)
+        i = _add_to_cart(c, p, quantity, comments)
     except UnprocessedOrder:
         return JsonResponse({'success': False, 'error': _(u'Tu último pedido todavía no fue procesado. Podés modificarlo entrando al <a href="%s">carrito de compras</a>.') % urlresolvers.reverse('shopping_cart')})
     if i is None:

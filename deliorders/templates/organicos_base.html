@@ -17,6 +17,8 @@
     <link href="/static/css/organicos.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
 
+    <link rel="stylesheet" href="/static/css/simple-sidebar.css">
+
     <!-- Custom CSS -->
     <link href="/static/css/shop-homepage.css" rel="stylesheet">
 
@@ -42,7 +44,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><span class="hidden-sm">Orgánicos de mi Tierra</span><span class="visible-sm-block">OdmT</span></a>
+                <a class="navbar-brand" href="#" onclick="toggleSidebar()"><span class="hidden-sm">Orgánicos de mi Tierra</span><span class="visible-sm-block">OdmT</span></a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -92,26 +94,27 @@
         <!-- /.container -->
     </nav>
 
+    <div id="wrapper">
     <!-- Page Content -->
     {% block content %}
     {% endblock %}
-    <!-- /.container -->
+        <div class="container">
 
-    <div class="container">
+            <hr/>
 
-        <hr/>
-
-        <!-- Footer -->
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Organicos de mi Tierra 2015</p>
+            <!-- Footer -->
+            <footer>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p>Organicos de mi Tierra 2015</p>
+                    </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
 
+        </div>
+        <!-- /.container -->
     </div>
-    <!-- /.container -->
+    <!-- /#wrapper -->
 
     <!-- dialogs -->
     {% if tf_closed and not tf_confirmed %}
@@ -227,6 +230,9 @@
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/bootstrap3-typeahead.js"></script>
     <script type="text/javascript">
+    function toggleSidebar() {
+        $('#wrapper').toggleClass('toggled');
+    }
     $('#nav-search').typeahead({
         source: searchProds,
         templates: {
@@ -275,7 +281,9 @@
       var priceId = price.val();
       var inptQty = btn.closest('form').find('[name=quantity]');
       var quantity = parseFloat(qty) || inptQty.val();
-      addToCart(priceId, quantity)
+      var inptComments = btn.closest('form').find('[name=comments]');
+      var comments = inptComments.val();
+      addToCart(priceId, quantity, comments)
       .then(function(){
           inptQty.val('1');
       });
@@ -314,13 +322,14 @@
         })
     }
 
-    function addToCart(pId, pQty) {
+    function addToCart(pId, pQty, comments) {
         var elAlert = null;
         var jqProm = $.ajax({
             url: '{% url "add_to_cart" %}',
             data: {
                 price_id: pId,
-                quantity: pQty || 1
+                quantity: pQty || 1,
+                comments
             },
             dataType: 'json'
         });

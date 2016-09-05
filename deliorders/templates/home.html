@@ -30,53 +30,63 @@
             </div>
         </div>
     {% endif %}
-    <div class="container {% if category_browse %}container-bar{% endif %}">
-    <div class="row">
-
-        <div class="col-md-3">
-            <h4>Nuestros productos</h4>
-            <div class="list-group">
-                {% for category in categories %}
-                <a href="{% url 'category' category=category.slug %}" class="list-group-item">{{ category.name }}</a>
-                    {% for subcategory in category.subcategories.active %}
-                    <a href="{% url 'category' category=subcategory.slug %}" class="list-group-item inner">{{ subcategory.name }}</a>
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav" id="products-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        Nuestros productos
+                    </a>
+                </li>
+                <li>
+                    {% for category in categories %}
+                    <a href="{% url 'category' category=category.slug %}"{% if category.subcategories.active.exists %}class="has-children"{% endif %}>{{ category.name }}</a>
+                        {% if selected_category == category or selected_category.parent == category %}
+                        {% for subcategory in category.subcategories.active %}
+                        <a href="{% url 'category' category=subcategory.slug %}" class="inner">{{ subcategory.name }}</a>
+                        {% endfor %}
+                        {% endif %}
                     {% endfor %}
-                {% endfor %}
-            </div>
-            <div class="hidden-sm hidden-xs" id="cart-status">
-            </div>
+                </li>
+            </ul>
         </div>
+        <!-- /#sidebar-wrapper -->
 
-        <div class="col-md-9">
+        <div id="page-content-wrapper">
+            <div class="container-fluid {% if category_browse %}container-bar{% endif %}">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-9">
 
-            {% for price in products %}
-            {% if forloop.counter|divisibleby:3 %}
-            <div class="row">
-                {% endif %}
-                <div class="col-sm-4 col-lg-4 col-md-4">
-                    <div class="thumbnail">
-                        <div class="caption-full">
-                            <h4><a href="#" onclick="btnAddProductDialog({{ price.id }}, event)">{{ price.product.name }}</a></h4>
-                            <p>{{ price.presentation }}</p>
-                            {% if price.product.description %}<p>{{ price.product.description }}</p>{% endif %}
-                            <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
-                            <div class="form-group">
-                                <button onclick="addToCart({{ price.id }}, 1)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
+                        {% for price in products %}
+                        {% if forloop.counter|divisibleby:3 %}
+                        <div class="row">
+                            {% endif %}
+                            <div class="col-sm-4">
+                                <div class="thumbnail">
+                                    <div class="caption-full">
+                                        <h4><a href="#" onclick="btnAddProductDialog({{ price.id }}, event)">{{ price.product.name }}</a></h4>
+                                        <p>{{ price.presentation }}</p>
+                                        {% if price.product.description %}<p>{{ price.product.description }}</p>{% endif %}
+                                        <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
+                                        <div class="form-group">
+                                            <button onclick="btnAddProductDialog({{ price.id }}, event)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                            {% if forloop.counter|divisibleby:3 %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3">
+                        <div id="cart-status">
                         </div>
                     </div>
                 </div>
-                {% if forloop.counter|divisibleby:3 %}
             </div>
-            {% endif %}
-            {% endfor %}
         </div>
-
-    </div>
-    <div class="row container">
-        <div class="visible-sm-block visible-xs-block col-sm-12 col-xs-12" id="cart-status-sm"></div>
-    </div>
-    </div>
+        <!-- End page wrapper -->
     {% endblock %}
 
     {% block dialogs %}

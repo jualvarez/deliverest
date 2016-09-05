@@ -16,6 +16,10 @@ Ya tenés en tu carrito:
     <label for="quantity">Cantidad</label>
     <input name="quantity" value="1" class="form-control input" />
 </div>
+<div class="form-group">
+    <label for="comments">¿Nos querés dejar un comentario?</label>
+    <input name="comments" class="form-control input" />
+</div>
 <div class="modal-footer">
   {% if is_logged_in %}
   <button type="button" class="btn btn-info" onclick="btnAddToCart(event)" data-dismiss="modal">Agregar</button>

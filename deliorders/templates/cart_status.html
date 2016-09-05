@@ -9,7 +9,7 @@
     <input type="hidden" name="price_id" value="{{ item.product.id }}" />
     <a href="{% url 'shopping_cart' %}#{{ item.id }}">{{ item.quantity }} {%if item.quantity == 1%}{{ item.product.presentation.name|lower }}{% else %}{{ item.product.presentation.plural_name|lower }}{% endif %} de <strong>{{ item.product.product.name|lower }}</strong> ($&nbsp;{{ item.item_total|floatformat:2 }})</a>
     </div>
-    <div class="col-xs-2 pull-right">
+    <div class="text-right col-xs-2 pull-right">
     <a href="#" onclick="btnAddToCart(event, 1)"><span class="glyphicon glyphicon-plus-sign"></span></a>
     <a href="#" onclick="btnAddToCart(event, -1)"><span class="glyphicon glyphicon-minus-sign"></span></a>
     </div>
