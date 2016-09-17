@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils import timezone
 
 from datetime import date
 
@@ -159,7 +160,7 @@ class Order(models.Model):
 
     def user_can_open(self):
         # Check if delivery date is open
-        open_delivery = self.delivery_date >= utils.next_open_day(date.today(), self.delivery_method.delivery_day)
+        open_delivery = self.delivery_date >= utils.next_open_day(timezone.now(), self.delivery_method.delivery_day)
         # User can only open if they closed it and the target delivery date is still open
         return self.status == 20 and open_delivery
 

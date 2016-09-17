@@ -11,6 +11,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
+from django.utils import timezone
 
 from deliverest.decorators import render_to
 from deliproducts.models import Category, Price
@@ -107,7 +108,7 @@ def confirm_cart(request, *args, **kwargs):
     # Try to get a user unconfirmed cart
     o = get_object_or_404(Order, customer=c, status=10)
     o.contact_mode = 50  # Web
-    o.delivery_date = utils.next_open_day(datetime.today(), o.delivery_method.delivery_day)
+    o.delivery_date = utils.next_open_day(timezone.now(), o.delivery_method.delivery_day)
     o.status = 20  # User confirmed order
     OrderForm = modelform_factory(Order, fields=('delivery_method', 'delivery_address', 'user_comments'))
     form = OrderForm(request.POST, request.FILES, instance=o)
