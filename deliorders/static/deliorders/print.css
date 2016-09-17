@@ -30,6 +30,12 @@
     margin-bottom: 7px;
     }
 
+@media print {
+    .order-bound {
+        page-break-inside: avoid;
+    }
+}
+
 tr.order-total {
     font-weight: bold;
     border-top: #aaa 2px solid;
