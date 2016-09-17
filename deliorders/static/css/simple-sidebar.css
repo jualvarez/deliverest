@@ -70,6 +70,8 @@
     color: #f9cae0;
 }
 
+a.selected-category::before {content: "\e080";font-family: 'Glyphicons Halflings';font-size: 10px;vertical-align: top;padding: 0 5px 0 0;}
+
 .sidebar-nav li a:hover {
     text-decoration: none;
     color: #fff;
@@ -96,7 +98,7 @@
     background: none;
 }
 
-@media(min-width:768px) {
+@media(min-width: 992px) {
     #wrapper {
         padding-left: 250px;
     }
@@ -125,8 +127,8 @@
 }
 
 .sidebar-nav li a.inner {
-    background: hsla(332,64%,34%,1);
-    color: hsla(318,61%,79%,1);
+    background: #8e1f53;
+    color: #f0c1e2;
     padding-left: 17px;
 }
 
@@ -134,5 +136,3 @@
     background: hsla(332,49%,63%,1);
     color: hsla(318,73%,94%,1);
 }
-
-.sidebar-nav li a.has-children::after {content: "\e114";font-family: 'Glyphicons Halflings';font-size: 13px;float: right;padding-right: 19px;}

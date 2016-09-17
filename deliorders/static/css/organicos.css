@@ -84,6 +84,7 @@ a,a:focus, a:hover {
 	min-width: 300px;
 	margin-right: auto;
 	margin-left: auto;
+	pointer-events: all;
 }
 
 .alert-wrapper {
@@ -91,6 +92,7 @@ a,a:focus, a:hover {
     position: fixed;
     z-index: 5000;
     top: 20px;
+    pointer-events: none;
 }
 
 tr.removed {
@@ -175,4 +177,53 @@ tr.removed {
         text-align: right;
 		margin-top:10px;
  	}
+}
+
+
+h2 {
+    color: #b7286a;
+    margin-bottom: 22px;
+}
+
+.sidebar-nav a.selected-category {
+    background-color: #d2327d !important;
+    font-weight: bold;
+}
+
+
+.dropdown a.has-children {background-color: hsla(79,32%,44%,1);}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+    background: #718740;
+    color: #f9fbe4;
+}
+
+.dropdown-menu>li>a {color: #f9fbe4 !important;}
+
+
+
+.sidebar-nav a.has-children::after {
+    content: "\e114";
+    font-family: 'Glyphicons Halflings';
+    font-size: 13px;
+    float: right;
+    padding-right: 19px;
+}
+
+.dropdown-menu a.inner {
+    background-color: #7d944c;
+    padding-left: 42px !important;
+}
+
+ul.dropdown-menu {
+    background-color: #788d49 !important;
+}
+
+
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: hsla(83,39%,37%,1);
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ebead4;
 }

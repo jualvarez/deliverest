@@ -40,10 +40,10 @@
                 </li>
                 <li>
                     {% for category in categories %}
-                    <a href="{% url 'category' category=category.slug %}"{% if category.subcategories.active.exists %}class="has-children"{% endif %}>{{ category.name }}</a>
+                    <a href="{% url 'category' category=category.slug %}"class="{% if category.subcategories.active.exists %}has-children{% endif %} {% if selected_category == category %}selected-category{% endif %}">{{ category.name }}</a>
                         {% if selected_category == category or selected_category.parent == category %}
                         {% for subcategory in category.subcategories.active %}
-                        <a href="{% url 'category' category=subcategory.slug %}" class="inner">{{ subcategory.name }}</a>
+                        <a href="{% url 'category' category=subcategory.slug %}" class="inner {% if selected_category == subcategory %}selected-category{% endif %}">{{ subcategory.name }}</a>
                         {% endfor %}
                         {% endif %}
                     {% endfor %}
@@ -54,6 +54,7 @@
 
         <div id="page-content-wrapper">
             <div class="container-fluid {% if category_browse %}container-bar{% endif %}">
+                {% if category_browse %}<h2>{{ selected_category.parent_crumbs }}</h2>{% endif %}
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-9">
 

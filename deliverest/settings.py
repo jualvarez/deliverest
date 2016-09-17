@@ -87,8 +87,10 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'deliorders.context_processors.check_timeframe',
-                 # Required by `allauth` template tags
-                'django.core.context_processors.request'
+                # Required by `allauth` template tags
+                'django.core.context_processors.request',
+                # Application specific
+                'deliproducts.context_processors.category_browse'
             ]
         }
     }
