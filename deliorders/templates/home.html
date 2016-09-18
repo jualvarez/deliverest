@@ -2,7 +2,7 @@
     {% load bootstrap3 %}
 
     {% block content %}
-
+    <div id="wrapper">
     {% if not category_browse %}
     <div class="jumbotron">
             <div class="carousel-holder">
@@ -87,7 +87,9 @@
                 </div>
             </div>
         </div>
-        <!-- End page wrapper -->
+        <!-- /#page-content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
     {% endblock %}
 
     {% block dialogs %}
