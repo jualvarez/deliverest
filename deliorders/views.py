@@ -166,7 +166,7 @@ class UnprocessedOrder(Exception):
     pass
 
 
-def _add_to_cart(customer, price, quantity, comments):
+def _add_to_cart(customer, price, quantity, comments=None):
     # Try to find an order open for this customer
     o = Order.objects.get_active(customer)
     if o and o.status == 20:
@@ -246,6 +246,7 @@ def load_order(request):
     customer = request.user.customer
 
     history_order = Order.objects.get(id=order_id, customer=customer)
+
     for item in history_order.orderitem_set.all():
         _add_to_cart(customer, item.product, item.quantity)
 

@@ -32,6 +32,7 @@ ORDER_STATUS_CHOICES = (
 )
 
 DELIVERED_STATUSES = (300, 500)
+CLOSED_STATUSES = (200, 300, 400, 500, 600)
 
 
 class OrderManager(models.Manager):
@@ -141,6 +142,9 @@ class Order(models.Model):
             self.send_close_email()
 
         return super(Order, self).save(*args, **kwargs)
+
+    def is_closed(self):
+        return self.status in CLOSED_STATUSES
 
     def get_order_total(self, include_delivery=True):
         total = self.orderitem_set.aggregate(

@@ -36,7 +36,7 @@
                 <form action={% url 'load_order' %} method='post'>
                 {% csrf_token %}
                 <input type="hidden" name="order_id" value="{{ o.id }}" />
-                <li><h3 class="history-order">{{o.code}} - {{o.when_closed}}&nbsp;<button type="button" class="btn btn-info" onclick="toggleOrder(this)">Mostrar</button>&nbsp;<button type="submit" class="btn btn-info">Agregar al pedido actual</button></h3></li>
+                <li><h3 class="history-order">{{o.code}} - {{o.when_closed}}&nbsp;<button type="button" class="btn btn-info" onclick="toggleOrder(this)">Mostrar</button>{% if can_add %}&nbsp;<button type="submit" class="btn btn-info">Agregar al pedido actual</button>{% endif %}</h3></li>
                 <form>
                 <ul>
                     {% for item in o.orderitem_set.all %}

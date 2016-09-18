@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 from deliverest.decorators import render_to
 from delicontacts.models import Customer
+from deliorders.models import Order
 
 
 @login_required
@@ -39,8 +40,12 @@ def account_settings(request, *args, **kwargs):
     else:
         form = CustomerForm(instance=customer)
 
+    current_order = Order.objects.get_active(customer)
+    can_add = current_order.status == 10
+
     return {
         'form': form,
         'customer': customer,
-        'mode': mode
+        'mode': mode,
+        'can_add': can_add
     }
