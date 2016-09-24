@@ -58,6 +58,7 @@ INSTALLED_APPS = (
 
     'django_extensions',
     'bootstrap3',
+    'mailer'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -118,6 +119,8 @@ ABSOLUTE_URL = 'http://organicosdemitierra.com'
 LOGIN_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 URL_PATH = ''
+
+EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
