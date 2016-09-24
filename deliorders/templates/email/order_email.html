@@ -42,7 +42,7 @@
 			{% for item in order.orderitem_set.all %}
 			<tr>
 				<td align="center" width="7%" valign="middle" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="padding-top:4px;padding-bottom:4px;color:#3E3939;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:15px">{{ item.quantity }}</td>
-				<td align="left" width="78%" valign="middle" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="padding-top:4px;padding-bottom:4px;color:#3E3939;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:15px">{{ item.display }}</td>
+				<td align="left" width="78%" valign="middle" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" style="padding-top:4px;padding-bottom:4px;color:#3E3939;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:15px">{{ item.display }}{% if item.comments %}<br><small>{{ item.comments }}</small>{% endif %}</td>
 				<td align="right" width="15%" bgcolor="{% if forloop.counter|divisibleby:2 %}#a3b181{% else %}#b6c19b{% endif %}" valign="middle" style="padding-top:4px;padding-bottom:4px;color:#3E3939;font-family:Geneva,Arial,Helvetica,sans-serif;font-size:15px">${{ item.item_total|floatformat:2 }}</td>
 			</tr>
 			{% endfor %}

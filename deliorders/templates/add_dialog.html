@@ -1,9 +1,12 @@
+<h4>{{ product.name }}</h4>
+<p>{{ product.description }}</p>
 {% if existing_items %}
-Ya tenés en tu carrito:
+<h4>Ya tenés en tu carrito</h4>
 <ul>
     {% for item in existing_items %}<li><strong>{{ item.quantity }}</strong> {{ item.product }}</li>{% endfor %}
 </ul>
 {% endif %}
+<h4>Elegí una opción</h4>
 <form action="#" method="post">
 <div class="form-group">
     {% for price in product.price_set.active %}

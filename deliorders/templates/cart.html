@@ -119,8 +119,6 @@
         <dd>{{ order.delivery_date|date:"l d \d\e F \d\e Y"|lower|capfirst }}</dd>
         <dt>Hora de entrega</dt>
         <dd>{{ order.delivery_method.delivery_time|capfirst }}</dd>
-        <dt>Notas</dt>
-        <dd>{{ order.delivery_method.notes | safe }}</dd>
     </dl>
     <form action="{% url 'confirm_cart' %}" method="post">
         {% csrf_token %}
