@@ -41,7 +41,7 @@ def account_settings(request, *args, **kwargs):
         form = CustomerForm(instance=customer)
 
     current_order = Order.objects.get_active(customer)
-    can_add = current_order.status == 10
+    can_add = current_order and current_order.status
 
     return {
         'form': form,
