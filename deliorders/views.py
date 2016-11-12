@@ -4,6 +4,7 @@ from datetime import datetime
 
 from django.core import urlresolvers
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.http import HttpResponseBadRequest, JsonResponse, Http404
@@ -38,7 +39,7 @@ def home(request, *args, **kwargs):
             category = None
         else:
             category = get_object_or_404(Category, slug=catslug)
-        context['products'] = Price.objects.filter(product__category=category, product__is_active=True, is_active=True)
+        context['products'] = Price.objects.filter(Q(product__category__parent=category) | Q(product__category=category), product__is_active=True, is_active=True)
         context['category_browse'] = True
         context['selected_category'] = category
     else:
