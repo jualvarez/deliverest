@@ -5,6 +5,16 @@ body {
 
 .navbar-default {
 	background-color: #576f31;
+	min-height: 100px;
+}
+
+.navbar-nav {
+	padding-top: 30px;
+}
+
+.logo-organicos {
+	padding-right: 15px;
+
 }
 
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
@@ -100,7 +110,7 @@ tr.removed {
 }
 
 .container-bar {
-	padding-top: 60px;
+	padding-top: 110px !important;
 }
 
 .history-order-item {
