@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.utils import timezone
+from django.conf import settings
 from deliorders.utils import *
 
 
@@ -30,3 +31,6 @@ def check_timeframe(request):
                 ret['tf_confirmed'] = True
 
     return ret
+
+def google_analytics(request):
+    return {'google_analytics_id': settings.GOOGLE_ANALYTICS}

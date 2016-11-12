@@ -91,7 +91,8 @@ TEMPLATES = [
                 # Required by `allauth` template tags
                 'django.core.context_processors.request',
                 # Application specific
-                'deliproducts.context_processors.category_browse'
+                'deliproducts.context_processors.category_browse',
+                'deliorders.context_processors.google_analytics',
             ]
         }
     }
