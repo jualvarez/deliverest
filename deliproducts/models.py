@@ -4,6 +4,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.functional import cached_property
 
 UNIT_L = 'L'
 UNIT_ML = 'CC'
@@ -129,6 +130,16 @@ class Presentation(models.Model):
         else:
             return self.name
 
+    @cached_property
+    def plural_repr(self):
+        if self.quantity is not None:
+            return u"%s de %s %s" % (
+                self.plural_name,
+                self.quantity if self.quantity.to_integral() - self.quantity else self.quantity.to_integral(),
+                self.get_measure_unit_display() if (self.quantity == 1) or (self.measure_unit not in UNIT_CHOICES_PLURAL) else UNIT_CHOICES_PLURAL[self.measure_unit])
+        else:
+            return self.plural_name
+
     def unit_display(self):
         if self.quantity is not None:
             return "%0.f %s" % (
@@ -165,14 +176,6 @@ class Product(models.Model):
 
     def __str__(self):
         return u"%s" % (self.name)
-
-    def lowest_price(self):
-        try:
-            l_price = Price.objects.filter(
-                product_id=self.id).order_by('sell_price')[0]
-        except IndexError:
-            return "N/A"
-        return l_price.sell_price
 
 CURRENCY_CHOICE = (
     ('ARS', _(u'Peso argentino')),
