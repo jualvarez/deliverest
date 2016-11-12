@@ -55,7 +55,10 @@ def cart(request, *args, **kwargs):
     c = request.user.customer
     o = Order.objects.get_active(c)
     if o is None:
-        o = Order.objects.filter(customer=c, status=20).order_by('-when_create')[0]
+        try:
+            o = Order.objects.filter(customer=c, status=20).order_by('-when_create')[0]
+        except IndexError:
+            o = None
     if o is not None:
         item_ids = [item.id for item in o.orderitem_set.all()]
         if request.POST:
