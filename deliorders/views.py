@@ -88,7 +88,7 @@ def cart(request, *args, **kwargs):
         o.save()
 
     context = {
-        'empty_cart': o is None or not o.orderitem_set.all().count,
+        'empty_cart': o is None or not o.orderitem_set.all().count(),
         'order': o,
         'delivery_methods': DeliveryMethod.objects.all(),
         'customer': c
