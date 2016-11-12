@@ -4,7 +4,7 @@
   <dt>Presentación</dt>
   <dd>{{ selected_price.presentation }}</dd>
   <dt>Precio</dt>
-  <dd>$&nbsp;{{ selected_price.sell_price }}</dd>
+  <dd>$&nbsp;{{ selected_price.sell_price|floatformat:2 }}</dd>
 </dl>
 {% if existing_items %}
 <h4>Este producto ya está en el carrito</h4>
