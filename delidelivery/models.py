@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date
+
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
+
+from deliorders import utils
 
 DELIVERY_DAY_CHOICES = (
     (0, _(u'Lunes')),
@@ -40,3 +45,10 @@ class DeliveryMethod(models.Model):
 
     def __str__(self):
         return self.name
+
+    def next_delivery_date(self, dt=None):
+        """ Calculates the next possible delivery date after datetime dt """
+        if not dt:
+            dt = timezone.now()
+
+        return utils.next_open_day(dt, self.delivery_day)

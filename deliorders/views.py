@@ -54,6 +54,8 @@ def cart(request, *args, **kwargs):
     # This should always return a customer. Let the error propagate otherwise.
     c = request.user.customer
     o = Order.objects.get_active(c)
+    if o is None:
+        o = Order.objects.filter(customer=c, status=20).order_by('-when_create')[0]
     if o is not None:
         item_ids = [item.id for item in o.orderitem_set.all()]
         if request.POST:
@@ -98,27 +100,23 @@ def confirm_cart(request, *args, **kwargs):
     # This should always return a customer. Let the error propagate otherwise.
     c = request.user.customer
 
-    # See if user is trying to open the cart again
-    if request.POST.get('modify_order', '0') == '1':
-        o = get_object_or_404(Order, customer=c, status=20)
-        o.status = 10
-        o.save()
-        return redirect('shopping_cart')
-
     # Try to get a user unconfirmed cart
-    o = get_object_or_404(Order, customer=c, status=10)
+    o = Order.objects.get_active(c)
+    if not o:
+        raise Http404("El usuario no tiene una order abierta.")
     o.contact_mode = 50  # Web
-    o.delivery_date = utils.next_open_day(timezone.now(), o.delivery_method.delivery_day)
     o.status = 20  # User confirmed order
     OrderForm = modelform_factory(Order, fields=('delivery_method', 'delivery_address', 'user_comments'))
     form = OrderForm(request.POST, request.FILES, instance=o)
     if form.is_valid():
+        dm = form.cleaned_data['delivery_method']
+        form.instance.delivery_date = dm.next_delivery_date()
         form.save()
         # Update customer's data with latest delivery address
         c.address = form.instance.delivery_address
         c.save()
     else:
-        raise Exception("dbg")
+        raise Exception("Los datos ingresados son inválidos")
 
     return redirect('shopping_cart')
 
@@ -162,16 +160,10 @@ def add_dialog(request):
     }
 
 
-class UnprocessedOrder(Exception):
-    pass
-
-
 def _add_to_cart(customer, price, quantity, comments=None):
     # Try to find an order open for this customer
     o = Order.objects.get_active(customer)
-    if o and o.status == 20:
-        raise UnprocessedOrder
-    if o is None:
+    if o is None or o.status == 20:
         o = Order()
         o.customer = customer
         o.contact_mode = 50  # Web
@@ -221,10 +213,7 @@ def add_to_cart(request):
     # This should always return a customer. Let the error propagate otherwise.
     c = request.user.customer
 
-    try:
-        i = _add_to_cart(c, p, quantity, comments)
-    except UnprocessedOrder:
-        return JsonResponse({'success': False, 'error': _(u'Tu último pedido todavía no fue procesado. Podés modificarlo entrando al <a href="%s">carrito de compras</a>.') % urlresolvers.reverse('shopping_cart')})
+    i = _add_to_cart(c, p, quantity, comments)
     if i is None:
         return JsonResponse({'success': True, 'message': _((u'Sacamos <strong>%s</strong> del carrito de compras') % (p.product.name))})
 

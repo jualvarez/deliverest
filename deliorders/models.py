@@ -32,14 +32,15 @@ ORDER_STATUS_CHOICES = (
 )
 
 DELIVERED_STATUSES = (300, 500)
+USER_CONFIRMED_STATUSES = (20,)
 CLOSED_STATUSES = (200, 300, 400, 500, 600)
 
 
 class OrderManager(models.Manager):
     def get_active(self, customer):
-        """Try to get an unprocessed order for a customer."""
+        """Tries to get an unprocessed order for a customer."""
         try:
-            o = Order.objects.get(customer=customer, status__in=[10, 20])
+            o = Order.objects.get(customer=customer, status=10)
         except ObjectDoesNotExist:
             o = None
         return o
@@ -68,7 +69,8 @@ class Order(models.Model):
     delivery_address = models.TextField(verbose_name=_(u'dirección de envío'))
     delivery_date = models.DateField(
         verbose_name=_(u"fecha de entrega"),
-        blank=True)
+        blank=True,
+        null=True)
     delivery_price = models.DecimalField(
         max_digits=20,
         decimal_places=4,
@@ -130,7 +132,8 @@ class Order(models.Model):
         self.delivery_price = self.delivery_method.delivery_price
 
         # Calculate next delivery date
-        self.delivery_date = self.delivery_date or date.today() + datetime.timedelta((self.delivery_method.delivery_day - date.today().weekday()) % 7)
+        if self.status in USER_CONFIRMED_STATUSES or self.is_closed():
+            self.delivery_date = self.delivery_date or self.delivery_method.next_delivery_date()
 
         # If the order is closed, send notification email to user
         old_status = 0
