@@ -66,7 +66,7 @@ class Order(models.Model):
         DeliveryMethod,
         blank=True,
         verbose_name=_(u'método de envío'))
-    delivery_address = models.TextField(verbose_name=_(u'dirección de envío'))
+    delivery_address = models.TextField(verbose_name=_(u'dirección de envío'), blank=True)
     delivery_date = models.DateField(
         verbose_name=_(u"fecha de entrega"),
         blank=True,
