@@ -22,12 +22,12 @@
     <label for="price_id">¿Preferís alguna de estas alternativas?</label>
     {% for price in product.price_set.active %}
     <div class="radio" {% if price.id == selected_price.id %}style="display: none;"{% endif %}>
-      <label class="radio-inline"><input type="radio" name="price_id" value="{{ price.id }}" id="price_id_{{ price.id }}" {% if price.id == selected_price.id %}checked{% endif %}>{{ price }}</label>
+      <label class="radio-inline"><input type="radio" name="price_id" value="{{ price.id }}" id="price_id_{{ price.id }}" data-price-name="{{ price.product.name }} ({{ price.presentation }})" {% if price.id == selected_price.id %}checked{% endif %}>{{ price }}</label>
     </div>
     {% endfor %}
 </div>
 {% else%}
-<input type="hidden" name="price_id" value="{{ selected_price.id }}" />
+<input type="hidden" name="price_id" value="{{ selected_price.id }}" data-price-name="{{ selected_price.product.name }} ({{ selected_price.presentation }})" />
 {% endif %}
 <div class="form-group">
     <label for="comments">¿Nos querés dejar un comentario?</label>

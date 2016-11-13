@@ -250,12 +250,6 @@
         <script type="text/javascript">
           $('#nav-search').typeahead({
             source: searchProds,
-            templates: {
-              suggestion: function(data){
-                return '<p><strong>' + data.name + '</strong> - $' + data.price + '</p>';
-              },
-              header: '<h3 class="league-name">NBA Teams</h3>'
-            },
             afterSelect: selectItem,
             delay: 200
           })
@@ -284,6 +278,10 @@
           function selectItem(item){
             $('#nav-search').val('');
             btnAddProductDialog(item.id);
+            // Log Google analytics event
+            // TODO: Hacky way to get only product names
+            if (ga !== undefined)
+              ga('send', 'event', 'Search', 'select', item.name.split(":")[0]);
           }
 
           function btnAddToCart(e, qty) {
@@ -302,6 +300,11 @@
             .then(function(){
               inptQty.val('1');
             });
+
+            // Log on Google analytics
+            if (ga !== undefined) {
+              ga('send', 'event', 'Cart', 'add', price.attr('data-price-name'));
+            }
           }
 
           function btnAddProductDialog(productId, e) {
@@ -359,11 +362,11 @@
               elAlert = $('<div id="cart-success" class="alert alert-danger alert-dismissible alert-fixed" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Disculpanos, algo salió mal y no pudimos modificar el producto. Por favor intentá de nuevo mas tarde.</div>');
             })
             .always(function(){
-            // Get an updated cart list
-            if (typeof updateCartStatus == 'undefined')
-              location.reload();
-            function closeAlert() {
-              elAlert.alert('close');
+              // Get an updated cart list
+              if (typeof updateCartStatus == 'undefined')
+                location.reload();
+              function closeAlert() {
+                elAlert.alert('close');
             }
             elAlert.hide();
             var aWrapper = $('#alert-wrapper');
