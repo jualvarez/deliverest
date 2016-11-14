@@ -32,5 +32,10 @@ def check_timeframe(request):
 
     return ret
 
+
 def google_analytics(request):
     return {'google_analytics_id': settings.GOOGLE_ANALYTICS}
+
+
+def absolute_url(request):
+    return {'ABSOLUTE_URL': settings.ABSOLUTE_URL}
