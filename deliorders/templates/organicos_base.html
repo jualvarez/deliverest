@@ -80,7 +80,7 @@
                   <a href="https://www.facebook.com/organicosdemitierra" target="fb">Contacto</a>
                 </li>
                 <li>
-                  <form class="navbar-form navbar-right" role="search" method="get" action="{% url 'search' %}">
+                  <form id="search-form" class="navbar-form navbar-right" role="search" method="get" action="{% url 'search' %}">
                     <input
                     type="text"
                     name="q"
@@ -271,7 +271,7 @@
               var ta = $(this).data('typeahead');
               var val = ta.$menu.find('.active').data('value');
               if (!val)
-                $('form.navbar-form').submit();
+                $('#search-form').submit();
             }
           });
 
