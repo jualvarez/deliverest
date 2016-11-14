@@ -33,7 +33,6 @@ def tf_frame(ref_date=None):
 def is_tf_closed(ref_date=None):
     """Check if order timeframe is closed for a given date."""
 
-    print ref_date
     tf_start, tf_end = tf_frame(ref_date)
     if tf_start < tf_end:
         tf_end = tf_end + datetime.timedelta(days=7)
@@ -42,15 +41,15 @@ def is_tf_closed(ref_date=None):
     return now > tf_start and now < tf_end
 
 
-def tf_is_after_last_window(tzdatetime):
+def date_is_after_last_window(tzdatetime):
     """Check if given date falls after the last window has closed."""
     now = timezone.now()
     now = timezone.datetime(year=now.year, month=now.month, day=now.day)
     now = timezone.make_aware(now)
-    days_from_end = (now.weekday() - settings.WEEKLY_WINDOW_END) % 7
+    days_from_end = ((now.weekday() - settings.WEEKLY_WINDOW_END) % 7) * -1
     end_hour = settings.WEEKLY_WINDOW_END_HOUR
     td_end = datetime.timedelta(days=days_from_end, hours=end_hour)
-    last_tf_end = now - td_end
+    last_tf_end = now + td_end
     return tzdatetime >= last_tf_end
 
 

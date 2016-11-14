@@ -34,8 +34,7 @@ def check_timeframe(request):
             else:
                 when_last_confirmed = customer.last_confirmed_tf
 
-            if tf_is_after_last_window(when_last_confirmed):
-                ret['tf_confirmed'] = True
+            ret['tf_confirmed'] = date_is_after_last_window(when_last_confirmed)
 
     return ret
 
