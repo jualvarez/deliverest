@@ -252,6 +252,7 @@
           $('#nav-search').typeahead({
             source: searchProds,
             afterSelect: selectItem,
+            autoSelect: false,
             delay: 200
           })
           .on('focus', function(){
@@ -264,6 +265,14 @@
           .on('blur', function(){
             $(this).animate({width:'100%'});
             $(this).val('');
+          })
+          .on('keydown', function(e) {
+            if (e.keyCode == 13) {
+              var ta = $(this).data('typeahead');
+              var val = ta.$menu.find('.active').data('value');
+              if (!val)
+                $('form.navbar-form').submit();
+            }
           });
 
           function searchProds(q, prcs){

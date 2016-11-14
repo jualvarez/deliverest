@@ -61,7 +61,7 @@ def search(request, *args, **kwargs):
     context = {}
     context['products'] = products
     context['category_browse'] = True
-    context['category_header'] = 'Búsqueda'
+    context['category_header'] = 'Buscaste:'
     context['category_header_additional'] = q
 
     return context
