@@ -52,7 +52,7 @@ def home(request, *args, **kwargs):
 @render_to('home.html')
 def search(request, *args, **kwargs):
     # This should be the same query as deliproducts.views.search_ajax
-    q = request.GET['q']
+    q = request.GET.get('q', '')
     products = Price.objects.filter(
         Q(presentation__name__icontains=q) | Q(product__name__icontains=q) | Q(product__description__icontains=q),
         is_active=True, product__is_active=True
