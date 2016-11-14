@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import pytz
+
 from django.utils import timezone
 from django.conf import settings
 from deliorders.utils import *
@@ -25,7 +27,12 @@ def check_timeframe(request):
                 ret['tf_confirmed'] = True
                 return ret
             customer = request.user.customer
-            when_last_confirmed = customer.last_confirmed_tf or datetime.datetime(2015, 1, 1, 0, 0, 0)
+
+            if not customer.last_confirmed_tf:
+                tz = pytz.timezone('America/Cordoba')
+                when_last_confirmed = tz.localize(timezone.datetime(2015, 1, 1, 0, 0, 0))
+            else:
+                when_last_confirmed = customer.last_confirmed_tf
 
             if tf_is_after_last_window(when_last_confirmed):
                 ret['tf_confirmed'] = True
