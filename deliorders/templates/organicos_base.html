@@ -301,7 +301,7 @@
           function btnAddToCart(e, qty) {
             e.preventDefault();
 
-            var btn = $(event.target);
+            var btn = $(e.target);
             var price = btn.closest('form').find('[name=price_id]')
             if (price.length > 1)
               price = price.filter(':checked')
