@@ -19,6 +19,8 @@ body {
 
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
 	border-color: #50672d;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 .navbar-default .navbar-brand {
