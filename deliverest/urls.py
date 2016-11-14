@@ -7,7 +7,7 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
-from deliorders.views import home, add_to_cart, load_order, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
+from deliorders.views import home, search, add_to_cart, load_order, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
 from deliproducts.views import search_ajax
 from delicontacts.views import account_settings
 
@@ -16,6 +16,8 @@ urlpatterns = [
         name="home"),
     url(r'^categoria/(?P<category>[^/]+)/$',
         home, name="category"),
+    url(r'^buscar/$',
+        search, name="search"),
     url(r'^agregar/$',
         add_to_cart, name="add_to_cart"),
     url(r'^agregar-producto/$',
@@ -31,7 +33,7 @@ urlpatterns = [
     url(r'^confirm-tf/$',
         user_confirmed_tf, name="confirm_tf"),
 
-    url(r'^buscar/$',
+    url(r'^buscar-ajax/$',
         search_ajax, name="product_search_ajax"),
 
     url(r'^cuenta/$',

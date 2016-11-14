@@ -49,6 +49,24 @@ def home(request, *args, **kwargs):
     return context
 
 
+@render_to('home.html')
+def search(request, *args, **kwargs):
+    # This should be the same query as deliproducts.views.search_ajax
+    q = request.GET['q']
+    products = Price.objects.filter(
+        Q(presentation__name__icontains=q) | Q(product__name__icontains=q) | Q(product__description__icontains=q),
+        is_active=True, product__is_active=True
+    )
+
+    context = {}
+    context['products'] = products
+    context['category_browse'] = True
+    context['category_header'] = 'Búsqueda'
+    context['category_header_additional'] = q
+
+    return context
+
+
 @login_required
 @render_to('cart.html')
 def cart(request, *args, **kwargs):

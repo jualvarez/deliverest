@@ -80,9 +80,10 @@
                   <a href="https://www.facebook.com/organicosdemitierra" target="fb">Contacto</a>
                 </li>
                 <li>
-                  <form class="navbar-form navbar-right" role="search">
+                  <form class="navbar-form navbar-right" role="search" method="get" action="{% url 'search' %}">
                     <input
                     type="text"
+                    name="q"
                     class="form-control"
                     id="nav-search"
                     placeholder="Buscar"

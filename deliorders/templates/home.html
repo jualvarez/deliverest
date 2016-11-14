@@ -54,7 +54,7 @@
 
         <div id="page-content-wrapper">
             <div class="container-fluid {% if category_browse %}container-bar{% endif %}">
-                {% if category_browse %}<h2>{{ selected_category.parent_crumbs }}</h2>{% endif %}
+                {% if category_browse %}<h2>{{ selected_category.parent_crumbs }}{{ category_header }} <em>{{ category_header_additional }}</em></h2>{% endif %}
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-9">
 
