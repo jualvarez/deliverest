@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from deliorders.views import home, search, add_to_cart, load_order, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
-from deliproducts.views import search_ajax
+from deliproducts.views import price, search_ajax
 from delicontacts.views import account_settings
 
 urlpatterns = [
@@ -22,6 +22,8 @@ urlpatterns = [
         add_to_cart, name="add_to_cart"),
     url(r'^agregar-producto/$',
         add_dialog, name="add_dialog"),
+    url(r'^producto/(?P<id>[^/]+)$',
+        price, name="price"),
     url(r'^recargar-pedido/$',
         load_order, name="load_order"),
     url(r'^carrito/$',

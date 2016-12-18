@@ -3,9 +3,21 @@
 """Products views."""
 
 from django.http import JsonResponse
-from django.db.models import Q, Min
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+
+from deliverest.decorators import render_to
 
 from deliproducts.models import Price
+
+
+@render_to('deliproducts/product.html')
+def price(request, id):
+    price = get_object_or_404(Price, id=id)
+    return {
+        'price': price,
+        'category_browse': True
+    }
 
 
 def search_ajax(request):

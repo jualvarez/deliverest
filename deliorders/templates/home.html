@@ -1,5 +1,5 @@
-    {% extends "organicos_base.html" %}
-    {% load bootstrap3 %}
+{% extends "organicos_base.html" %}
+{% load bootstrap3 %}
 
     {% block content %}
     <div id="wrapper">
@@ -54,10 +54,10 @@
 
         <div id="page-content-wrapper">
             <div class="container-fluid {% if category_browse %}container-bar{% endif %}">
-                {% if category_browse %}<h2>{{ selected_category.parent_crumbs }}{{ category_header }} <em>{{ category_header_additional }}</em></h2>{% endif %}
+                {% if category_browse %}<h2>{% block containertitle %}{{ selected_category.parent_crumbs }}{{ category_header }} <em>{{ category_header_additional }}</em>{% endblock %}</h2>{% endif %}
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-9">
-
+                    {% block maincontent %}
                         {% for price in products %}
                         {% if forloop.first %}
                         <div class="row">
@@ -65,7 +65,7 @@
                             <div class="col-sm-4">
                                 <div class="thumbnail">
                                     <div class="caption-full">
-                                        <h4><a href="#" onclick="btnAddProductDialog({{ price.id }}, event)">{{ price.product.name }}</a></h4>
+                                        <h4><a href="{% url 'price' price.id %}">{{ price.product.name }}</a></h4>
                                         <p>{{ price.presentation }}</p>
                                         {% if price.product.description %}<p>{{ price.product.description }}</p>{% endif %}
                                         <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
@@ -82,6 +82,7 @@
                         </div>
                         {% endif %}
                         {% endfor %}
+                    {% endblock %}
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-3">
                         <div id="cart-status">
