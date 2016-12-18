@@ -49,6 +49,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 
     # Third party apps
+    'markdownx',
+    'django_markdown2',
     #'debug_toolbar.apps.DebugToolbarConfig',
     #'social.apps.django_app.default',
     'allauth',

@@ -1,5 +1,5 @@
 {% extends "home.html" %}
-{% load bootstrap3 %}
+{% load bootstrap3 md2 %}
 
 {% block title %}{{ price.product.name }}{% endblock %}
 {% block containertitle %}{{ price.product.name }}{% endblock %}
@@ -10,8 +10,13 @@
             <div class="thumbnail">
                 <!--<img class="img-responsive" src="http://placehold.it/800x300" alt="">-->
                 <div class="caption-full">
-                    <h4 class="pull-right">$24.99</h4>
+                    <h4 class="pull-right">$ {{ price.sell_price | floatformat:2 }}</h4>
                     <p>{{ price.product.description }}</p>
+                    <p>{{ price.product.long_description | markdown }}</p>
+                    <dl class="dl-horizontal">
+                      <dt>Presentación</dt>
+                      <dd>{{ price.presentation }}</dd>
+                    </dl>
                 </div>
                 <div class="caption-full">
                     <div class="form-group">

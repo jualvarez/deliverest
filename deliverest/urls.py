@@ -11,6 +11,7 @@ from deliorders.views import home, search, add_to_cart, load_order, add_dialog, 
 from deliproducts.views import price, search_ajax
 from delicontacts.views import account_settings
 
+
 urlpatterns = [
     url(r'^$', home,
         name="home"),
@@ -43,6 +44,8 @@ urlpatterns = [
     url(r'^cuenta/(?P<mode>[^/]+)/$',
         account_settings, name="account_settings_mode"),
 
+    url(r'^markdownx/', include('markdownx.urls')),
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^autocomplete/', include('autocomplete_light.urls')),
 
@@ -58,5 +61,6 @@ if settings.DEBUG:
     # static files (images, css, javascript, etc.)
     urlpatterns += [
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': settings.MEDIA_ROOT})
+            'document_root': settings.MEDIA_ROOT
+        })
     ]

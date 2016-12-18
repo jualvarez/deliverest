@@ -6,6 +6,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
 
+from markdownx.models import MarkdownxField
+
 UNIT_L = 'L'
 UNIT_ML = 'CC'
 UNIT_G = 'G'
@@ -157,7 +159,8 @@ class Product(models.Model):
         verbose_name=_(u'nombre'),
         unique=True
     )
-    description = models.TextField(verbose_name=_(u'descripción'), blank=True)
+    description = models.TextField(verbose_name=_(u'descripción'), help_text=_(u'descripción que se muestra en los listados de producto'), blank=True)
+    long_description = MarkdownxField(verbose_name=_(u'descripción larga'), help_text=_(u'descripción que se muestra en el detalle de producto'), blank=True)
     presentations = models.ManyToManyField(Presentation, through='Price')
     provider = models.ForeignKey('Provider', verbose_name=_(u'proveedor'), blank=True, null=True)
 
