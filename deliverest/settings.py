@@ -96,6 +96,7 @@ TEMPLATES = [
                 'deliproducts.context_processors.category_browse',
                 'deliorders.context_processors.google_analytics',
                 'deliorders.context_processors.absolute_url',
+                'delicontent.context_processors.nav_pages',
             ]
         }
     }

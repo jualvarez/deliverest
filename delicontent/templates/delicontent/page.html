@@ -1,0 +1,17 @@
+{% extends "home.html" %}
+{% load bootstrap3 md2 %}
+
+{% block title %}{{ page.title }}{% endblock %}
+{% block containertitle %}{{ page.title }}{% endblock %}
+
+{% block maincontent %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="thumbnail">
+            	<div class="caption-full">
+                	<p>{{ page.content | markdown }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

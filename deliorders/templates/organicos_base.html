@@ -95,6 +95,13 @@
                   <a href="{% url 'account_settings' %}">Mi cuenta</a>
                 </li>
                 {% endif %}
+                {% if nav_pages %}
+                {% for page in nav_pages %}
+                <li>
+                  <a href="{% url 'page' slug=page.slug %}">{{ page.short_title }}</a>
+                </li>
+                {% endfor %}
+                {% endif %}
                 <li>
                   <a href="https://www.facebook.com/organicosdemitierra" target="fb">Contacto</a>
                 </li>

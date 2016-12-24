@@ -9,6 +9,7 @@ from django.conf import settings
 
 from deliorders.views import home, search, add_to_cart, load_order, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
 from deliproducts.views import price, search_ajax
+from delicontent.views import page
 from delicontacts.views import account_settings
 
 
@@ -25,6 +26,8 @@ urlpatterns = [
         add_dialog, name="add_dialog"),
     url(r'^producto/(?P<id>[^/]+)$',
         price, name="price"),
+    url(r'^pagina/(?P<slug>[^/]+)$',
+        page, name="page"),
     url(r'^recargar-pedido/$',
         load_order, name="load_order"),
     url(r'^carrito/$',

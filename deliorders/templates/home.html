@@ -5,30 +5,30 @@
     <div id="wrapper">
     {% if not category_browse %}
     <div class="jumbotron" style="padding:31px 0 0 0;">
-            <div class="carousel-holder">
-                    <div id="promo-carousel" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            {% for promo_image in promo_images %}
-                            <li data-target="#promo-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}class="active"{% endif %}></li>
-                            {% endfor %}
-                        </ol>
-                        <div class="carousel-inner">
-                            {% for promo_image in promo_images %}
-                            <div class="item{% if forloop.counter0 == 0 %} active{% endif %}">
-                                <img class="slide-image" src="{{ promo_image.image.url }}" alt="{{ promo_image.description }}">
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <a class="left carousel-control" href="#promo-carousel" data-slide="prev">
-                            <span class="glyphicon glyphicon-chevron-left"></span>
-                        </a>
-                        <a class="right carousel-control" href="#promo-carousel" data-slide="next">
-                            <span class="glyphicon glyphicon-chevron-right"></span>
-                        </a>
+        <div class="carousel-holder">
+            <div id="promo-carousel" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    {% for promo_image in promo_images %}
+                    <li data-target="#promo-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.counter0 == 0 %}class="active"{% endif %}></li>
+                    {% endfor %}
+                </ol>
+                <div class="carousel-inner">
+                    {% for promo_image in promo_images %}
+                    <div class="item{% if forloop.counter0 == 0 %} active{% endif %}">
+                        <img class="slide-image" src="{{ promo_image.image.url }}" alt="{{ promo_image.description }}">
+                    </div>
+                    {% endfor %}
                 </div>
-
+                <a class="left carousel-control" href="#promo-carousel" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#promo-carousel" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
             </div>
+
         </div>
+    </div>
     {% endif %}
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
@@ -71,6 +71,9 @@
                                         <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
                                         <div class="form-group">
                                             <button onclick="btnAddProductDialog({{ price.id }}, event)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
+                                            {% if request.user.is_staff %}
+                                            <a class="btn btn-primary" href="{% url 'admin:deliproducts_price_change' price.id %}"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Editar</a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 </div>
