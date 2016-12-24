@@ -165,12 +165,6 @@ class Order(models.Model):
     def get_order_total_without_delivery(self):
         return self.get_order_total(False)
 
-    def user_can_open(self):
-        # Check if delivery date is open
-        open_delivery = self.delivery_date >= utils.next_open_day(timezone.now(), self.delivery_method.delivery_day)
-        # User can only open if they closed it and the target delivery date is still open
-        return self.status == 20 and open_delivery
-
     def send_close_email(self):
         absolute_url = settings.ABSOLUTE_URL
         message = "Need an HTML enabled email client"  # render_to_string("email/order_email.txt", {'order':self})
