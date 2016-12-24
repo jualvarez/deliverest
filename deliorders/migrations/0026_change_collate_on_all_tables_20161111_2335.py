@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         ('socialaccount', '0001_initial'),
     ]
 
-    operations = []
+    operations = [
         migrations.RunSQL('ALTER TABLE account_emailaddress CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;'),
         migrations.RunSQL('ALTER TABLE account_emailconfirmation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;'),
         migrations.RunSQL('ALTER TABLE auth_group CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;'),

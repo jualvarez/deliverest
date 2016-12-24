@@ -65,7 +65,7 @@
                             <div class="col-sm-4">
                                 <div class="thumbnail">
                                     <div class="caption-full">
-                                        <h4><a href="{% url 'price' price.id %}">{{ price.product.name }}</a></h4>
+                                        <h4><a href="{% url 'price' price.id %}" onclick="btnAddProductDialog({{ price.id }}, event)">{{ price.product.name }}</a></h4>
                                         <p>{{ price.presentation }}</p>
                                         {% if price.product.description %}<p>{{ price.product.description }}</p>{% endif %}
                                         <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
