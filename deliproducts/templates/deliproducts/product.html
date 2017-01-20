@@ -12,7 +12,7 @@
                 <!--<img class="img-responsive" src="http://placehold.it/800x300" alt="">-->
                 <div class="caption-full">
                     <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                        <h4 class="pull-right"><span itemprop="priceCurrency" content="ARS">$ </span itemprop="price" content="{{ price.sell_price | floatformat:2 }}">{{ price.sell_price | floatformat:2 }}</h4>
+                        <h4 class="pull-right"><span itemprop="priceCurrency" content="ARS">$ </span><span itemprop="price" content="{{ price.sell_price | floatformat:2 }}">{{ price.sell_price | floatformat:2 }}</span></h4>
                     </span>
                     <p itemprop="description">{{ price.product.description }}</p>
                     <p>{{ price.product.long_description | markdown }}</p>
