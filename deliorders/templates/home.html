@@ -53,7 +53,7 @@
         </div>
         <!-- /#sidebar-wrapper -->
 
-        <div id="page-content-wrapper">
+        <div id="page-content-wrapper" {% block containerprops %}{% endblock %}>
             <div class="container-fluid {% if category_browse %}container-bar{% endif %}">
                 {% if category_browse %}<h2>{% block containertitle %}{{ selected_category.parent_crumbs }}{{ category_header }} <em>{{ category_header_additional }}</em>{% endblock %}</h2>{% endif %}
                 <div class="row">

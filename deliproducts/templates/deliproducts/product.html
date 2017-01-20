@@ -2,7 +2,8 @@
 {% load bootstrap3 md2 %}
 
 {% block title %}{{ price.product.name }}{% endblock %}
-{% block containertitle %}{{ price.product.name }}{% endblock %}
+{% block containerprops %}itemscope itemtype="http://schema.org/Product"{% endblock %}
+{% block containertitle %}<span itemprop="name">{{ price.product.name }}</span>{% endblock %}
 
 {% block maincontent %}
     <div class="row">
@@ -10,13 +11,16 @@
             <div class="thumbnail">
                 <!--<img class="img-responsive" src="http://placehold.it/800x300" alt="">-->
                 <div class="caption-full">
-                    <h4 class="pull-right">$ {{ price.sell_price | floatformat:2 }}</h4>
-                    <p>{{ price.product.description }}</p>
+                    <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                        <h4 class="pull-right"><span itemprop="priceCurrency" content="ARS">$ </span itemprop="price" content="{{ price.sell_price | floatformat:2 }}">{{ price.sell_price | floatformat:2 }}</h4>
+                    </span>
+                    <p itemprop="description">{{ price.product.description }}</p>
                     <p>{{ price.product.long_description | markdown }}</p>
-                    <dl class="dl-horizontal">
-                      <dt>Presentación</dt>
-                      <dd>{{ price.presentation }}</dd>
+                    <dl class="dl-horizontal" itemprop="additionalProperty" itemscope itemtype="http://schema.org/PropertyValue">
+                      <dt itemprop="name">Presentación</dt>
+                      <dd itemprop="value">{{ price.presentation }}</dd>
                     </dl>
+                    <link itemprop="availability" href="http://schema.org/InStock" />
                 </div>
                 <div class="caption-full">
                     <div class="form-group">
