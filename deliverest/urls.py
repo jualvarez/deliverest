@@ -5,12 +5,15 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf.urls.static import static
+from django.contrib.sitemaps.views import sitemap
 from django.conf import settings
 
 from deliorders.views import home, search, add_to_cart, load_order, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
 from deliproducts.views import price, search_ajax
 from delicontent.views import page
 from delicontacts.views import account_settings
+
+from deliproducts.sitemaps import sitemaps
 
 
 urlpatterns = [
@@ -51,6 +54,10 @@ urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^autocomplete/', include('autocomplete_light.urls')),
+
+    # Sitemap
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+        name='django.contrib.sitemaps.views.sitemap'),
 
     # Auth views
     url('^', include('django.contrib.auth.urls')),

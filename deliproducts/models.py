@@ -5,6 +5,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.functional import cached_property
+from django.core.urlresolvers import reverse
 
 from markdownx.models import MarkdownxField
 
@@ -89,6 +90,11 @@ class Category(models.Model):
 
         else:
             return crumb_str
+
+    def get_absolute_url(self):
+        return reverse(
+            'deliorders.views.home',
+            kwargs={'category': self.slug})
 
     def __str__(self):
         return self.parent_crumbs()
@@ -229,7 +235,6 @@ class Price(models.Model):
             self.sell_price)
 
     def get_absolute_url(self):
-        from django.core.urlresolvers import reverse
         category = self.product.category
         if category is not None:
             category = category.slug
