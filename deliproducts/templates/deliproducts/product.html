@@ -13,6 +13,7 @@
                 <div class="caption-full">
                     <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                         <h4 class="pull-right"><span itemprop="priceCurrency" content="ARS">$ </span><span itemprop="price" content="{{ price.sell_price | stringformat:'.2f' }}">{{ price.sell_price | floatformat:2 }}</span></h4>
+                        <link itemprop="availability" href="http://schema.org/InStock" />
                     </span>
                     <p itemprop="description">{{ price.product.description }}</p>
                     <p>{{ price.product.long_description | markdown }}</p>
@@ -20,7 +21,6 @@
                       <dt itemprop="name">Presentación</dt>
                       <dd itemprop="value">{{ price.presentation }}</dd>
                     </dl>
-                    <link itemprop="availability" href="http://schema.org/InStock" />
                 </div>
                 <div class="caption-full">
                     <div class="form-group">
