@@ -108,7 +108,7 @@ def cart(request, *args, **kwargs):
     context = {
         'empty_cart': o is None or not o.orderitem_set.all().count(),
         'order': o,
-        'delivery_methods': DeliveryMethod.objects.all(),
+        'delivery_methods': DeliveryMethod.objects.filter(is_active=True),
         'customer': c
     }
     return context
@@ -190,7 +190,7 @@ def _add_to_cart(customer, price, quantity, comments=None):
         o.customer = customer
         o.contact_mode = 50  # Web
         o.status = 10
-        o.delivery_method = customer.prefered_delivery_method
+        o.delivery_method = customer.prefered_delivery_method if customer.prefered_delivery_method.is_active else None
         o.delivery_address = customer.address
         o.save()
 

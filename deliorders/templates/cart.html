@@ -90,6 +90,7 @@
                 <div class="form-group">
                     <label for="delivery_method">Método de entrega</label>
                     <select class="form-control" id="delivery_method" name="delivery_method">
+                        <option value="" {% if order.delivery_method_id == None %}selected{% endif %}>--------</option>
                         {% for dm in delivery_methods %}
                         <option value="{{dm.id}}" {% if order.delivery_method_id == dm.id %}selected{% endif %}>{{ dm.name }} {% if dm.delivery_price %}($&nbsp;{{ dm.delivery_price|floatformat:2 }}){% else %}({% trans 'sin costo' %}){% endif %}</option>
                         {% endfor %}

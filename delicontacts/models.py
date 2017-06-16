@@ -46,6 +46,7 @@ class Customer(Person):
     associated_user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         verbose_name=_(u'usuario vinculado'),
+        on_delete=models.PROTECT,
         null=True,
         blank=True
     )
@@ -63,3 +64,15 @@ class Customer(Person):
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
         return reverse('delicontacts.views.account_settings')
+
+
+class NewsletterSubscriber(Person):
+    related_customer = models.OneToOneField(Customer, on_delete=models.SET_NULL, null=True, verbose_name=_(u'cliente actual'), related_name='subscriber')
+    is_subscribed = models.BooleanField(default=True, verbose_name=_(u'está suscripto'))
+
+    class Meta:
+        verbose_name = _(u'suscriptor de novedades')
+        verbose_name_plural = _(u'suscriptores de novedades')
+
+    def __str__(self):
+        return u"%s <%s>" % (self.name, self.email if self.email else u'sin email')

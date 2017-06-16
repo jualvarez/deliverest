@@ -38,6 +38,7 @@ class DeliveryMethod(models.Model):
         decimal_places=4,
         default=settings.DELIVERY_DEFAULT_PRICE,
         verbose_name=_(u'precio de envío'))
+    is_active = models.BooleanField(default=True, verbose_name=_(u'está activo'))
 
     class Meta:
         verbose_name = _(u'método de envío')

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from decimal import Decimal
-import datetime
 
 from django.db import models
 from django.conf import settings
@@ -9,7 +8,6 @@ from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils import timezone
 
 from datetime import date
 
@@ -17,7 +15,6 @@ from django.utils.translation import ugettext_lazy as _
 from delicontacts.models import Customer, CONTACT_MODE_CHOICES
 from deliproducts.models import Price
 from delidelivery.models import DeliveryMethod
-from deliorders import utils
 
 
 ORDER_STATUS_CHOICES = (
@@ -57,7 +54,8 @@ class Order(models.Model):
         verbose_name=_(u'código'))
     customer = models.ForeignKey(
         Customer,
-        verbose_name=_(u'cliente'))
+        verbose_name=_(u'cliente'),
+        on_delete=models.PROTECT)
     contact_mode = models.IntegerField(
         choices=CONTACT_MODE_CHOICES,
         blank=True,
@@ -65,6 +63,7 @@ class Order(models.Model):
     delivery_method = models.ForeignKey(
         DeliveryMethod,
         blank=True,
+        null=True,
         verbose_name=_(u'método de envío'))
     delivery_address = models.TextField(verbose_name=_(u'dirección de envío'), blank=True)
     delivery_date = models.DateField(
@@ -184,7 +183,7 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order)
     quantity = models.IntegerField(verbose_name=_(u'cantidad'))
-    product = models.ForeignKey(Price, verbose_name=_(u'producto'))
+    product = models.ForeignKey(Price, verbose_name=_(u'producto'), on_delete=models.PROTECT)
     sell_price = models.DecimalField(
         max_digits=20,
         decimal_places=4,

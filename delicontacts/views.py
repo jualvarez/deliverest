@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from deliverest.decorators import render_to
 from delicontacts.models import Customer
 from deliorders.models import Order
+from delidelivery.models import DeliveryMethod
 
 
 @login_required
@@ -34,11 +35,13 @@ def account_settings(request, *args, **kwargs):
     CustomerForm = modelform_factory(Customer, fields=('name', 'address', 'phone', 'prefered_delivery_method'))
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES, instance=customer)
+        form.fields['prefered_delivery_method'].queryset = DeliveryMethod.objects.filter(is_active=True)
         if form.is_valid():
             form.save()
             return redirect('home')
     else:
         form = CustomerForm(instance=customer)
+        form.fields['prefered_delivery_method'].queryset = DeliveryMethod.objects.filter(is_active=True)
 
     current_order = Order.objects.get_active(customer)
     can_add = current_order and current_order.status
