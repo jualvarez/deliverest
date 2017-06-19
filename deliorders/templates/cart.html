@@ -95,6 +95,7 @@
                         <option value="{{dm.id}}" {% if order.delivery_method_id == dm.id %}selected{% endif %}>{{ dm.name }} {% if dm.delivery_price %}($&nbsp;{{ dm.delivery_price|floatformat:2 }}){% else %}({% trans 'sin costo' %}){% endif %}</option>
                         {% endfor %}
                     </select>
+                    <span class="error text-danger">{{ errors.delivery_method }}</span>
                 </div>
                 <div class="form-group">
                     <label for="address">Dirección de envío</label>
