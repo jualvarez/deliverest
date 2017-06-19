@@ -8,16 +8,15 @@ from django.db.models import Q
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.http import HttpResponseBadRequest, JsonResponse, Http404
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render_to_response
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
-from django.utils import timezone
+from django.template import RequestContext
 
 from deliverest.decorators import render_to
 from deliproducts.models import Category, Price
 from deliorders.models import Order, OrderItem
-from deliorders import utils
 from delicontacts.models import Customer
 from delidelivery.models import DeliveryMethod
 from delicontent.models import PromoImage
@@ -127,10 +126,10 @@ def confirm_cart(request, *args, **kwargs):
     if not o:
         raise Http404("El usuario no tiene una order abierta.")
     o.contact_mode = 50  # Web
-    o.status = 20  # User confirmed order
     OrderForm = modelform_factory(Order, fields=('delivery_method', 'delivery_address', 'user_comments'))
     form = OrderForm(request.POST, request.FILES, instance=o)
     if form.is_valid():
+        o.status = 20  # User confirmed order
         dm = form.cleaned_data['delivery_method']
         form.instance.delivery_date = dm.next_delivery_date()
         form.save()
@@ -138,7 +137,14 @@ def confirm_cart(request, *args, **kwargs):
         c.address = form.instance.delivery_address
         c.save()
     else:
-        raise Exception("Los datos ingresados son inválidos")
+        context = {
+            'empty_cart': o is None or not o.orderitem_set.all().count(),
+            'delivery_methods': DeliveryMethod.objects.filter(is_active=True),
+            'customer': c,
+            'order': o,
+            'errors': form.errors
+        }
+        return render_to_response('cart.html', RequestContext(request, context))
 
     return redirect('shopping_cart')
 

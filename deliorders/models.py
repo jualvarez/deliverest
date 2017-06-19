@@ -62,7 +62,6 @@ class Order(models.Model):
         verbose_name=_(u'forma de contacto'))
     delivery_method = models.ForeignKey(
         DeliveryMethod,
-        blank=True,
         null=True,
         verbose_name=_(u'método de envío'))
     delivery_address = models.TextField(verbose_name=_(u'dirección de envío'), blank=True)
