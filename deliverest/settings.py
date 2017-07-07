@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'delicontent',
 
     'autocomplete_light',
+    'import_export',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

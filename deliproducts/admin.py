@@ -7,6 +7,9 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.conf import settings
 
+from import_export.admin import ExportMixin
+from import_export import resources, fields, widgets
+
 from deliorders import utils
 from .models import Category, Presentation, Product, Price, Provider
 
@@ -82,14 +85,31 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 
 
-class PriceAdmin(admin.ModelAdmin):
+class PriceResource(resources.ModelResource):
+
+    product = fields.Field(attribute='product', column_name='Producto', widget=widgets.CharWidget())
+    presentation = fields.Field(attribute='presentation', column_name='Presentación', widget=widgets.CharWidget())
+    sell_price = fields.Field(attribute='sell_price', column_name='Precio', widget=widgets.DecimalWidget())
+    is_active = fields.Field(attribute='is_active', column_name='Activo', widget=widgets.BooleanWidget())
+    featured = fields.Field(attribute='featured', column_name='Destacado', widget=widgets.BooleanWidget())
+
+    class Meta:
+        model = Price
+        exclude = ('id', 'currency', 'in_stock', 'wholesale', 'buy_price')
+        export_order = ('product', 'presentation', 'sell_price', 'is_active', 'featured')
+
+
+class PriceAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ['product__name', 'product__description', 'presentation__name']
     list_display = ('product', 'presentation', 'currency', 'sell_price', 'buy_price', 'is_active', 'featured')
     list_editable = ('sell_price', 'buy_price', 'is_active', 'featured')
-    list_filter = ('product__category', 'presentation__name',)
+    list_filter = ('is_active', 'product__category', 'presentation__name',)
     list_per_page = 25
     ordering = ('product__name',)
     actions = ['build_email']
+
+    # Export
+    resource_class = PriceResource
 
     def build_email(self, request, queryset):
         def closing_date():
