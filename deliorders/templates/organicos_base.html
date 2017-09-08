@@ -47,7 +47,7 @@
     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
     })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-    ga('create', '{{ GOOGLE_ANALYTICS }}', 'auto');
+    ga('create', '{{ google_analytics_id }}', 'auto');
 
   </script>
 </head>
@@ -120,7 +120,7 @@
               <ul class="nav navbar-default navbar-nav navbar-right">
                 {% if user.is_authenticated %}
                 <li>
-                  <a href="{% url 'shopping_cart' %}"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;Carrito</a>
+                  <a href="{% url 'shopping_cart' %}"><img class="shopping-basket" src="/static/images/basket.svg"></img>&nbsp;Canasta</a>
                 </li>
                 <li>
                   <a href="#" onclick="btnLogoutDialog(event)">Desconectar</a>

@@ -1,6 +1,10 @@
 body {
 	background-color: #f3eacd;
-	background: url("/static/images/organicos_fondo.png")
+	background: url("/static/images/organicos_fondo.png");
+}
+
+.shopping-basket {
+	width: 22px;
 }
 
 .navbar-default {

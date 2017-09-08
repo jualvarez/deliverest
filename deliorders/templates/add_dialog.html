@@ -7,7 +7,7 @@
   <dd>$&nbsp;{{ selected_price.sell_price|floatformat:2 }}</dd>
 </dl>
 {% if existing_items %}
-<h4>Este producto ya está en el carrito</h4>
+<h4>Este producto ya está en tu canasta</h4>
 <ul>
     {% for item in existing_items %}<li><strong>{{ item.quantity }}</strong> {% if item.quantity == 1 %}{{ item.product.presentation|lower }}{% else %}{{ item.product.presentation.plural_repr|lower }}{% endif %}</li>{% endfor %}
 </ul>
@@ -37,7 +37,7 @@
   {% if is_logged_in %}
   <button type="button" class="btn btn-info" onclick="btnAddToCart(event)" data-dismiss="modal">Agregar</button>
   {% else %}
-  <p style="text-align:center">Necesitas iniciar sesión para agregar productos al carrito.</p>
+  <p style="text-align:center">Necesitas iniciar sesión para agregar productos a la canasta.</p>
   <a class="btn btn-primary form-control" data-dismiss="modal" data-toggle="modal" data-target="#login-modal">Inicia sesión</a>
   {% endif %}
 </div>

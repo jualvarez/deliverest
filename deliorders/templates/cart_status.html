@@ -1,5 +1,5 @@
 {% if order.orderitem_set.all %}
-<h4><a href="{% url 'shopping_cart' %}"><span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;Tu lista&nbsp;-&nbsp;Finalizar pedido</a></h4>
+<h4><a href="{% url 'shopping_cart' %}"><img class="shopping-basket" src="/static/images/basket_pink.svg"></img>&nbsp;Tu lista&nbsp;-&nbsp;Finalizar pedido</a></h4>
 {% endif %}
 <ul class="list-group cart-list" id="cart-status">
     {% for item in order.orderitem_set.all %}

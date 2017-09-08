@@ -225,7 +225,7 @@ def _add_to_cart(customer, price, quantity, comments=None):
 
 def add_to_cart(request):
     if not request.user.is_authenticated():
-        return JsonResponse({'success': False, 'error': _(u'Antes de crear un carrito de compras, tenés que acceder al sistema.')})
+        return JsonResponse({'success': False, 'error': _(u'Antes de crear una canasta de compras, tenés que acceder al sistema.')})
     price_id = request.GET.get('price_id', '')
     quantity = request.GET.get('quantity', '')
     comments = request.GET.get('comments', '')
@@ -243,9 +243,9 @@ def add_to_cart(request):
 
     i = _add_to_cart(c, p, quantity, comments)
     if i is None:
-        return JsonResponse({'success': True, 'message': _((u'Sacamos <strong>%s</strong> del carrito de compras') % (p.product.name))})
+        return JsonResponse({'success': True, 'message': _((u'Sacamos <strong>%s</strong> de la canasta de compras') % (p.product.name))})
 
-    return JsonResponse({'success': True, 'message': _((u'Ahora tenés %d <strong>%s</strong> en el carrito de compras') % (i.quantity, p.product.name))})
+    return JsonResponse({'success': True, 'message': _((u'Ahora tenés %d <strong>%s</strong> en la canasta de compras') % (i.quantity, p.product.name))})
 
 
 @login_required
