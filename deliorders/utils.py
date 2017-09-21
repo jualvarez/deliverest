@@ -47,7 +47,7 @@ def date_is_after_last_window(tzdatetime):
     now = timezone.now()
     now = timezone.datetime(year=now.year, month=now.month, day=now.day)
     now = timezone.make_aware(now)
-    days_from_end = ((now.weekday() - settings.WEEKLY_WINDOW_END) % 7) * -1
+    days_from_end = (((now.weekday() - settings.WEEKLY_WINDOW_END) % 7) * -1) or -7
     end_hour = settings.WEEKLY_WINDOW_END_HOUR
     td_end = datetime.timedelta(days=days_from_end, hours=end_hour)
     last_tf_end = now + td_end
