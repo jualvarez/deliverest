@@ -116,8 +116,8 @@ class OrderAdmin(admin.ModelAdmin):
     def products_report(self, request):
         # Not-delivered orders
         pending_orders = Order.objects.filter(Q(status=200) | Q(status=400))
-        delivery_methods = {dm.pk: dm.name for dm in DeliveryMethod.objects.all().order_by('pk')}
-        result_headers = ['Product'] + list(delivery_methods.values()) + ['Total']
+        delivery_methods = list(DeliveryMethod.objects.all().order_by('code'))
+        result_headers = ['Product'] + delivery_methods + ['Total']
 
         results = {}
         for order in pending_orders:
@@ -129,10 +129,13 @@ class OrderAdmin(admin.ModelAdmin):
                         prod.presentation
                     )
                     results[item.product.pk] = [item_display] + [0 for i in delivery_methods] + [0]
-                for pos, delivery_method_id in enumerate(delivery_methods.keys()):
-                    if order.delivery_method_id == delivery_method_id:
+                for pos, delivery_method in enumerate(delivery_methods):
+                    if order.delivery_method_id == delivery_method.id:
                         results[item.product.pk][pos + 1] += item.quantity
                 results[item.product.pk][-1] += item.quantity
+
+        results = results.values()
+        results = sorted(results, key=lambda i: i[0])
 
         return render_to_response(self.order_report_template, {
             'title': _(u'Reporte de cantidades de producto'),

@@ -42,7 +42,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for key, result in results.items %}
+        {% for result in results %}
         <tr class="{% cycle 'row1' 'row2' %}">{% for item in result %}<td>{{ item }}</td>{% endfor %}</tr>
         {% endfor %}
         {% if totals %}
