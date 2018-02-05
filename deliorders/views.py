@@ -238,6 +238,9 @@ def add_to_cart(request):
     except ObjectDoesNotExist:
         return JsonResponse({'success': False, 'error': _(u'¡Ups! No encontramos el producto que quisiste agregar. Lo vamos a verificar.')})
 
+    if not p.is_active:
+        return JsonResponse({'success': False, 'error': _(u'Lamentablemente este producto no etá disponible en este momento :(')})
+
     # This should always return a customer. Let the error propagate otherwise.
     c = request.user.customer
 

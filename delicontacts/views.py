@@ -29,6 +29,7 @@ def account_settings(request, *args, **kwargs):
             customer.associated_user = user
             customer.name = user.first_name + ' ' + user.last_name
             customer.email = user.email
+            customer.new = True
     else:
         customer = user.customer
 
@@ -51,4 +52,20 @@ def account_settings(request, *args, **kwargs):
         'customer': customer,
         'mode': mode,
         'can_add': can_add
+    }
+
+
+@login_required
+@render_to('delete_confirm.html')
+def delete_account(request, *args, **kwargs):
+    confirm = request.POST.get('confirm', False)
+    if confirm == '1':
+        from django.contrib.auth import logout
+        request.user.delete()
+        logout(request)
+        return {
+            'confirmed': True
+        }
+    return {
+        'confirmed': False
     }

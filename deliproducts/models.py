@@ -234,6 +234,11 @@ class Price(models.Model):
             self.presentation,
             self.sell_price)
 
+    @property
+    def slug_id(self):
+        from django.utils.text import slugify
+        return "{}-{}".format(self.id, slugify(self.product.name))
+
     def get_absolute_url(self):
         category = self.product.category
         if category is not None:

@@ -55,7 +55,8 @@ class Order(models.Model):
     customer = models.ForeignKey(
         Customer,
         verbose_name=_(u'cliente'),
-        on_delete=models.PROTECT)
+        on_delete=models.SET_NULL,
+        null=True)
     contact_mode = models.IntegerField(
         choices=CONTACT_MODE_CHOICES,
         blank=True,
@@ -182,7 +183,12 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order)
     quantity = models.IntegerField(verbose_name=_(u'cantidad'))
-    product = models.ForeignKey(Price, verbose_name=_(u'producto'), on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Price,
+        verbose_name=_(u'producto'),
+        on_delete=models.SET_NULL,
+        null=True
+    )
     sell_price = models.DecimalField(
         max_digits=20,
         decimal_places=4,

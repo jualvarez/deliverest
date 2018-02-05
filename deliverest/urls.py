@@ -10,7 +10,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
 from delicontent.views import page
-from delicontacts.views import account_settings
+from delicontacts.views import account_settings, delete_account
 from deliorders.views import home, search, add_to_cart, load_order, add_dialog, cart, confirm_cart, cart_status, user_confirmed_tf
 from deliproducts.views import price, search_ajax
 
@@ -29,6 +29,8 @@ urlpatterns = [
     url(r'^agregar-producto/$',
         add_dialog, name="add_dialog"),
     url(r'^producto/(?P<id>[^/]+)$',
+        price, name="price_redir"),
+    url(r'^productos/(?P<slug_id>[^/]+)$',
         price, name="price"),
     url(r'^pagina/(?P<slug>[^/]+)$',
         page, name="page"),
@@ -50,6 +52,8 @@ urlpatterns = [
         account_settings, name="account_settings"),
     url(r'^cuenta/(?P<mode>[^/]+)/$',
         account_settings, name="account_settings_mode"),
+    url(r'^borrarcuenta/$',
+        delete_account, name="account_delete"),
 
     url(r'^markdownx/', include('markdownx.urls')),
 

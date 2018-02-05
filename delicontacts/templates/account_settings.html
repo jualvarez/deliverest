@@ -26,6 +26,11 @@
                     <button type="submit" class="btn btn-info">
                         {% bootstrap_icon "star" %} Guardar
                     </button>
+                    {% if not customer.new %}
+                    <a class="btn btn-danger" href={% url 'account_delete' %}>
+                        {% bootstrap_icon "remove" %} Eliminar mi cuenta
+                    </a>
+                    {% endif %}
                 {% endbuttons %}
             </form>
         </div>

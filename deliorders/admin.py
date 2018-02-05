@@ -90,16 +90,23 @@ class OrderAdmin(admin.ModelAdmin):
         return OrderAdminChangeList
 
     def get_contact_mode(self, obj):
+        if obj.customer is None:
+            return "Cliente eliminado"
+
         return obj.customer.email if (obj.contact_mode == 100 and obj.customer.email) else obj.get_contact_mode_display()
     get_contact_mode.admin_order_field = 'customer'
     get_contact_mode.short_description = _(u'Contacto')
 
     def get_customer_address(self, obj):
+        if obj.customer is None:
+            return "Cliente eliminado"
         return obj.customer.address
     get_customer_address.admin_order_field = 'customer'
     get_customer_address.short_description = _(u'Dirección de entrega')
 
     def get_customer_phone(self, obj):
+        if obj.customer is None:
+            return "Cliente eliminado"
         return obj.customer.phone
     get_customer_phone.admin_order_field = 'customer'
     get_customer_phone.short_description = _(u'Teléfono de contacto')

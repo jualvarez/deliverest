@@ -12,7 +12,9 @@ from deliproducts.models import Price
 
 
 @render_to('deliproducts/product.html')
-def price(request, id):
+def price(request, id=None, slug_id=None):
+    if slug_id:
+        id = slug_id.split('-')[0]
     price = get_object_or_404(Price, id=id)
     return {
         'price': price,

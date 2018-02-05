@@ -37,7 +37,8 @@ class Customer(Person):
     contact_mode = models.IntegerField(choices=CONTACT_MODE_CHOICES, default=100, verbose_name=_(u'forma de contacto'))
     prefered_delivery_method = models.ForeignKey(
         DeliveryMethod,
-        verbose_name=_(u'forma de envío preferida')
+        verbose_name=_(u'forma de envío preferida'),
+        on_delete=models.PROTECT,
     )
     last_confirmed_tf = models.DateTimeField(
         verbose_name=_(u'última confirmación de ventana de entrega'),
@@ -46,7 +47,7 @@ class Customer(Person):
     associated_user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         verbose_name=_(u'usuario vinculado'),
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=True,
         blank=True
     )

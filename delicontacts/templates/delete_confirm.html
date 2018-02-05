@@ -1,0 +1,51 @@
+{% extends "organicos_base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container container-bar">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="{% url 'account_settings_mode' mode='settings' %}" class="list-group-item">Información de la cuenta</a>
+            </div>
+            <div class="hidden-sm hidden-xs" id="cart-status">
+            </div>
+        </div>
+        
+        {% if confirmed == False %}
+        <div class="col-md-9">
+            <h1>Borrar cuenta</h1>
+            <h2>¿Estás segura?</h2>
+            <p>Gracias por haber confiado en nosotras este tiempo.</p>
+            <p>En Orgánicos de mi Tierra respetamos tu privacidad. Al borrar tu cuenta, tus datos se borran
+            definitivamente de nuestra base de datos. Todo tu historial y cualquier otra información
+            que nos hayas confiado será eliminada y no es posible volver atrás.</p>
+            <form method="POST" action="{% url 'account_delete' %}">
+                {% csrf_token %}
+                <input type="hidden" name="confirm" value="1" />
+                <button type="submit" class="btn btn-danger">
+                    {% bootstrap_icon "warning" %} Confirmar borrado de cuenta
+                </button>
+            </form>
+        </div>
+        {% endif %}
+        {% if confirmed == True %}
+        <div class="col-md-9">
+            <h1>¡Hasta la próxima!</h1>
+            <p>¡Esperamos poder volver a verte pronto!</p>
+        </div>
+        {% endif%}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    $(function(){
+    });
+    function toggleOrder(obj) {
+        $(obj).parent().parent().next().find('li').slideToggle();
+        return false;
+    }
+</script>
+{% endblock %}
