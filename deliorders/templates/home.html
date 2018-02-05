@@ -55,7 +55,7 @@
 
         <div id="page-content-wrapper" {% block containerprops %}{% endblock %}>
             <div class="container-fluid {% if category_browse %}container-bar{% endif %}">
-                {% if category_browse %}<h2>{% block containertitle %}{{ selected_category.parent_crumbs }}{{ category_header }} <em>{{ category_header_additional }}</em>{% endblock %}</h2>{% endif %}
+                {% if category_browse %}<h1>{% block containertitle %}{{ selected_category.parent_crumbs }}{{ category_header }} <em>{{ category_header_additional }}</em>{% endblock %}</h1>{% endif %}
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-9">
                     {% block maincontent %}

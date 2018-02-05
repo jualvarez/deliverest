@@ -4,7 +4,7 @@
 
 from django.http import JsonResponse
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from deliverest.decorators import render_to
 
@@ -16,6 +16,8 @@ def price(request, id=None, slug_id=None):
     if slug_id:
         id = slug_id.split('-')[0]
     price = get_object_or_404(Price, id=id)
+    if slug_id != price.slug_id:
+        return redirect(price, permanent=True)
     return {
         'price': price,
         'category_browse': True

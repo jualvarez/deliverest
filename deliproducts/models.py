@@ -240,14 +240,10 @@ class Price(models.Model):
         return "{}-{}".format(self.id, slugify(self.product.name))
 
     def get_absolute_url(self):
-        category = self.product.category
-        if category is not None:
-            category = category.slug
-        else:
-            category = settings.CATEGORY_SLUG_FOR_OTHER
         return reverse(
-            'deliorders.views.home',
-            kwargs={'category': category}) + '#' + str(self.id)
+            'price',
+            kwargs={'slug_id': self.slug_id}
+        )
 
 
 @python_2_unicode_compatible
