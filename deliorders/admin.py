@@ -116,7 +116,7 @@ class OrderAdmin(admin.ModelAdmin):
         my_urls = [
             url(r'^products_report/$', self.products_report, name='admin_order_products_report'),
             url(r'^print_orders/$', self.print_orders, name='admin_order_print'),
-            url(r'^print_orders/(?P<delivery_method_id>[0-9])/$', self.print_orders, name='admin_order_print'),
+            url(r'^print_orders/(?P<delivery_method_id>[0-9]{1,4})/$', self.print_orders, name='admin_order_print'),
         ]
         return my_urls + urls
 
