@@ -17,10 +17,10 @@ class PriceSitemap(Sitemap):
     protocol = 'https'
 
     def items(self):
-        return Price.objects.filter(is_active=True, in_stock=True)
+        return Price.objects.all()
 
     def location(self, obj):
-        return reverse('deliproducts.views.price', kwargs={'id': obj.id})
+        return reverse('deliproducts.views.price', kwargs={'slug_id': obj.slug_id})
 
 
 sitemaps = {
