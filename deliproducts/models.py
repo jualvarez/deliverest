@@ -128,6 +128,7 @@ class Presentation(models.Model):
         verbose_name = _(u'presentación')
         verbose_name_plural = _(u'presentaciones')
         unique_together = ('name', 'quantity', 'measure_unit')
+        ordering = ('name', 'quantity', 'measure_unit')
 
     def __str__(self):
         if self.quantity is not None:
@@ -182,6 +183,7 @@ class Product(models.Model):
     class Meta:
         verbose_name = _(u'producto')
         verbose_name_plural = _(u'productos')
+        ordering = ('name',)
 
     def __str__(self):
         return u"%s" % (self.name)
@@ -259,6 +261,7 @@ class Provider(models.Model):
     class Meta:
         verbose_name = _(u'proveedor')
         verbose_name_plural = _(u'proveedores')
+        ordering = ('name',)
 
     def __str__(self):
         return u"%s (%s)" % (self.name, self.code)
