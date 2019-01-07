@@ -14,6 +14,7 @@ from django.utils.encoding import force_text
 
 from .models import Order, OrderItem, ORDER_STATUS_CHOICES
 from delidelivery.models import DeliveryMethod
+from deliproducts.models import Price
 
 import autocomplete_light
 
@@ -173,34 +174,29 @@ class OrderAdmin(admin.ModelAdmin):
         }, context_instance=RequestContext(request))
 
     def balance_report(self, request, queryset):
-        results = {}
+        from django.db.models import ExpressionWrapper, F, FloatField, Sum
+
+        results = OrderItem.objects.filter(
+            order__in=queryset
+        ).values(
+            'product__pk'
+        ).order_by(
+            'product__product__name'
+        ).annotate(
+            total_quantity=Sum('quantity')
+        ).annotate(
+            total_cost=ExpressionWrapper(F('total_quantity') * F('product__buy_price'), output_field=FloatField()),
+            total_sell_price=ExpressionWrapper(F('total_quantity') * F('product__sell_price'), output_field=FloatField())
+        ).annotate(profit=ExpressionWrapper(F('total_sell_price') - F('total_cost'), output_field=FloatField()))
+
         totals = [0, 0, 0, 0, 0]
-        for order in queryset:
-            for item in order.orderitem_set.all():
-                try:
-                    edit_item = results[item.product.pk]
-                except KeyError:
-                    prod = item.product
-                    item_display = "%s (%s)" % (
-                        prod.product.name,
-                        prod.presentation
-                    )
-                    results[item.product.pk] = [item_display] + [0, 0, 0, 0]
-
-                quantity = item.quantity
-                cost = item.product.buy_price * quantity
-                sell_price = item.sell_price * quantity
-                profit = sell_price - cost
-
-                results[item.product.pk][1] += quantity
-                results[item.product.pk][2] += cost
-                results[item.product.pk][3] += sell_price
-                results[item.product.pk][4] += profit
-
-                totals[1] += quantity
-                totals[2] += cost
-                totals[3] += sell_price
-                totals[4] += profit
+        for p in results:
+            price = Price.objects.get(pk=p['product__pk'])
+            p['display'] = unicode(price)
+            totals[1] += p['total_quantity']
+            totals[2] += p['total_cost']
+            totals[3] += p['total_sell_price']
+            totals[4] += p['profit']
 
         return render_to_response(self.order_balance_template, {
             'title': _(u'Balance'),

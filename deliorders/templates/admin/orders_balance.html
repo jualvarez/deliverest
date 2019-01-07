@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_urls admin_static admin_list %}
+{% load i18n admin_urls admin_static admin_list humanize %}
   <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />
   <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
 {{ media.js }}
@@ -52,11 +52,16 @@
         </tr>
         </thead>
         <tbody>
-        {% for key, result in results.items %}
-        <tr class="{% cycle 'row1' 'row2' %}">{% for item in result %}<td>{{ item }}</td>{% endfor %}</tr>
+        {% for result in results %}
+        <tr class="{% cycle 'row1' 'row2' %}">
+            <td>{{ result.display }}</td>
+            <td>{{ result.total_quantity }}</td>
+            <td>{{ result.total_cost | floatformat:2 | intcomma }}</td>
+            <td>{{ result.total_sell_price | floatformat:2 | intcomma }}</td>
+            <td>{{ result.profit | floatformat:2 | intcomma }}</td>
         {% endfor %}
         {% if totals %}
-        <tfoot><tr>{% for total in totals %}<td>{% if forloop.counter == 1 %}Totales{% else %}{{ total }}{% endif %}</td>{% endfor %}</tr></tfoot>
+        <tfoot><tr>{% for total in totals %}<td>{% if forloop.counter == 1 %}Totales{% else %}{{ total | floatformat:2 | intcomma }}{% endif %}</td>{% endfor %}</tr></tfoot>
         {% endif %}
         </tbody>
         </table>
