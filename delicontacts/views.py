@@ -33,7 +33,7 @@ def account_settings(request, *args, **kwargs):
     else:
         customer = user.customer
 
-    CustomerForm = modelform_factory(Customer, fields=('name', 'address', 'phone', 'prefered_delivery_method'))
+    CustomerForm = modelform_factory(Customer, fields=('name', 'address', 'phone', 'prefered_delivery_method', 'subscribed_to_newsletter'))
     if request.method == 'POST':
         form = CustomerForm(request.POST, request.FILES, instance=customer)
         form.fields['prefered_delivery_method'].queryset = DeliveryMethod.objects.filter(is_active=True)
