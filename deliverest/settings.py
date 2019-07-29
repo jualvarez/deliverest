@@ -26,7 +26,7 @@ SECRET_KEY = 'update_in_settings_local.py'
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['jualvarez.webfactional.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -94,7 +94,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'deliorders.context_processors.check_timeframe',
                 # Required by `allauth` template tags
-                'django.core.context_processors.request',
+                'django.template.context_processors.request',
                 # Application specific
                 'deliproducts.context_processors.category_browse',
                 'deliorders.context_processors.google_analytics',

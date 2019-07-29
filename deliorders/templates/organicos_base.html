@@ -373,15 +373,15 @@
             if (e !== undefined)
               e.preventDefault();
 
+            var html = "<p>¿Seguro que quiere salir?</p>\
+                    <form method=\"post\" action=\"/accounts/logout/\">\
+                    {% csrf_token %}\
+                    <button class=\"btn btn-info\" type=\"submit\">Salir</button>\
+                    </form>";
             $('#custom-modal').modal('hide');
-            $.ajax({
-              url: '{% url "account_logout" %}'
-            })
-            .then(function(dHtml) {
-              $('#custom-modal .modal-title').html("Cerrar sesión");
-              $('#custom-modal .modal-body').html(dHtml);
-              $('#custom-modal').modal('show');
-            })
+            $('#custom-modal .modal-title').html("Cerrar sesión");
+            $('#custom-modal .modal-body').html(html);
+            $('#custom-modal').modal('show');
           }
 
           function addToCart(pId, pQty, comments) {
