@@ -6,9 +6,8 @@ from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Q
-from django.template import RequestContext
 from django.conf.urls import url
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
 
@@ -145,11 +144,11 @@ class OrderAdmin(admin.ModelAdmin):
         results = results.values()
         results = sorted(results, key=lambda i: i[0])
 
-        return render_to_response(self.order_report_template, {
+        return render(request, self.order_report_template, {
             'title': _(u'Reporte de cantidades de producto'),
             'result_headers': result_headers,
             'results': results
-        }, context_instance=RequestContext(request))
+        })
 
     def print_orders(self, request, delivery_method_id=None):
         pending_orders = Order.objects.filter(Q(status=200) | Q(status=400))
@@ -166,12 +165,12 @@ class OrderAdmin(admin.ModelAdmin):
                 delivery_method_id=delivery_method_id)
             title_append = _(u" para ") + '"' + delivery_method.name + '"'
 
-        return render_to_response(self.order_print_template, {
+        return render(request, self.order_print_template, {
             'title': _(u'Ordenes a entregar') + title_append,
             'delivery_method': delivery_method,
             'delivery_methods': delivery_methods,
             'orders': pending_orders
-        }, context_instance=RequestContext(request))
+        })
 
     def balance_report(self, request, queryset):
         from django.db.models import ExpressionWrapper, F, FloatField, Sum
@@ -198,11 +197,11 @@ class OrderAdmin(admin.ModelAdmin):
             totals[3] += p['total_sell_price']
             totals[4] += p['profit']
 
-        return render_to_response(self.order_balance_template, {
+        return render(request, self.order_balance_template, {
             'title': _(u'Balance'),
             'results': results,
             'totals': totals
-        }, context_instance=RequestContext(request))
+        })
 
     def change_orders_status(self, queryset, from_status, to_status):
         if hasattr(from_status, '__contains__'):

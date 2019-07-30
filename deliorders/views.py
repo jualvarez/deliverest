@@ -8,11 +8,10 @@ from django.db.models import Q
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.http import HttpResponseBadRequest, JsonResponse, Http404
-from django.shortcuts import redirect, get_object_or_404, render_to_response
+from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
-from django.template import RequestContext
 
 from deliverest.decorators import render_to
 from deliproducts.models import Category, Price
@@ -144,7 +143,7 @@ def confirm_cart(request, *args, **kwargs):
             'order': o,
             'errors': form.errors
         }
-        return render_to_response('cart.html', RequestContext(request, context))
+        return render(request, 'cart.html')
 
     return redirect('shopping_cart')
 
