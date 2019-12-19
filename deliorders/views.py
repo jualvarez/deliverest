@@ -2,10 +2,10 @@
 
 from datetime import datetime
 
+from constance import config
 from django.core import urlresolvers
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.http import HttpResponseBadRequest, JsonResponse, Http404
 from django.shortcuts import redirect, get_object_or_404, render
@@ -33,7 +33,7 @@ def home(request, *args, **kwargs):
 
     context = {}
     if catslug is not None:
-        if catslug == settings.CATEGORY_SLUG_FOR_OTHER:
+        if catslug == config.CATEGORY_SLUG_FOR_OTHER:
             category = None
         else:
             category = get_object_or_404(Category, slug=catslug)
