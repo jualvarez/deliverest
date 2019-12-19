@@ -2,6 +2,7 @@
 
 from datetime import date
 
+from constance import config
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
@@ -36,7 +37,7 @@ class DeliveryMethod(models.Model):
     delivery_price = models.DecimalField(
         max_digits=20,
         decimal_places=4,
-        default=settings.DELIVERY_DEFAULT_PRICE,
+        default=config.DELIVERY_DEFAULT_PRICE,
         verbose_name=_(u'precio de envío'))
     is_active = models.BooleanField(default=True, verbose_name=_(u'está activo'))
 

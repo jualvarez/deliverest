@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from constance import config
 from django.contrib import admin
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -122,7 +122,7 @@ class PriceAdmin(ExportMixin, admin.ModelAdmin):
             return delivery_dates
 
         def delivery_cost():
-            return u"%.2f" % settings.DELIVERY_DEFAULT_PRICE
+            return u"%.2f" % config.DELIVERY_DEFAULT_PRICE
 
         queryset.order_by('product__name')
         categories = []
