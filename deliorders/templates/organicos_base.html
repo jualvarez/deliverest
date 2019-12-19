@@ -119,9 +119,11 @@
               </ul>
               <ul class="nav navbar-default navbar-nav navbar-right">
                 {% if user.is_authenticated %}
+                {% if not config.ORDERS_SUSPENDED %}
                 <li>
                   <a href="{% url 'shopping_cart' %}"><img class="shopping-basket" src="/static/images/basket.svg"></img>&nbsp;Canasta</a>
                 </li>
+                {% endif %}
                 <li>
                   <a href="#" onclick="btnLogoutDialog(event)">Desconectar</a>
                 </li>
@@ -172,6 +174,26 @@
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="user_tf_confirmed()" data-dismiss="modal">Entiendo</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        {% endif %}
+
+        {% if config.ORDERS_SUSPENDED %}
+        <!-- Suspension modal -->
+        <div class="modal fade" id="suspend-modal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Los pedidos están momentáneamente suspendidos</h4>
+              </div>
+              <div class="modal-body">
+                <p>{{ config.ORDERS_SUSPENDED_REASON }}</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="user_suspension_confirmed()" data-dismiss="modal">Entiendo</button>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->
@@ -430,6 +452,17 @@
             $.ajax({
               url: '{% url "confirm_tf" %}'
             });
+          }
+          {% endif %}
+
+          {% if config.ORDERS_SUSPENDED %}
+          var suspensionConfirmDate = localStorage.getItem('suspensionConfirmDate');
+          var now = new Date();
+          var cmpDate = now.toLocaleDateString();
+          if (cmpDate !== suspensionConfirmDate)
+            $('#suspend-modal').modal();
+          function user_suspension_confirmed(){
+            localStorage.setItem('suspensionConfirmDate', cmpDate);
           }
           {% endif %}
         </script>

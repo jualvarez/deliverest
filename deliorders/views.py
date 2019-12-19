@@ -13,7 +13,7 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelform_factory
 
-from deliverest.decorators import render_to
+from deliverest.decorators import render_to, suspendable_view
 from deliproducts.models import Category, Price
 from deliorders.models import Order, OrderItem
 from delicontacts.models import Customer
@@ -65,6 +65,7 @@ def search(request, *args, **kwargs):
     return context
 
 
+@suspendable_view
 @login_required
 @render_to('cart.html')
 def cart(request, *args, **kwargs):
@@ -112,6 +113,7 @@ def cart(request, *args, **kwargs):
     return context
 
 
+@suspendable_view
 @login_required
 def confirm_cart(request, *args, **kwargs):
     # should always be a POST from the shopping cart
@@ -222,6 +224,7 @@ def _add_to_cart(customer, price, quantity, comments=None):
     return i
 
 
+@suspendable_view
 def add_to_cart(request):
     if not request.user.is_authenticated():
         return JsonResponse({'success': False, 'error': _(u'Antes de crear una canasta de compras, tenés que acceder al sistema.')})
@@ -258,6 +261,7 @@ def user_confirmed_tf(request):
     return JsonResponse({'success': True})
 
 
+@suspendable_view
 @login_required
 def load_order(request):
     order_id = request.POST.get('order_id')

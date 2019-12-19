@@ -71,7 +71,7 @@
                                         {% if price.product.description %}<p>{{ price.product.description }}</p>{% endif %}
                                         <p>$&nbsp;{{ price.sell_price|floatformat:2 }}</p>
                                         <div class="form-group">
-                                            <button onclick="btnAddProductDialog({{ price.id }}, event)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
+                                            <button {% if not config.ORDERS_SUSPENDED %}onclick="btnAddProductDialog({{ price.id }}, event)" class="btn btn-info"{% else %}onclick="$('#suspend-modal').modal()" class="btn btn-disabled"{% endif %}><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
                                             {% if request.user.is_staff %}
                                             <a class="btn btn-primary" href="{% url 'admin:deliproducts_price_change' price.id %}"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Editar</a>
                                             {% endif %}
@@ -104,6 +104,7 @@
     {% endblock %}
 
     {% block javascript %}
+    {% if not config.ORDERS_SUSPENDED %}
     <script type="text/javascript">
         $(function(){
             updateCartStatus();
@@ -127,4 +128,5 @@
         });
     }
     </script>
+    {% endif %}
     {% endblock %}

@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from collections import OrderedDict
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -63,7 +65,9 @@ INSTALLED_APPS = (
 
     'django_extensions',
     'bootstrap3',
-    'mailer'
+    'mailer',
+    'constance',
+    'constance.backends.database',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -93,6 +97,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'deliorders.context_processors.check_timeframe',
+                'constance.context_processors.config',
                 # Required by `allauth` template tags
                 'django.template.context_processors.request',
                 # Application specific
@@ -122,6 +127,8 @@ DATABASES = {
         'HOST': 'localhost'
     }
 }
+
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 
 ABSOLUTE_URL = 'http://organicosdemitierra.com'
 LOGIN_URL = '/'
@@ -171,21 +178,24 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = '/home/juan/Documentos/dev/deliverest_media'
 
 
-# Application specific settings
-CATEGORY_SLUG_FOR_OTHER = 'otras'
-
-# Monday is 0
-WEEKLY_WINDOW_START = 0  # Monday
-WEEKLY_WINDOW_END = 3  # Thursday
-
-WEEKLY_WINDOW_START_HOUR = 11
-WEEKLY_WINDOW_END_HOUR = 20
-
-WEEKLY_DELIVERY_START = 2  # Wednesday
-WEEKLY_DELIVERY_END = 3  # Thursday
-
-# Delivery defaults
-DELIVERY_DEFAULT_PRICE = 20.0
-
 # Import local configurations
 from settings_local import *
+
+
+CONSTANCE_CONFIG = OrderedDict([
+    ('CATEGORY_SLUG_FOR_OTHER', ('otras', 'URL para la categoria "otra".')),
+
+    ('WEEKLY_WINDOW_START', (0, 'Dia que se dejan de tomar pedidos. 0 es lunes.')),
+    ('WEEKLY_WINDOW_END', (3, 'Dia que se vuelven a tomar pedidos. 0 es lunes.')),
+
+    ('WEEKLY_WINDOW_START_HOUR', (23, 'Hora a la que se dejan de tomar pedidos.')),
+    ('WEEKLY_WINDOW_END_HOUR', (15, 'Hora a la que se vuelven a tomar pedidos.')),
+
+    ('WEEKLY_DELIVERY_START', (3, 'Dia en que comienzan los envios. 0 es lunes.')),
+    ('WEEKLY_DELIVERY_END', (4, 'Dia en que se finalizan los envios. 0 es lunes.')),
+
+    ('DELIVERY_DEFAULT_PRICE', (40.0, 'Precio por defecto del envio.')),
+
+    ('ORDERS_SUSPENDED', (False, 'Pedidos suspendidos.')),
+    ('ORDERS_SUSPENDED_REASON', ('Lamentablemente esta semana no podremos tomar pedidos.', 'Razon por la que los pedidos se encuentran suspendidos.')),
+])

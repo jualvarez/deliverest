@@ -3,8 +3,8 @@
 """Support methdos for deliorders."""
 
 import datetime
-from django.conf import settings
 from django.utils import timezone
+from constance import config
 
 
 def tf_frame(ref_date=None):
@@ -14,12 +14,12 @@ def tf_frame(ref_date=None):
 
     ref_date = timezone.datetime(year=ref_date.year, month=ref_date.month, day=ref_date.day)
     ref_date = timezone.make_aware(ref_date)
-    days_to_start = (settings.WEEKLY_WINDOW_START - ref_date.weekday()) % 7
-    start_hour = settings.WEEKLY_WINDOW_START_HOUR
+    days_to_start = (config.WEEKLY_WINDOW_START - ref_date.weekday()) % 7
+    start_hour = config.WEEKLY_WINDOW_START_HOUR
     td_start = datetime.timedelta(days=days_to_start, hours=start_hour)
 
-    days_to_end = (settings.WEEKLY_WINDOW_END - ref_date.weekday()) % 7
-    end_hour = settings.WEEKLY_WINDOW_END_HOUR
+    days_to_end = (config.WEEKLY_WINDOW_END - ref_date.weekday()) % 7
+    end_hour = config.WEEKLY_WINDOW_END_HOUR
     td_end = datetime.timedelta(days=days_to_end, hours=end_hour, minutes=59)
 
     tf_start = ref_date + td_start
@@ -39,7 +39,7 @@ def is_tf_closed(ref_date=None):
 
     tf_start, tf_end = tf_frame(ref_date)
 
-    return ref_date > tf_start and ref_date < tf_end
+    return tf_start < ref_date < tf_end
 
 
 def date_is_after_last_window(tzdatetime):
@@ -47,8 +47,8 @@ def date_is_after_last_window(tzdatetime):
     now = timezone.now()
     now = timezone.datetime(year=now.year, month=now.month, day=now.day)
     now = timezone.make_aware(now)
-    days_from_end = (((now.weekday() - settings.WEEKLY_WINDOW_END) % 7) * -1) or -7
-    end_hour = settings.WEEKLY_WINDOW_END_HOUR
+    days_from_end = (((now.weekday() - config.WEEKLY_WINDOW_END) % 7) * -1) or -7
+    end_hour = config.WEEKLY_WINDOW_END_HOUR
     td_end = datetime.timedelta(days=days_from_end, hours=end_hour)
     last_tf_end = now + td_end
     return tzdatetime >= last_tf_end
@@ -56,8 +56,8 @@ def date_is_after_last_window(tzdatetime):
 
 def delivery_days(date):
     """Calculate delivery timeframe."""
-    tf_delivery_start = settings.WEEKLY_DELIVERY_START
-    tf_delivery_end = settings.WEEKLY_DELIVERY_END
+    tf_delivery_start = config.WEEKLY_DELIVERY_START
+    tf_delivery_end = config.WEEKLY_DELIVERY_END
 
     start = date + datetime.timedelta((tf_delivery_start - date.weekday()) % 7)
     end = date + datetime.timedelta((tf_delivery_end - date.weekday()) % 7)

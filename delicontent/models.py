@@ -30,5 +30,5 @@ class PromoImage(models.Model):
     is_active = models.BooleanField(default=True, verbose_name=_(u'activa'))
 
     class Meta:
-        verbose_name = _(u'imágen de promoción')
+        verbose_name = _(u'imagen de promoción')
         verbose_name_plural = _(u'imágenes de promoción')
