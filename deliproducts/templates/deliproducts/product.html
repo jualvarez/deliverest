@@ -27,7 +27,7 @@
                 </div>
                 <div class="caption-full">
                     <div class="form-group">
-                        {% if price.is_active %}
+                        {% if price.is_active and not config.ORDERS_SUSPENDED %}
                         <button onclick="btnAddProductDialog({{ price.id }}, event)" class="btn btn-info"><span class="glyphicon glyphicon-plus"></span>&nbsp;Agregar</button>
                         {% else %}
                         <button class="btn btn-info" disabled><span class="glyphicon glyphicon-minus-sign"></span>&nbsp;No disponible en este momento</button>
