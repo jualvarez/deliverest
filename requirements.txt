@@ -10,7 +10,7 @@ django-markdown2==0.3.0
 django-markdownx==1.6.3
 django-import-export==0.5.1
 django-mailer==1.2.2
-ipython==5.8.0
+ipython==7.16.3
 mysqlclient==1.4.2.post1
 oauthlib==3.0.2
 pyreadline==2.1
